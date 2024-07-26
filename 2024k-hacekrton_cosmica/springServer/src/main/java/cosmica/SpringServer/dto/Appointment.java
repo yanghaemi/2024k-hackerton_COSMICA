@@ -12,7 +12,7 @@ public class Appointment {
     private Integer id;
     private Integer myId;
     private Integer companionId;
-    private Date dateTime;
+    private Date appointDate;
     private String location;
     private int bill;
 }

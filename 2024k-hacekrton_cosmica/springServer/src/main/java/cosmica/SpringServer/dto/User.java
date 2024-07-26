@@ -11,8 +11,8 @@ import java.sql.Date;
 @ToString
 public class User {
     private Integer id;
-    private Integer password;
-    private String name;
+    private Integer pw;
+    private String userName;
     private UserType userType;
     private String location;
     private Double rate;

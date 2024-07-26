@@ -34,8 +34,8 @@ public class JdbcUserRepository implements UserRepository {
     public Optional<User> register(User user) {
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("id", user.getId());
-        ms.addValue("name", user.getName());
-        ms.addValue("password", user.getPassword());
+        ms.addValue("name", user.getUserName());
+        ms.addValue("password", user.getPw());
         ms.addValue("type", user.getUserType());
         ms.addValue("location", user.getLocation());
         ms.addValue("rate",user.getRate());
@@ -69,8 +69,8 @@ public class JdbcUserRepository implements UserRepository {
         return ((rs, rowNum) ->{
             User user=new User();
             user.setId(rs.getInt("id"));
-            user.setPassword(rs.getInt("password"));
-            user.setName(rs.getString("name"));
+            user.setPw(rs.getInt("pw"));
+            user.setUserName(rs.getString("userName"));
             user.setUserType(rs.getString("userType").equals("휠체어 이용자")? UserType.WHEELCHAIR:UserType.COMPANION);
             user.setLocation(rs.getString("location"));
             user.setRate(rs.getDouble("rate"));

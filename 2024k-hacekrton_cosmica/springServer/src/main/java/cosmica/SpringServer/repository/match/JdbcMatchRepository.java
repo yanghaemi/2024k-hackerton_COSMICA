@@ -35,7 +35,7 @@ public class JdbcMatchRepository implements MatchRepository {
     @Override
     public Map<Date, Appointment> insertMatchDay(Appointment appointment) {
         Map<Date, Appointment> map = new HashMap<>();
-        map.put(appointment.getDateTime(), appointment);
+        map.put(appointment.getAppointDate(), appointment);
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("id",appointment.getId());
         jdbcTemplate.update("insert into Appointment (id,myId,companionId,dateTime,location,bill)" +
@@ -61,14 +61,13 @@ public class JdbcMatchRepository implements MatchRepository {
         return findMatchedDateById(id);
     }
 
-
     private RowMapper<Appointment> appointmentRowMapper1(){
         return((rs,rowNum)->{
             Appointment appointment = new Appointment();
             appointment.setId(rs.getInt("id"));
             appointment.setMyId(rs.getInt("myId"));
             appointment.setCompanionId(rs.getInt("companionId"));
-            appointment.setDateTime(rs.getDate("dateTime"));
+            appointment.setAppointDate(rs.getDate("appointDate"));
             appointment.setLocation(rs.getString("location"));
             appointment.setBill(rs.getInt("bill"));
             return appointment;
@@ -82,10 +81,10 @@ public class JdbcMatchRepository implements MatchRepository {
             appointment.setId(rs.getInt("id"));
             appointment.setMyId(rs.getInt("myId"));
             appointment.setCompanionId(rs.getInt("companionId"));
-            appointment.setDateTime(rs.getDate("dateTime"));
+            appointment.setAppointDate(rs.getDate("appointDate"));
             appointment.setLocation(rs.getString("location"));
             appointment.setBill(rs.getInt("bill"));
-            map.put(appointment.getDateTime(), appointment);
+            map.put(appointment.getAppointDate(), appointment);
             return map;
         });
     }
