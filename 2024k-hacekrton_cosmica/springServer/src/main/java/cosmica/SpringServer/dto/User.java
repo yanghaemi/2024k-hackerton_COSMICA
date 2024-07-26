@@ -1,13 +1,12 @@
 package cosmica.SpringServer.dto;
 
-import cosmica.SpringServer.dto.enums.Rate;
-import cosmica.SpringServer.dto.enums.UserType;
+import cosmica.SpringServer.enums.UserType;
 import lombok.Data;
 import lombok.ToString;
 
 import java.sql.Date;
-import java.util.Optional;
 
+//사용자 정보 객체
 @Data
 @ToString
 public class User {

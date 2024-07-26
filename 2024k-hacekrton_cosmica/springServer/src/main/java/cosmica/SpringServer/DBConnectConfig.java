@@ -1,3 +1,5 @@
+package cosmica.SpringServer;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -5,14 +7,15 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-public class AppConfig {
+public class DBConnectConfig {
 
     @Bean
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-//        dataSource.setUrl("jdbc:mariadb://localhost:0000/tablename);
-//        dataSource.setUsername("root");
-//        dataSource.setPassword("0000");
+        dataSource.setUrl("jdbc:mariadb://localhost:3307/DBName");
+        dataSource.setUsername("root");
+        dataSource.setPassword("0000");
+        dataSource.setDriverClassName("org.mariadb.jdbc.Driver");
         return dataSource;
     }
 

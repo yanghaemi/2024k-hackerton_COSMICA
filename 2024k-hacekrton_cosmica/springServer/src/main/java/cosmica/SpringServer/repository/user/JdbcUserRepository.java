@@ -1,16 +1,20 @@
-package cosmica.SpringServer.repository;
+package cosmica.SpringServer.repository.user;
 
 import cosmica.SpringServer.dto.User;
-import cosmica.SpringServer.dto.enums.UserType;
+import cosmica.SpringServer.enums.UserType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
+//DB에 데이터 입력, 출력
+@Primary
 @RequiredArgsConstructor
 @Repository
 public class JdbcUserRepository implements UserRepository {
@@ -28,17 +32,36 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> register(User user) {
-        return null;
+        MapSqlParameterSource ms = new MapSqlParameterSource();
+        ms.addValue("id", user.getId());
+        ms.addValue("name", user.getName());
+        ms.addValue("password", user.getPassword());
+        ms.addValue("type", user.getUserType());
+        ms.addValue("location", user.getLocation());
+        ms.addValue("rate",user.getRate());
+        ms.addValue("possibleDate", user.getPossibleDate());
+        ms.addValue("times", user.getTimes());
+
+        jdbcTemplate.update("insert into user (id,password,name,type,location,rate,possibleDate,times)" +
+                " values (:id,:password,:name,:type,:location,:rating,:possibleDate,:times)",ms);
+
+        return Optional.of(user);
     }
 
     @Override
     public Optional<User> deleteById(int id) {
-        return null;
+        MapSqlParameterSource ms = new MapSqlParameterSource();
+        ms.addValue("id", id);
+        jdbcTemplate.update("delete from user where id=:id",ms);
+        return findById(id);
     }
 
     @Override
-    public Optional<User> findByDate(Date date) {
-        return null;
+    public Optional<List<User>> findByDate(Date date) {
+        MapSqlParameterSource ms = new MapSqlParameterSource();
+        ms.addValue("date", date);
+        List<User> userList = jdbcTemplate.query("select * from user where date=:date", ms, userRowMapper());
+        return Optional.of(userList);
     }
 
 
