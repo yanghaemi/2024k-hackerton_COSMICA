@@ -1,3 +1,15 @@
+// Load properties from local.properties
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+
+// Define googleMapsApiKey property
+ext {
+    googleMapsApiKey = localProperties.getProperty('GOOGLE_MAPS_API_KEY')
+}
+
 buildscript {
     ext {
         buildToolsVersion = "34.0.0"

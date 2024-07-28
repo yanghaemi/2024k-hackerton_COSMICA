@@ -11,7 +11,7 @@ import {
 import { Colors} from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MainScreen from './screens/MainScreen';
+import MainScreen from './screens/main/MainScreen';
 
 const Tab = createBottomTabNavigator();
 
