@@ -34,6 +34,14 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByPw(int pw) {
+        User pw1 = jdbcTemplate.queryForObject(
+                "select *from user where pw=:pw",
+                new MapSqlParameterSource("pw", pw), userRowMapper());
+        return Optional.ofNullable(pw1);
+    }
+
+    @Override
     public Optional<User> register(User user) {
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("id", user.getId());

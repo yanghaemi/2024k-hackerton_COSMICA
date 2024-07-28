@@ -6,7 +6,6 @@ import cosmica.SpringServer.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +22,7 @@ public class CompanionController {
     private final UserService userService;
 
     @PostMapping("/users/sign-up")
-    public ResponseEntity<User> regiser(@RequestBody User user)
+    public ResponseEntity<User> register(@RequestBody User user)
     {
         Optional<User> register = userService.register(user);
         ResponseEntity<User> response;
@@ -38,7 +37,13 @@ public class CompanionController {
     @PostMapping("/users/login")
     public ResponseEntity<User> login(@RequestParam("id")int id, @RequestParam("password")int password, Session session)
     {
-        
+        Optional<User> user = userService.login(id, password);
+        ResponseEntity<User> response;
+        HttpHeaders headers = new HttpHeaders();
+        MediaType mediaType = new MediaType("application", "json");
+        headers.setContentType(mediaType);
+        response = new ResponseEntity<User>(user.get(),headers,HttpStatus.OK);
+        return response;
     }
 
     @PostMapping("/Appointments/dateSearch")

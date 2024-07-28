@@ -24,6 +24,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByPw(int pw) {
+        return userRepository.findByPw(pw);
+    }
+
+    @Override
+    public Optional<User> login(int id, int pw) {
+        Optional<User> userById = findById(id);
+        Optional<User> userByPw = findByPw(pw);
+        if (userById.isPresent() && userByPw.isPresent()) {
+            if(userById.get().equals(userByPw.get())) {
+                return userById;
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<User> register(User user) {
         return userRepository.register(user);
     }
