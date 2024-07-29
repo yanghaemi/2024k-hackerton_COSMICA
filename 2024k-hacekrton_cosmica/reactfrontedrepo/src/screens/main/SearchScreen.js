@@ -1,28 +1,55 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Button, Alert } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 
-const SearchScreen = () => {
+const SearchScreen = ({ navigation }) => {
+  const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(null);
+
+  const handleNavigate = () => {
+    if (origin && destination) {
+      navigation.navigate('Main', { origin, destination }); //Main스크린으로 출발지와 도착지 정보 보냄
+    } else {
+      Alert.alert('경고', '두 장소를 모두 선택해야 합니다.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <GooglePlacesAutocomplete
-        placeholder="장소를 검색하세요"
+        placeholder="출발지 입력"
         onPress={(data, details = null) => {
-          // 선택한 장소에 대한 처리
-          console.log(data, details);
+          setOrigin({ //출발지 정보 저장
+            latitude: details.geometry.location.lat,
+            longitude: details.geometry.location.lng,
+            name: data.description,
+          });
         }}
         query={{
           key: GOOGLE_MAPS_API_KEY,
-          language: 'ko', // 언어 설정
+          language: 'ko', // 한국어
         }}
-        fetchDetails={true} // 장소의 세부정보를 가져옴
-        styles={{
-          textInputContainer: styles.searchContainer,
-          textInput: styles.searchInput,
-          listView: styles.suggestionList,
-        }}
+        fetchDetails={true}
+        styles={styles.search}
       />
+      <GooglePlacesAutocomplete
+        placeholder="도착지 입력"
+        onPress={(data, details = null) => {
+          setDestination({ //도착지 정보 저장
+            latitude: details.geometry.location.lat,
+            longitude: details.geometry.location.lng,
+            name: data.description,
+          });
+        }}
+        query={{
+          key: GOOGLE_MAPS_API_KEY,
+          language: 'ko', // 한국어
+        }}
+        fetchDetails={true}
+        styles={styles.search}
+      />
+      <Button title="경로 찾기" onPress={handleNavigate} />
     </View>
   );
 };
@@ -32,19 +59,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
-  searchContainer: {
-    backgroundColor: 'white',
-    borderRadius: 5,
-    elevation: 3,
-  },
-  searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 10,
-  },
-  suggestionList: {
-    backgroundColor: 'white',
+  search: {
+    textInputContainer: {
+      backgroundColor: 'white',
+      borderRadius: 5,
+      elevation: 3,
+      marginBottom: 10,
+    },
+    textInput: {
+      height: 40,
+      borderColor: 'gray',
+      borderWidth: 1,
+      paddingHorizontal: 10,
+    },
   },
 });
 

@@ -1,13 +1,22 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainScreen from './screens/main/MainScreen';
+import SearchScreen from './screens/main/SearchScreen';
 import SamplePage from './screens/SamplePage'
 
 const Tab = createBottomTabNavigator();
-//const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
+const MainStackNavigator = () => {
+  return (
+    <Stack.Navigator initialRouteName="Main">
+      <Stack.Screen name="Main" component={MainScreen} />
+      <Stack.Screen name="Search" component={SearchScreen} />
+    </Stack.Navigator>
+  );
+};
 
 function App(){
 
@@ -18,7 +27,8 @@ function App(){
        component={SamplePage} //현재는 일단 샘플로 만들어둔 페이지로 지정해놨습니다
         options={{ headerShown: false }} />
       <Tab.Screen name="Main" //여기다가 지도 넣을 예정
-      component={MainScreen} />
+      component={MainStackNavigator}
+      options={{ headerShown: false }} />
     </Tab.Navigator>
   </NavigationContainer>
   );

@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { getLocation } from './Location';
-import { useNavigation } from '@react-navigation/native';
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import { getLocation } from '../../components/Location';
+import { fetchRoute } from '../../components/FetchRoute'; // fetchRoute 함수 가져오기
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const MainScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { origin, destination } = route.params || {}; // SearchScreen에서 받은 인자
   const [region, setRegion] = useState(null); // 지도에서 보여주는 현재 화면 (위치 및 지도 표시 영역 정의)
   const [location, setLocation] = useState(null); // 사용자 위치
   const [loading, setLoading] = useState(true); // 로딩 상태 (현재 위치 불러올 때 생기는 텀 방지)
   const [selectedLocation, setSelectedLocation] = useState(null); // 사용자가 선택한 장소
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
+
 
   useEffect(() => {
     getLocation(setLocation, setRegion, setLoading); // 위치 받아오는 함수
-  }, []);
+    if (destination) {
+      // 도착지 위치를 지도 중심으로 설정
+      setRegion({
+        latitude: destination.latitude,
+        longitude: destination.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      })
+    }
+    
+  }, [destination]);
+
+  useEffect(() => { //길 찾기 장소
+    if (origin && destination) {
+      fetchRoute(origin, destination, setLoading, setRouteCoordinates );
+    }
+  }, [origin, destination]);
 
   if (loading) { // 현재 위치 확인해서 표시해 줄 때까지 로딩 화면 보여주는 부분
     return (
@@ -29,7 +50,7 @@ const MainScreen = () => {
         style={styles.searchButton}
         onPress={() => navigation.navigate('Search')} //클릭 시 검색 화면으로 이동
       >
-        <Text style={styles.buttonText}>장소 검색</Text>
+        <Text style={styles.buttonText}>길 찾기</Text>
       </TouchableOpacity>
       <MapView
         style={styles.map}
@@ -48,6 +69,27 @@ const MainScreen = () => {
               longitude: selectedLocation.longitude,
             }}
             title={selectedLocation.name}
+          />
+        )}
+        {origin && (
+          <Marker
+            coordinate={origin}
+            pinColor="blue" // 색상 변경 가능
+            title="출발지"
+          />
+        )}
+        {destination && (
+          <Marker
+            coordinate={destination}
+            pinColor="red" // 색상 변경 가능
+            title="도착지"
+          />
+        )}
+        {routeCoordinates.length > 0 && (
+          <Polyline
+            coordinates={routeCoordinates}
+            strokeColor="#FF0000" // 경로 선 색상
+            strokeWidth={4} // 경로 선 두께
           />
         )}
       </MapView>
