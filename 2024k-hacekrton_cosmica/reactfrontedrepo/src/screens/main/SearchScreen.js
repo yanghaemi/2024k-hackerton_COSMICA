@@ -31,6 +31,7 @@ const SearchScreen = ({ navigation }) => {
           language: 'ko', // 한국어
         }}
         fetchDetails={true}
+        listViewDisplayed={true} // 목록이 기본적으로 보이지 않도록 설정
         styles={styles.search}
       />
       <GooglePlacesAutocomplete
@@ -47,6 +48,7 @@ const SearchScreen = ({ navigation }) => {
           language: 'ko', // 한국어
         }}
         fetchDetails={true}
+        listViewDisplayed={true} // 목록이 기본적으로 보이지 않도록 설정
         styles={styles.search}
       />
       <Button title="경로 찾기" onPress={handleNavigate} />

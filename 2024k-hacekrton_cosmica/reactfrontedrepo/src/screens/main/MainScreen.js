@@ -17,17 +17,7 @@ const MainScreen = () => {
 
 
   useEffect(() => {
-    getLocation(setLocation, setRegion, setLoading); // 위치 받아오는 함수
-    if (destination) {
-      // 도착지 위치를 지도 중심으로 설정
-      setRegion({
-        latitude: destination.latitude,
-        longitude: destination.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      })
-    }
-    
+    getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
   }, [destination]);
 
   useEffect(() => { //길 찾기 장소
