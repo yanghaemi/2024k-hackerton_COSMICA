@@ -9,7 +9,7 @@ const SearchScreen = ({ navigation }) => {
 
   const handleNavigate = () => {
     if (origin && destination) {
-      navigation.navigate('Main', { origin, destination }); //Main스크린으로 출발지와 도착지 정보 보냄
+      navigation.navigate('Map', { origin, destination }); //Main스크린 이동 및 출발지와 도착지 정보 보냄
     } else {
       Alert.alert('경고', '두 장소를 모두 선택해야 합니다.');
     }
@@ -17,7 +17,7 @@ const SearchScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <GooglePlacesAutocomplete
+      <GooglePlacesAutocomplete //검색창
         placeholder="출발지 입력"
         onPress={(data, details = null) => {
           setOrigin({ //출발지 정보 저장
@@ -31,10 +31,10 @@ const SearchScreen = ({ navigation }) => {
           language: 'ko', // 한국어
         }}
         fetchDetails={true}
-        listViewDisplayed={true} // 목록이 기본적으로 보이지 않도록 설정
+        listViewDisplayed={true} // 목록
         styles={styles.search}
       />
-      <GooglePlacesAutocomplete
+      <GooglePlacesAutocomplete //검색 창
         placeholder="도착지 입력"
         onPress={(data, details = null) => {
           setDestination({ //도착지 정보 저장
@@ -48,7 +48,7 @@ const SearchScreen = ({ navigation }) => {
           language: 'ko', // 한국어
         }}
         fetchDetails={true}
-        listViewDisplayed={true} // 목록이 기본적으로 보이지 않도록 설정
+        listViewDisplayed={true} // 목록
         styles={styles.search}
       />
       <Button title="경로 찾기" onPress={handleNavigate} />

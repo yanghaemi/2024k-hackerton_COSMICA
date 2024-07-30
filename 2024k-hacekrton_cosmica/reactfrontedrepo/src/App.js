@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainScreen from './screens/main/MainScreen';
 import SearchScreen from './screens/main/SearchScreen';
 import SamplePage from './screens/SamplePage'
+import MyPage from './screens/mypage/MyPage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -12,7 +13,7 @@ const Stack = createNativeStackNavigator();
 const MainStackNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Main">
-      <Stack.Screen name="Main" component={MainScreen} />
+      <Stack.Screen name="Map" component={MainScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
     </Stack.Navigator>
   );
@@ -29,6 +30,9 @@ function App(){
       <Tab.Screen name="Main" //여기다가 지도 넣을 예정
       component={MainStackNavigator}
       options={{ headerShown: false }} />
+      <Tab.Screen name="마이페이지" //여기다가 지도 넣을 예정
+      component={MyPage}
+      options={{ headerShown: true }} />
     </Tab.Navigator>
   </NavigationContainer>
   );

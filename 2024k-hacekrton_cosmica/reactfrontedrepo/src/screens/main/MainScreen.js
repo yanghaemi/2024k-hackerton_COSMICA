@@ -22,6 +22,12 @@ const MainScreen = () => {
 
   useEffect(() => { //길 찾기 장소
     if (origin && destination) {
+        setRegion({
+          latitude: destination.latitude,
+          longitude: destination.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        })
       fetchRoute(origin, destination, setLoading, setRouteCoordinates );
     }
   }, [origin, destination]);
@@ -36,20 +42,20 @@ const MainScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      <TouchableOpacity //길 찾기 버튼
         style={styles.searchButton}
         onPress={() => navigation.navigate('Search')} //클릭 시 검색 화면으로 이동
       >
         <Text style={styles.buttonText}>길 찾기</Text>
       </TouchableOpacity>
-      <MapView
+      <MapView //지도
         style={styles.map}
         region={region}
         onRegionChangeComplete={setRegion} // 지역 변경 시 상태를 업데이트
         showsUserLocation={true} // 사용자 위치 표시
         showsMyLocationButton={true} // 위치 버튼 표시
       >
-        {location && (
+        {location && ( //현재 위치 표시
           <Marker coordinate={location} title="현재 위치" />
         )}
         {selectedLocation && ( // 선택한 장소 표시
@@ -61,21 +67,21 @@ const MainScreen = () => {
             title={selectedLocation.name}
           />
         )}
-        {origin && (
+        {origin && ( //출발지
           <Marker
             coordinate={origin}
             pinColor="blue" // 색상 변경 가능
             title="출발지"
           />
         )}
-        {destination && (
+        {destination && ( //도착지
           <Marker
             coordinate={destination}
             pinColor="red" // 색상 변경 가능
             title="도착지"
           />
         )}
-        {routeCoordinates.length > 0 && (
+        {routeCoordinates.length > 0 && ( //경로
           <Polyline
             coordinates={routeCoordinates}
             strokeColor="#FF0000" // 경로 선 색상
@@ -94,11 +100,11 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  searchButton: {
+  searchButton: { //길 찾기 버튼
     position: 'absolute',
-    top: 20,
+    top: 10,
     left: 10, 
-    right: 10, 
+    right: 70, 
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 5,

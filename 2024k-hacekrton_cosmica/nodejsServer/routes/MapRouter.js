@@ -1,4 +1,4 @@
-const express = require('express0');
+const express = require('express');
 const router = express.Router();
 const SerachLocation  = require('../controllers/SearchLocation');
 
