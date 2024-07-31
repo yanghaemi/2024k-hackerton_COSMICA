@@ -16,30 +16,35 @@ public class MatchServiceImpl implements MatchService {
 
     private final MatchRepository matchRepository;
 
-    //id입력 -> 동행자와 약속 정보 출력
+
     @Override
-    public Appointment findMatchedDateById(int id) {
-        return matchRepository.findMatchedDateById(id);
+    public Appointment registerAppointment(User user, Appointment appointment) {
+        return matchRepository.registerAppointment(user, appointment);
     }
 
-    //약속 정보 저장
     @Override
-    public Map<Date, Appointment> insertMatchDay(Appointment appointment) {
-        return matchRepository.insertMatchDay(appointment);
+    public Appointment searchAppointmentById(int id) {
+        return matchRepository.searchAppointmentById(id);
     }
 
-    //자기자신 입력 ->내가 잡았던 약속정보들 출력
     @Override
-    public List<Map<Date, Appointment>> showMatchedDatesByUser(User user) {
-        return matchRepository.showMatchedDatesByUser(user);
+    public List<Appointment> searchAppointmentByDate(Date date) {
+        return matchRepository.searchAppointmentByDate(date);
     }
 
-    //id입력 -> 동행자와 약속 정보 취소
     @Override
-    public Appointment deleteMatchedDateById(int id) {
-        return matchRepository.deleteMatchedDateById(id);
+    public List<Appointment> searchAppointmentByUser(User user) {
+        return matchRepository.searchAppointmentByUser(user);
     }
 
+    @Override
+    public Appointment applyAppointment(Appointment appointment, User I) {
+        return matchRepository.applyAppointment(appointment, I);
+    }
 
-
+    @Override
+    public Appointment cancelAppointment(int id) {
+        return matchRepository.cancelAppointment(id);
+    }
 }
+

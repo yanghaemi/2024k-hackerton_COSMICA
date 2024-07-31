@@ -11,7 +11,7 @@ import java.sql.Date;
 
 public class Appointment {
     private Integer id;
-    private Integer myId;
+    private Integer wheelchairId;
     private Integer companionId;
     private Date appointDate;
     private String location;
