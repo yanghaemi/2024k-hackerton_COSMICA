@@ -3,10 +3,7 @@ package cosmica.SpringServer.controller;
 
 import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
-import cosmica.SpringServer.enums.UserType;
 import cosmica.SpringServer.service.match.MatchService;
-import cosmica.SpringServer.service.user.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -28,18 +25,10 @@ import java.util.*;
 @RequiredArgsConstructor
 @RestController
 //동행자 매칭 관련 컨트롤러
-public class CompanionController {
+public class AppointmentController {
 
-    private final UserService userService;
     private final MatchService matchService;
 
-    private HttpHeaders getJSONHeader()
-    {
-        HttpHeaders headers = new HttpHeaders();
-        MediaType mediaType = new MediaType("application", "json");
-        headers.setContentType(mediaType);
-        return headers;
-    }
 
     @GetMapping("/test")
     public Appointment test()
@@ -55,52 +44,8 @@ public class CompanionController {
         return appointment;
     }
 
-    @PostMapping("/users/sign-up")
-    public ResponseEntity<User> register(@RequestBody User user)
-    {
-        System.out.println(user);
-        if(user.getUserType()==UserType.WHEELCHAIR)
-        {
-            System.out.println("abc");
-            System.out.println(user.getUserType().toString());
-        }
-        Optional<User> register = userService.register(user);
-        ResponseEntity<User> response;
-        response = new ResponseEntity<User>(register.get(),getJSONHeader(),HttpStatus.OK);
-        return response;
-    }
-
-
-    @PostMapping("/users/login")
-    public ResponseEntity<User> login(@RequestParam("id")int id,@RequestParam("password")String pw, HttpSession session)
-    {
-        System.out.println(id+" "+pw);
-        Optional<User> login = userService.login(id,pw);
-        if(login.isPresent())
-        {
-            System.out.println(login.get());
-            session.setAttribute("user", login.get());
-            ResponseEntity<User> response;
-            HttpHeaders headers = new HttpHeaders();
-            MediaType mediaType = new MediaType("application","json");
-            headers.setContentType(mediaType);
-            response = new ResponseEntity<User>(login.get(),headers,HttpStatus.OK);
-            return response;
-        }
-        return ResponseEntity.of(login);
-    }
-
-    @GetMapping("/users/logout")
-    public ResponseEntity<User> logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/dateRegister")
-    public ResponseEntity<Map<Date,Appointment>> dateRegister(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment, HttpSession session)
+    @PostMapping("/appointment/register")
+    public ResponseEntity<Map<Date,Appointment>> dateRegister(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment)
     {
         System.out.println(user);
         System.out.println(appointment);
@@ -110,23 +55,23 @@ public class CompanionController {
         return ResponseEntity.ok().body(mapAppointment);
     }
 
-    @GetMapping("/dateSearch")
-    public ResponseEntity<List<Appointment>> dateSearch(@RequestBody Date date)
+    @PostMapping("/appointment/search")
+    public ResponseEntity<List<Appointment>> dateSearch(@RequestBody Date date,@SessionAttribute(name="user")User user)
     {
         List<Appointment> appointments = matchService.searchAppointmentByDate(date);
         return ResponseEntity.ok().body(appointments);
     }
 
-    @GetMapping("/lookupMyAppointment")
-    public ResponseEntity<List<Appointment>> lookupMyAppointment(HttpSession session,@SessionAttribute(name="user")User user)
+    @GetMapping("/appointment/my")
+    public ResponseEntity<List<Appointment>> lookupMyAppointment(@SessionAttribute(name="user")User user)
     {
         List<Appointment> appointments = matchService.searchAppointmentByUser(user);
         return ResponseEntity.ok().body(appointments);
     }
 
 
-    @PostMapping("/matchDecide")
-    public ResponseEntity<JSONObject> matchDecide(@RequestBody String jsonBody, HttpSession session, @SessionAttribute(name="user")User user) throws IOException, ParseException, org.json.simple.parser.ParseException {
+    @PostMapping("/appointment/pay")
+    public ResponseEntity<JSONObject> payMatch(@RequestBody String jsonBody, @SessionAttribute(name="user")User user) throws IOException, ParseException, org.json.simple.parser.ParseException {
 
         System.out.println(jsonBody);
         JSONParser parser = new JSONParser();
@@ -176,14 +121,14 @@ public class CompanionController {
         return ResponseEntity.status(code).body(jsonObject);
     }
 
-    @PostMapping("/matching")
-    public ResponseEntity<Appointment> matching(@SessionAttribute(name="user")User user,@RequestBody Appointment appointment)
+    @PostMapping("/appointment/payComplete")
+    public ResponseEntity<Appointment> completeMatch(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment)
     {
         Appointment appliedAppointment = matchService.applyAppointment(appointment, user);
         return ResponseEntity.ok().body(appliedAppointment);
     }
 
-    @GetMapping("/matchingCancel")
+    @GetMapping("/appointment/cancel")
     public ResponseEntity<Appointment> matchingCancel(@SessionAttribute(name="user")User user,@RequestParam("id")int id)
     {
         Appointment appointment = matchService.cancelAppointment(id);
@@ -194,12 +139,10 @@ public class CompanionController {
     private String getAuthorization()
     {
         String widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
-
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
         return "Basic " + new String(encodedBytes);
     }
-
 
 
 }
