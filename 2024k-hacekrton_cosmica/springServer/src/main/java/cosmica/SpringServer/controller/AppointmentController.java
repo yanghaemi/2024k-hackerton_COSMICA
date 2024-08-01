@@ -56,9 +56,11 @@ public class AppointmentController {
     }
 
     @PostMapping("/appointment/search")
-    public ResponseEntity<List<Appointment>> dateSearch(@RequestBody Date date,@SessionAttribute(name="user")User user)
+    public ResponseEntity<List<Appointment>> dateSearch(@RequestBody Object date,@SessionAttribute(name="user")User user)
     {
-        List<Appointment> appointments = matchService.searchAppointmentByDate(date);
+        Date date1 = Date.valueOf(date.toString());
+        System.out.println(date);
+        List<Appointment> appointments = matchService.searchAppointmentByDate(date1);
         return ResponseEntity.ok().body(appointments);
     }
 

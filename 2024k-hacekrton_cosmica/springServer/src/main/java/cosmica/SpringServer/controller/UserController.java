@@ -41,8 +41,10 @@ public class UserController {
     @PostMapping("/users/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest, HttpSession session)
     {
-        System.out.println(loginRequest.getId()+" "+loginRequest.getPw());
-        Optional<User> login = userService.login(loginRequest.getId(), loginRequest.getPw());
+        System.out.println("abc");
+        System.out.println(loginRequest);
+        System.out.println(loginRequest.getId()+" "+loginRequest.getPassword());
+        Optional<User> login = userService.login(Integer.parseInt(loginRequest.getId()), loginRequest.getPassword());
         if(login.isPresent())
         {
             System.out.println(login.get());
@@ -52,10 +54,9 @@ public class UserController {
             return response;
         }
         return ResponseEntity.of(login);
-
     }
 
-    @GetMapping("/users/logout")
+    @PostMapping("/users/logout")
     public ResponseEntity<User> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
