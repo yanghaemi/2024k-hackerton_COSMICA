@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import { getLocation } from '../../components/Location';
-import { fetchRoute } from '../../components/FetchRoute'; // fetchRoute 함수 가져오기
+import { fetchRoute } from '../../components/FetchRoute';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const MainScreen = () => {
@@ -28,9 +28,14 @@ const MainScreen = () => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         })
-      fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시 (현재 작동 X)
+        fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
     }
   }, [origin, destination]);
+
+  const handleResetDestination = () => {
+    navigation.navigate('Map', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
+    setRouteCoordinates([]); //경로 표시 제거
+  };
 
   if (loading) { // 현재 위치 확인해서 표시해 줄 때까지 로딩 화면 보여주는 부분
     return (
@@ -48,6 +53,14 @@ const MainScreen = () => {
       >
         <Text style={styles.buttonText}>길 찾기</Text>
       </TouchableOpacity>
+      {destination && ( // 도착지 값이 있는 경우 "길찾기 해제" 버튼 렌더링
+        <TouchableOpacity
+          style={styles.resetButton}
+          onPress={handleResetDestination}
+        >
+          <Text style={styles.buttonText}>길찾기 종료</Text>
+        </TouchableOpacity>
+      )}
       <MapView //지도
         style={styles.map}
         region={region}
@@ -70,21 +83,21 @@ const MainScreen = () => {
         {origin && ( //출발지
           <Marker
             coordinate={origin}
-            pinColor="blue" // 색상 변경 가능
+            pinColor="red" // 색상 변경 가능
             title="출발지"
           />
         )}
         {destination && ( //도착지
           <Marker
             coordinate={destination}
-            pinColor="red" // 색상 변경 가능
+            pinColor="#3A4CA8" // 색상 변경 가능
             title="도착지"
           />
         )}
         {routeCoordinates.length > 0 && ( //경로
           <Polyline
             coordinates={routeCoordinates}
-            strokeColor="#FF0000" // 경로 선 색상
+            strokeColor="#2363b2" // 경로 선 색상
             strokeWidth={4} // 경로 선 두께
           />
         )}
@@ -105,6 +118,17 @@ const styles = StyleSheet.create({
     top: 10,
     left: 10, 
     right: 70, 
+    backgroundColor: 'white',
+    padding: 12,
+    borderRadius: 5,
+    elevation: 3,
+    zIndex: 1, // 버튼이 지도 위에 표시되도록 설정
+  },
+  resetButton: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10, 
+    right: 10, 
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 5,
