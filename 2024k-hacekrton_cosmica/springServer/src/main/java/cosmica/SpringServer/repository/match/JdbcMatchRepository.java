@@ -25,7 +25,7 @@ public class JdbcMatchRepository implements MatchRepository {
 
     @Override
     public Appointment registerAppointment(User user, Appointment appointment) {
-        appointment.setId(Integer.valueOf(UUID.randomUUID().toString()));
+        appointment.setId((int) (Math.random() * Integer.MAX_VALUE));
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("id",appointment.getId());
         ms.addValue("wheelchairId",appointment.getWheelchairId());

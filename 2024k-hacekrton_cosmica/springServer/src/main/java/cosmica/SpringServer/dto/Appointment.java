@@ -1,5 +1,6 @@
 package cosmica.SpringServer.dto;
 
+import cosmica.SpringServer.enums.UserType;
 import lombok.Data;
 import lombok.ToString;
 
@@ -16,4 +17,11 @@ public class Appointment {
     private Date appointDate;
     private String location;
     private int bill;
+
+    public void DefaultSetting(User user){
+       switch (user.getUserType()){
+           case WHEELCHAIR -> wheelchairId = user.getId();
+           case COMPANION -> companionId = user.getId();
+       }
+    }
 }

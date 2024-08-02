@@ -115,4 +115,4 @@ const styles = StyleSheet.create({ //style 참고용
     },
 });
 
-export default App;
+export default App

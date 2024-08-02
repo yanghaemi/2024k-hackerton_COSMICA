@@ -2,6 +2,7 @@ package cosmica.SpringServer.service.match;
 
 import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
+import cosmica.SpringServer.enums.UserType;
 import cosmica.SpringServer.repository.match.MatchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public Appointment registerAppointment(User user, Appointment appointment) {
+        appointment.DefaultSetting(user);//user가 Companion이면 CompanionId를 자동으로 WheelChair이면 WheelChairId를 자동으로 설정
         return matchRepository.registerAppointment(user, appointment);
     }
 

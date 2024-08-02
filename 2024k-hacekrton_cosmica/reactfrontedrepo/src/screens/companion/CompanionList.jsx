@@ -12,13 +12,8 @@ const ProfileRoute = () => <PaperText>Profile</PaperText>;
 const CompanionList = () => {
     const navigation = useNavigation();
     const [index, setIndex] = useState(0);
-    const [routes] = useState([
-        { key: 'home', title: 'Home', icon: 'home' },
-        { key: 'search', title: 'Search', icon: 'search' },
-        { key: 'profile', title: 'Profile', icon: 'person' },
-    ]);
     const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString());
-    const [companions, setCompanions] = useState([]); // 기존 동행자들을 비워둡니다
+    const [appointment, setAppointment] = useState([]); // 기존 동행자들을 비워둡니다
 
     const renderScene = BottomNavigation.SceneMap({
         home: HomeRoute,
@@ -31,35 +26,33 @@ const CompanionList = () => {
             .then(data => {
                 console.log('Success:', data);
                 // fetched data를 companions에 설정 (예: data.companions가 리스트인 경우)
-                setCompanions(data.companions);
+                setAppointment(data);
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert("서비스 오류입니다. 다시 시도해주세요")
             });
     };
-
-    const renderAddButton = () => (
-        <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => navigation.navigate('AppointmentRegister')} // 네비게이트 함수 사용
-        >
-            <Text style={styles.addButtonText}>+</Text>
-        </TouchableOpacity>
-    );
 
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.selectedDate}>{`${selectedDate} 가능 동행자`}</Text>
 
             <FlatList
-                data={companions} // 동행자 리스트가 빈 배열로 설정되어 있음
-                renderItem={({ item }) => (
-                    <View style={styles.companionItem}>
-                        <Text>{item.name}</Text>
-                    </View>
+                data={appointment} renderItem={({ item }) => (
+                    <TouchableOpacity style={styles.button}>
+                        <Text>동행자: {item.companionId}</Text>
+                        <Text>장소: {item.location} 금액: {item.bill} </Text>
+                    </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.id.toString()}
-                ListFooterComponent={renderAddButton} // 리스트의 마지막에 버튼 추가
+                ListFooterComponent={()=>
+                    <TouchableOpacity
+                        style={styles.addButton}
+                        onPress={() => navigation.navigate('AppointmentRegister')} // 네비게이트 함수 사용
+                    >
+                        <Text style={styles.addButtonText}>+</Text>
+                    </TouchableOpacity>} // 리스트의 마지막에 버튼 추가
                 style={styles.recyclerView}
             />
 
@@ -71,11 +64,6 @@ const CompanionList = () => {
                 style={styles.calendarView}
             />
 
-            <BottomNavigation
-                navigationState={{ index, routes }}
-                onIndexChange={setIndex}
-                renderScene={renderScene}
-            />
         </SafeAreaView>
     );
 };
@@ -112,6 +100,14 @@ const styles = StyleSheet.create({
     addButtonText: {
         fontSize: 24,
         color: 'blue',
+    },
+    button: {
+        backgroundColor: '#fff', // 흰색 배경
+        borderColor: '#ccc', // 연한 회색 테두리
+        borderWidth: 1, // 테두리 두께A
+        borderRadius: 4, // 모서리 둥글기
+        padding: 6, // 버튼 내부 여백
+        marginBottom: 1, // 버튼 아래 간격
     },
 });
 

@@ -31,21 +31,6 @@ public class AppointmentController {
 
     private final MatchService matchService;
 
-
-    @GetMapping("/test")
-    public Appointment test()
-    {
-        Appointment appointment = new Appointment();
-        Date date = new Date(System.currentTimeMillis());
-        appointment.setId(1);
-        appointment.setCompanionId(12);
-        appointment.setWheelchairId(13);
-        appointment.setAppointDate(date);
-        appointment.setBill(14);
-        System.out.println(appointment);
-        return appointment;
-    }
-
     @PostMapping("/appointment/register")
     public ResponseEntity<Map<Date,Appointment>> dateRegister(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment)
     {
@@ -54,6 +39,7 @@ public class AppointmentController {
         Appointment registeredAppointment = matchService.registerAppointment(user, appointment);
         Map<Date,Appointment> mapAppointment = new HashMap<Date,Appointment>();
         mapAppointment.put(registeredAppointment.getAppointDate(),registeredAppointment);
+        System.out.println(mapAppointment);
         return ResponseEntity.ok().body(mapAppointment);
     }
 

@@ -1,8 +1,8 @@
-import React, {useState} from "react";
-import {Alert, StyleSheet, TextInput, View} from "react-native";
-import FetchJSONButton from "./FetchDataButton";
+import React, { useState } from "react";
+import { View, TextInput, Alert, StyleSheet } from "react-native";
+import FetchJSONButton from "./FetchJSONButton";
 
-const Register = ()=>{
+const Login = () => {
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
 
@@ -32,7 +32,7 @@ const Register = ()=>{
             />
             <FetchJSONButton
                 url="/users/sign-up"
-                user={{id,password}}
+                additionalData1={{id,password}}
             />
         </View>
     );
@@ -52,5 +52,4 @@ const styles = StyleSheet.create({
     },
 });
 
-
-export default Register;
+export default Login;

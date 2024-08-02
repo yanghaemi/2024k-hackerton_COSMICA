@@ -26,11 +26,6 @@ public class UserController {
     public ResponseEntity<User> register(@RequestBody User user)
     {
         System.out.println(user);
-        if(user.getUserType()== UserType.WHEELCHAIR)
-        {
-            System.out.println("abc");
-            System.out.println(user.getUserType().toString());
-        }
         Optional<User> register = userService.register(user);
         ResponseEntity<User> response;
         response = new ResponseEntity<User>(register.get(),getJSONHeader(), HttpStatus.OK);
@@ -41,13 +36,10 @@ public class UserController {
     @PostMapping("/users/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest, HttpSession session)
     {
-        System.out.println("abc");
         System.out.println(loginRequest);
-        System.out.println(loginRequest.getId()+" "+loginRequest.getPassword());
         Optional<User> login = userService.login(Integer.parseInt(loginRequest.getId()), loginRequest.getPassword());
         if(login.isPresent())
         {
-            System.out.println(login.get());
             session.setAttribute("user", login.get());
             ResponseEntity<User> response;
             response = new ResponseEntity<User>(login.get(),getJSONHeader(),HttpStatus.OK);
@@ -63,6 +55,12 @@ public class UserController {
             session.invalidate();
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/users/findById")
+    public ResponseEntity<User> findById(@RequestParam(value = "id")int id) {
+        Optional<User> user = userService.findById(id);
+        return ResponseEntity.of(user);
     }
 
     private HttpHeaders getJSONHeader()

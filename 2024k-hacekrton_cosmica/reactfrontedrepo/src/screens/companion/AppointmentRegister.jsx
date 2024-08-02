@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, Button, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { fetchFunc } from "./FetchFunc";
-import {backgroundColor} from "react-native-calendars/src/style";
 
 const AppointmentRegister = () => {
     const [wheelchairId, setWheelchairId] = useState('');
     const [companionId, setCompanionId] = useState('');
-    const [appointmentDate, setAppointmentDate] = useState(new Date());
+    const [appointDate, setAppointDate] = useState(new Date());
     const [location, setLocation] = useState('');
     const [bill, setBill] = useState('');
     const [showDatePicker, setShowDatePicker] = useState(false);
 
     const onDateChange = (event, selectedDate) => {
         setShowDatePicker(false);
-        setAppointmentDate(selectedDate || appointmentDate);
+        if (selectedDate) {
+            setAppointDate(selectedDate);
+        }
     };
 
     const handleSubmit = (url) => {
         const appointmentData = {
             wheelchairId: parseInt(wheelchairId, 10),
             companionId: parseInt(companionId, 10),
-            appointmentDate: appointmentDate.toISOString(),
+            appointDate: appointDate.toISOString(),
             location,
             bill: parseFloat(bill),
         };
@@ -29,7 +30,7 @@ const AppointmentRegister = () => {
         fetchFunc(url, appointmentData)
             .then(data => {
                 console.log('Success:', data);
-                alert(data);
+                alert("정상 등록되었습니다.");
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -39,13 +40,16 @@ const AppointmentRegister = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Appointment Register</Text>
-                <TouchableOpacity style={styles.button} title={`Select Date: ${appointmentDate.toDateString()}`} onPress={() => setShowDatePicker(true)}>
-                    <Text>Select Date</Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => setShowDatePicker(true)}
+            >
+                <Text>Select Date: {appointDate.toDateString()}</Text>
+            </TouchableOpacity>
             {showDatePicker && (
                 <DateTimePicker
                     testID="dateTimePicker"
-                    value={appointmentDate}
+                    value={appointDate}
                     mode="date"
                     display="default"
                     onChange={onDateChange}
@@ -98,6 +102,5 @@ const styles = StyleSheet.create({
         marginBottom: 16, // 버튼 아래 간격
     },
 });
-
 
 export default AppointmentRegister;
