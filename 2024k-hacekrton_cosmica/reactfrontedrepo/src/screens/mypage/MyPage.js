@@ -9,12 +9,12 @@ const MyPage= () =>{
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const loadUserData = async () => {
+        const loadUserData = async () => { //유저 데이터 가져오는 함수
             try {
-              const data = await fetchUserData();
+              const data = await fetchUserData(); //유저 데이터 가져오기
               setUserData(data); // 데이터를 상태에 저장
             } catch (err) {
-              console.error('데이터를 가져오는 중 오류가 발생했습니다:', err);
+              console.error('데이터를 가져오는 중 오류가 발생:', err);
               setError(err);
             } finally {
               setLoading(false);

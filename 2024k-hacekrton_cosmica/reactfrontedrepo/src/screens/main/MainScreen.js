@@ -21,14 +21,14 @@ const MainScreen = () => {
   }, [destination]);
 
   useEffect(() => { //길 찾기 장소
-    if (origin && destination) {
-        setRegion({
+    if (origin && destination) { //출발지, 목적지 둘 다 정해진 경우
+        setRegion({ //도착지를 기준으로 지도 포커스
           latitude: destination.latitude,
           longitude: destination.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         })
-      fetchRoute(origin, destination, setLoading, setRouteCoordinates );
+      fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시 (현재 작동 X)
     }
   }, [origin, destination]);
 

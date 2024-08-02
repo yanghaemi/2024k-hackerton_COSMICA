@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Colors} from 'react-native/Libraries/NewAppScreen';
 
-function Section({children, title}){
+function Section({children, title}){ //리액트에서 기본으로 제공한 예시 함수
     const isDarkMode = useColorScheme() === 'dark';
     return (
       <View style={styles.sectionContainer}>
