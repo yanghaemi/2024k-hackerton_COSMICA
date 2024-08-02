@@ -3,6 +3,7 @@ package cosmica.SpringServer.controller;
 
 import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
+import cosmica.SpringServer.dto.forMapping.DateMapping;
 import cosmica.SpringServer.service.match.MatchService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -56,11 +58,10 @@ public class AppointmentController {
     }
 
     @PostMapping("/appointment/search")
-    public ResponseEntity<List<Appointment>> dateSearch(@RequestBody Object date,@SessionAttribute(name="user")User user)
-    {
-        Date date1 = Date.valueOf(date.toString());
-        System.out.println(date);
-        List<Appointment> appointments = matchService.searchAppointmentByDate(date1);
+    public ResponseEntity<List<Appointment>> dateSearch(@RequestBody DateMapping dateStr, @SessionAttribute(name="user")User user) throws ParseException {
+
+        System.out.println(dateStr.getDateString());
+        List<Appointment> appointments = matchService.searchAppointmentByDate(Date.valueOf(dateStr.getDateString()));
         return ResponseEntity.ok().body(appointments);
     }
 

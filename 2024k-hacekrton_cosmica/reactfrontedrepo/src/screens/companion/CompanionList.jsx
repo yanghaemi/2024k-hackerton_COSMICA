@@ -1,50 +1,117 @@
 import React, { useState } from 'react';
-import { Text, View, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import { BottomNavigation, Text as PaperText } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { fetchFunc } from "./FetchFunc";
+
+const HomeRoute = () => <PaperText>Home</PaperText>;
+const SearchRoute = () => <PaperText>Search</PaperText>;
+const ProfileRoute = () => <PaperText>Profile</PaperText>;
 
 const CompanionList = () => {
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const navigation = useNavigation();
+    const [index, setIndex] = useState(0);
+    const [routes] = useState([
+        { key: 'home', title: 'Home', icon: 'home' },
+        { key: 'search', title: 'Search', icon: 'search' },
+        { key: 'profile', title: 'Profile', icon: 'person' },
+    ]);
+    const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString());
+    const [companions, setCompanions] = useState([]); // 기존 동행자들을 비워둡니다
 
-    // 데이터 요청 함수
-    const fetchData = () => {
-        setLoading(true); // 로딩 상태 시작
-        fetch('http://172.30.128.131:8080/test', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => response.json())
+    const renderScene = BottomNavigation.SceneMap({
+        home: HomeRoute,
+        search: SearchRoute,
+        profile: ProfileRoute,
+    });
+
+    const fetchData = (url, additionalData1) => {
+        fetchFunc(url, additionalData1)
             .then(data => {
-                setUserData(data);
-                setLoading(false); // 로딩 상태 종료
+                console.log('Success:', data);
+                // fetched data를 companions에 설정 (예: data.companions가 리스트인 경우)
+                setCompanions(data.companions);
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
-                setLoading(false); // 로딩 상태 종료
+                console.error('Error:', error);
             });
     };
 
+    const renderAddButton = () => (
+        <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => navigation.navigate('AppointmentRegister')} // 네비게이트 함수 사용
+        >
+            <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+    );
+
     return (
-        <View style={styles.container}>
-            <Button title="Fetch Data" onPress={fetchData} />
-            {loading && <Text>Loading...</Text>}
-            {userData && (
-                <View>
-                    <Text>Data:</Text>
-                    <Text>{JSON.stringify(userData)}</Text>
-                </View>
-            )}
-        </View>
+        <SafeAreaView style={styles.container}>
+            <Text style={styles.selectedDate}>{`${selectedDate} 가능 동행자`}</Text>
+
+            <FlatList
+                data={companions} // 동행자 리스트가 빈 배열로 설정되어 있음
+                renderItem={({ item }) => (
+                    <View style={styles.companionItem}>
+                        <Text>{item.name}</Text>
+                    </View>
+                )}
+                keyExtractor={(item) => item.id.toString()}
+                ListFooterComponent={renderAddButton} // 리스트의 마지막에 버튼 추가
+                style={styles.recyclerView}
+            />
+
+            <Calendar
+                onDayPress={(day) => {
+                    setSelectedDate(day.dateString);
+                    fetchData("/appointment/search", day);
+                }}
+                style={styles.calendarView}
+            />
+
+            <BottomNavigation
+                navigationState={{ index, routes }}
+                onIndexChange={setIndex}
+                renderScene={renderScene}
+            />
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        backgroundColor: '#fff',
+    },
+    selectedDate: {
+        textAlign: 'center',
+        marginTop: 16,
+        fontSize: 18,
+    },
+    recyclerView: {
+        flex: 1,
+        marginTop: 16,
+    },
+    calendarView: {
+        marginBottom: 64,
+    },
+    companionItem: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    addButton: {
+        padding: 16,
         alignItems: 'center',
-        padding: 20,
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    addButtonText: {
+        fontSize: 24,
+        color: 'blue',
     },
 });
 

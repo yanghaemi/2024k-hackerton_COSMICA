@@ -1,4 +1,4 @@
-package cosmica.SpringServer.dto;
+package cosmica.SpringServer.dto.forMapping;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package cosmica.SpringServer.controller;
 
-import cosmica.SpringServer.dto.LoginRequest;
+import cosmica.SpringServer.dto.forMapping.LoginRequest;
 import cosmica.SpringServer.dto.User;
 import cosmica.SpringServer.enums.UserType;
 import cosmica.SpringServer.service.user.UserService;
