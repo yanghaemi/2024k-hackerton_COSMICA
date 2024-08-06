@@ -32,7 +32,7 @@ const MainScreen = () => {
     }
   }, [origin, destination]);
 
-  const handleResetDestination = () => {
+  const handleResetDestination = () => { //길 찾기 종료 시
     navigation.navigate('Map', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
     setRouteCoordinates([]); //경로 표시 제거
   };
@@ -58,7 +58,7 @@ const MainScreen = () => {
           style={styles.resetButton}
           onPress={handleResetDestination}
         >
-          <Text style={styles.buttonText}>길찾기 종료</Text>
+          <Text style={styles.buttonText}>길 찾기 종료</Text>
         </TouchableOpacity>
       )}
       <MapView //지도

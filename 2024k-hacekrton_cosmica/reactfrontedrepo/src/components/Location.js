@@ -26,8 +26,8 @@ export const getLocation = async (setLocation, setRegion, setLoading, destinatio
       setRegion({ //현재 위치 표시
         latitude,
         longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
       });
     }
       setLoading(false); //로딩 화면 끝

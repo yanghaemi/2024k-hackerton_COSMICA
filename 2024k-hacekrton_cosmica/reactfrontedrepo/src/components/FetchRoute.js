@@ -2,6 +2,7 @@ import axios from 'axios';
 import {NAVER_CLIENT_ID, NAVER_CLIENT_SECRET} from '@env'
 
 export const fetchRoute = async (origin, destination, setLoading, setRouteCoordinates) => {
+    await new Promise(resolve => setTimeout(resolve, 50)); // 50ms 지연, 네트워크 요청 타이밍 문제 완화를 위해 잠시 지연 코드를 넣었습니다
     setLoading(true);
     try {
         const response = await axios.get('https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving', {
