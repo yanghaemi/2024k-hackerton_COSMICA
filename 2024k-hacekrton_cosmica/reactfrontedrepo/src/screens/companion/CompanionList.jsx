@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity, Button } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { BottomNavigation, Text as PaperText } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { fetchFunc } from "./FetchFunc";
+import {fetchFunc} from "./fetch/FetchFunc";
 
 const HomeRoute = () => <PaperText>Home</PaperText>;
 const SearchRoute = () => <PaperText>Search</PaperText>;
@@ -22,15 +22,13 @@ const CompanionList = () => {
     });
 
     const fetchData = (url, additionalData1) => {
-        fetchFunc(url, additionalData1)
+        fetchFunc(url,additionalData1)
             .then(data => {
                 console.log('Success:', data);
-                // fetched data를 companions에 설정 (예: data.companions가 리스트인 경우)
                 setAppointment(data);
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert("서비스 오류입니다. 다시 시도해주세요")
             });
     };
 
@@ -39,18 +37,16 @@ const CompanionList = () => {
             <Text style={styles.selectedDate}>{`${selectedDate} 가능 동행자`}</Text>
 
             <FlatList
-                data={appointment} renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.button}>
+                data={appointment}
+                renderItem={({ item }) => (
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('DetailAppointment', { item })}>
                         <Text>동행자: {item.companionId}</Text>
                         <Text>장소: {item.location} 금액: {item.bill} </Text>
                     </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.id.toString()}
-                ListFooterComponent={()=>
-                    <TouchableOpacity
-                        style={styles.addButton}
-                        onPress={() => navigation.navigate('AppointmentRegister')} // 네비게이트 함수 사용
-                    >
+                ListFooterComponent={() =>
+                    <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AppointmentRegister')}>
                         <Text style={styles.addButtonText}>+</Text>
                     </TouchableOpacity>} // 리스트의 마지막에 버튼 추가
                 style={styles.recyclerView}
@@ -63,7 +59,6 @@ const CompanionList = () => {
                 }}
                 style={styles.calendarView}
             />
-
         </SafeAreaView>
     );
 };

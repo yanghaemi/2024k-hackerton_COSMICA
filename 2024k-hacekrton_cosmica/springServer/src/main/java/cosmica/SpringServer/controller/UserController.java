@@ -7,6 +7,7 @@ import cosmica.SpringServer.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,14 +19,16 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/users")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/users/sign-up")
+    @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user)
     {
-        System.out.println(user);
+        log.info(user.toString());
         Optional<User> register = userService.register(user);
         ResponseEntity<User> response;
         response = new ResponseEntity<User>(register.get(),getJSONHeader(), HttpStatus.OK);
@@ -33,10 +36,10 @@ public class UserController {
     }
 
 
-    @PostMapping("/users/login")
+    @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest, HttpSession session)
     {
-        System.out.println(loginRequest);
+        log.debug(loginRequest.toString());
         Optional<User> login = userService.login(Integer.parseInt(loginRequest.getId()), loginRequest.getPassword());
         if(login.isPresent())
         {
@@ -48,7 +51,7 @@ public class UserController {
         return ResponseEntity.of(login);
     }
 
-    @PostMapping("/users/logout")
+    @PostMapping("/logout")
     public ResponseEntity<User> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
@@ -57,10 +60,19 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/users/findById")
-    public ResponseEntity<User> findById(@RequestParam(value = "id")int id) {
-        Optional<User> user = userService.findById(id);
+    @PostMapping("/findById")
+    public ResponseEntity<User> findById(@RequestParam(value = "id")String id) {
+        log.info(id);
+        int id1 = Integer.parseInt(id);
+        Optional<User> user = userService.findById(id1);
+        System.out.println(user.get());
         return ResponseEntity.of(user);
+    }
+
+    @GetMapping("/myInfo")
+    public ResponseEntity<User> getMyInfo(@SessionAttribute(name="user")User user) {
+        log.info(user.toString());
+        return ResponseEntity.ok().body(user);
     }
 
     private HttpHeaders getJSONHeader()

@@ -1,23 +1,31 @@
 import React from 'react';
-import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View,
-} from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import mainScreen from "./screens/main/MainScreen";
 import Login from "./screens/companion/Login";
 import Register from "./screens/companion/Register";
 import CompanionList from "./screens/companion/CompanionList";
 import AppointmentRegister from "./screens/companion/AppointmentRegister";
+import DetailAppointment from "./screens/companion/DetailAppointment";
+import CheckoutPage from "./screens/companion/CheckoutPage";
+
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+function CompanionStack() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="CompanionList" component={CompanionList} />
+            <Stack.Screen name="DetailAppointment" component={DetailAppointment} />
+            <Stack.Screen name="AppointmentRegister" component={AppointmentRegister} />
+            <Stack.Screen name="CheckoutPage" component={CheckoutPage} />
+        </Stack.Navigator>
+    );
+}
 
 function Section({ children, title }) {
     const isDarkMode = useColorScheme() === 'dark';
@@ -45,7 +53,7 @@ function Section({ children, title }) {
     );
 }
 
-function SamplePage() { //리액트 네이티브의 기본적인 구조를 확인하고자 만들어둔 샘플 페이지입니다
+function SamplePage() {
     const isDarkMode = useColorScheme() === 'dark';
 
     const backgroundStyle = {
@@ -53,8 +61,7 @@ function SamplePage() { //리액트 네이티브의 기본적인 구조를 확�
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }} //flex: 1로 하면 전체화면을 차지한다고 합니다
-        >
+        <SafeAreaView style={{ flex: 1 }}>
             <StatusBar
                 barStyle={isDarkMode ? 'light-content' : 'dark-content'}
                 backgroundColor={backgroundStyle.backgroundColor}
@@ -89,14 +96,13 @@ function App() {
                 <Tab.Screen name="Main" component={mainScreen} />
                 <Tab.Screen name="Login" component={Login} />
                 <Tab.Screen name="Register" component={Register} />
-                <Tab.Screen name="CompanionList" component={CompanionList} />
-                <Tab.Screen name="AppointmentRegister" component={AppointmentRegister} />
+                <Tab.Screen name="Companion" component={CompanionStack} />
             </Tab.Navigator>
         </NavigationContainer>
     );
 }
 
-const styles = StyleSheet.create({ //style 참고용
+const styles = StyleSheet.create({
     sectionContainer: {
         marginTop: 32,
         paddingHorizontal: 24,
@@ -115,4 +121,4 @@ const styles = StyleSheet.create({ //style 참고용
     },
 });
 
-export default App
+export default App;

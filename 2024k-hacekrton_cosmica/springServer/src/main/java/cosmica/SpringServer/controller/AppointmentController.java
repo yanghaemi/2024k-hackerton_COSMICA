@@ -8,6 +8,7 @@ import cosmica.SpringServer.service.match.MatchService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -26,32 +27,31 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/appointment")
+@Slf4j
 //동행자 매칭 관련 컨트롤러
 public class AppointmentController {
 
     private final MatchService matchService;
 
-    @PostMapping("/appointment/register")
+    @PostMapping("/register")
     public ResponseEntity<Map<Date,Appointment>> dateRegister(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment)
     {
-        System.out.println(user);
-        System.out.println(appointment);
+        log.info(user.toString());
         Appointment registeredAppointment = matchService.registerAppointment(user, appointment);
         Map<Date,Appointment> mapAppointment = new HashMap<Date,Appointment>();
         mapAppointment.put(registeredAppointment.getAppointDate(),registeredAppointment);
-        System.out.println(mapAppointment);
         return ResponseEntity.ok().body(mapAppointment);
     }
 
-    @PostMapping("/appointment/search")
+    @PostMapping("/search")
     public ResponseEntity<List<Appointment>> dateSearch(@RequestBody DateMapping dateStr, @SessionAttribute(name="user")User user) throws ParseException {
-
-        System.out.println(dateStr.getDateString());
+        log.info(dateStr.getDateString());
         List<Appointment> appointments = matchService.searchAppointmentByDate(Date.valueOf(dateStr.getDateString()));
         return ResponseEntity.ok().body(appointments);
     }
 
-    @GetMapping("/appointment/my")
+    @GetMapping("/my")
     public ResponseEntity<List<Appointment>> lookupMyAppointment(@SessionAttribute(name="user")User user)
     {
         List<Appointment> appointments = matchService.searchAppointmentByUser(user);
@@ -59,10 +59,10 @@ public class AppointmentController {
     }
 
 
-    @PostMapping("/appointment/pay")
+    @PostMapping("/pay")
     public ResponseEntity<JSONObject> payMatch(@RequestBody String jsonBody, @SessionAttribute(name="user")User user) throws IOException, ParseException, org.json.simple.parser.ParseException {
 
-        System.out.println(jsonBody);
+        log.info(jsonBody);
         JSONParser parser = new JSONParser();
         String orderId;
         String amount;
@@ -105,19 +105,19 @@ public class AppointmentController {
         // TODO: 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
-        System.out.println(jsonObject);
+        log.info(jsonBody);
         responseStream.close();
         return ResponseEntity.status(code).body(jsonObject);
     }
 
-    @PostMapping("/appointment/payComplete")
+    @PostMapping("/payComplete")
     public ResponseEntity<Appointment> completeMatch(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment)
     {
         Appointment appliedAppointment = matchService.applyAppointment(appointment, user);
         return ResponseEntity.ok().body(appliedAppointment);
     }
 
-    @GetMapping("/appointment/cancel")
+    @GetMapping("/cancel")
     public ResponseEntity<Appointment> matchingCancel(@SessionAttribute(name="user")User user,@RequestParam("id")int id)
     {
         Appointment appointment = matchService.cancelAppointment(id);

@@ -1,5 +1,5 @@
 export const fetchFunc = (url, additionalData) => {
-    const defaultUrl = "http://172.30.129.108:8080";
+    const defaultUrl = "http://172.30.129.248:8080";
     console.log(additionalData);
     const options = {
         method: 'POST',
@@ -15,7 +15,7 @@ export const fetchFunc = (url, additionalData) => {
             console.log('Success:', data);
             return data;
         })
-        .catch(error => {
+        .catch(error=>{
             console.error('Error:', error);
             throw error;
         });

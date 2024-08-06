@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { fetchFunc } from "./FetchFunc";
+import { fetchFunc } from "./fetch/FetchFunc";
 
 const AppointmentRegister = () => {
     const [wheelchairId, setWheelchairId] = useState('');

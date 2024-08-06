@@ -3,6 +3,7 @@ package cosmica.SpringServer.repository.user;
 import cosmica.SpringServer.dto.User;
 import cosmica.SpringServer.enums.UserType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Primary
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class JdbcUserRepository implements UserRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -51,10 +53,11 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> register(User user) {
+        log.info("Registered User={}",user);
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("id", user.getId());
-        ms.addValue("userName", user.getUserName());
         ms.addValue("pw", user.getPw());
+        ms.addValue("userName", user.getUserName());
         ms.addValue("userType", user.getUserType().toString());
         ms.addValue("location", user.getLocation());
         ms.addValue("rate",user.getRate());
