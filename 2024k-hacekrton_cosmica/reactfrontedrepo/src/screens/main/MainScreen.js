@@ -25,8 +25,8 @@ const MainScreen = () => {
         setRegion({ //도착지를 기준으로 지도 포커스
           latitude: destination.latitude,
           longitude: destination.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
         })
         fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
     }

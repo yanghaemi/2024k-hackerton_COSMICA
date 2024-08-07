@@ -18,8 +18,8 @@ export const getLocation = async (setLocation, setRegion, setLoading, destinatio
         setRegion({
           latitude: destination.latitude,
           longitude: destination.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
         })
       }
       else{ //길 찾기를 하지 않은 경우
