@@ -4,8 +4,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainScreen from './screens/main/MainScreen';
 import SearchScreen from './screens/main/SearchScreen';
-import SamplePage from './screens/SamplePage'
 import MyPage from './screens/mypage/MyPage';
+import Login from './screens/companion/loginregister/Login';
+import Register from './screens/companion/loginregister/Register';
+import CompanionStack from "./screens/companion/CompanionStack.tsx";
 
 const Tab = createBottomTabNavigator(); //탭 네비
 const Stack = createNativeStackNavigator(); //스택 네비
@@ -24,12 +26,12 @@ function App(){
   return (
     <NavigationContainer>
     <Tab.Navigator>
-      <Tab.Screen name="Sample"//제일 첫번째로 보이는 화면
-       component={SamplePage} //현재는 일단 샘플로 만들어둔 페이지로 지정해놨습니다
-        options={{ headerShown: false }} />
       <Tab.Screen name="Main" //여기다가 지도 넣을 예정
       component={MainStackNavigator}
       options={{ headerShown: false }} />
+      <Tab.Screen name="Login" component={Login} />
+      <Tab.Screen name="Register" component={Register} />
+      <Tab.Screen name="Companion" component={CompanionStack} />
       <Tab.Screen name="마이페이지" //확인용 마이페이지
       component={MyPage}
       options={{ headerShown: true }} />

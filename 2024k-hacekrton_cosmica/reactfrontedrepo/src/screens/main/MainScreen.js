@@ -18,7 +18,7 @@ const MainScreen = () => {
 
   useEffect(() => {
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
-  }, [destination]);
+  }, []);
 
   useEffect(() => { //길 찾기 장소
     if (origin && destination) { //출발지, 목적지 둘 다 정해진 경우
@@ -30,7 +30,7 @@ const MainScreen = () => {
         })
         fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
     }
-  }, [origin, destination]);
+  }, [destination]);
 
   const handleResetDestination = () => { //길 찾기 종료 시
     navigation.navigate('Map', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
