@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, TextInput, Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
-import FetchJSONButton from "./fetch/FetchJSONButton";
+import FetchJSONButton from "../fetch/FetchJSONButton";
 
 const Login = () => {
     const [user, setUser] = useState({

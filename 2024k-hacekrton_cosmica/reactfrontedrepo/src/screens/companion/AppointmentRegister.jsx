@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { fetchFunc } from "./fetch/FetchFunc";
+import {useNavigation} from "@react-navigation/native";
 
-const AppointmentRegister = () => {
+const AppointmentRegister = ({ route }) => {
+    // route.params에서 item을 추출
+    const { selectedDate } = route.params; // 여기서 selectedDate가 전달된 날짜 값입니다.
     const [wheelchairId, setWheelchairId] = useState('');
     const [companionId, setCompanionId] = useState('');
-    const [appointDate, setAppointDate] = useState(new Date());
+    const [appointDate, setAppointDate] = useState(new Date(selectedDate)); // selectedDate로 초기화
     const [location, setLocation] = useState('');
     const [bill, setBill] = useState('');
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const navigation = useNavigation();
 
     const onDateChange = (event, selectedDate) => {
         setShowDatePicker(false);
@@ -22,7 +26,7 @@ const AppointmentRegister = () => {
         const appointmentData = {
             wheelchairId: parseInt(wheelchairId, 10),
             companionId: parseInt(companionId, 10),
-            appointDate: appointDate.toISOString(),
+            appointDate: appointDate.toISOString(), // Date 객체를 ISO 문자열로 변환
             location,
             bill: parseFloat(bill),
         };
@@ -31,6 +35,7 @@ const AppointmentRegister = () => {
             .then(data => {
                 console.log('Success:', data);
                 alert("정상 등록되었습니다.");
+                navigation.navigate("CalendarPage");
             })
             .catch(error => {
                 console.error('Error:', error);

@@ -69,9 +69,9 @@ public class UserController {
         return ResponseEntity.of(user);
     }
 
-    @GetMapping("/myInfo")
+    @PostMapping("/myInfo")
     public ResponseEntity<User> getMyInfo(@SessionAttribute(name="user")User user) {
-        log.info(user.toString());
+        log.info("나의 정보: {}",user.toString());
         return ResponseEntity.ok().body(user);
     }
 

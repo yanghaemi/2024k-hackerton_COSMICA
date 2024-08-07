@@ -20,8 +20,14 @@ public class Appointment {
 
     public void DefaultSetting(User user){
        switch (user.getUserType()){
-           case WHEELCHAIR -> wheelchairId = user.getId();
-           case COMPANION -> companionId = user.getId();
+           case WHEELCHAIR -> {
+               wheelchairId = user.getId();
+               companionId = null;
+           }
+           case COMPANION -> {
+               companionId = user.getId();
+               wheelchairId = null;
+           }
        }
     }
 }

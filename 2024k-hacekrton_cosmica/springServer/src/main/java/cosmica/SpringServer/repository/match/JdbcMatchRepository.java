@@ -4,6 +4,7 @@ import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
 import cosmica.SpringServer.enums.UserType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -19,6 +20,7 @@ import java.util.*;
 //jdbc이용해서 DB 데이터 입력, 출력
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class JdbcMatchRepository implements MatchRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -72,6 +74,7 @@ public class JdbcMatchRepository implements MatchRepository {
     @Override
     public Appointment applyAppointment(Appointment appointment,User I) {
         MapSqlParameterSource ms = new MapSqlParameterSource();
+        log.info(appointment.toString());
         ms.addValue("id",appointment.getId());
         ms.addValue("wheelchairId",appointment.getWheelchairId());
         ms.addValue("companionId",appointment.getCompanionId());

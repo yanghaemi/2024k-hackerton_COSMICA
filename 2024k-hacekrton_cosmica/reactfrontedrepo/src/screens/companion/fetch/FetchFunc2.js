@@ -1,5 +1,7 @@
-export const fetchFunc2 = (url, additionalData) => {
-    const defaultUrl = "http://172.30.129.248:8080";
+import Config from "react-native-config";
+
+export const fetchFunc2 = (url, additionalData=null) => {
+    const defaultUrl = "http://172.18.13.36:8080";
     const params = new URLSearchParams();
 
     // additionalData 객체를 URLSearchParams 객체로 변환

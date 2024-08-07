@@ -4,6 +4,8 @@ package cosmica.SpringServer.controller;
 import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
 import cosmica.SpringServer.dto.forMapping.DateMapping;
+import cosmica.SpringServer.dto.forMapping.OrderMapping;
+import cosmica.SpringServer.enums.UserType;
 import cosmica.SpringServer.service.match.MatchService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -58,62 +60,58 @@ public class AppointmentController {
         return ResponseEntity.ok().body(appointments);
     }
 
-
     @PostMapping("/pay")
-    public ResponseEntity<JSONObject> payMatch(@RequestBody String jsonBody, @SessionAttribute(name="user")User user) throws IOException, ParseException, org.json.simple.parser.ParseException {
-
-        log.info(jsonBody);
-        JSONParser parser = new JSONParser();
-        String orderId;
-        String amount;
-        String paymentKey;
-        // 클라이언트에서 받은 JSON 요청 바디입니다.
-        JSONObject requestData = (JSONObject) parser.parse(jsonBody);
-        paymentKey = (String) requestData.get("paymentKey");
-        orderId = (String) requestData.get("orderId");
-        amount = (String) requestData.get("amount");
-        ;
+    public ResponseEntity<JSONObject> payMatch(@RequestBody OrderMapping orderMapping, @SessionAttribute(name = "user") User user) {
         JSONObject obj = new JSONObject();
-        obj.put("orderId", orderId);
-        obj.put("amount", amount);
-        obj.put("paymentKey", paymentKey);
+        obj.put("orderId", orderMapping.getOrderId());
+        obj.put("amount", orderMapping.getAmount());
+        obj.put("paymentKey", orderMapping.getPaymentKey());
+        obj.put("userName", user.getUserName());
 
-        //결제 승인 api 권한 코드
         String authorizations = getAuthorization();
 
+        try {
+            URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", authorizations);
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
 
-        // 결제 승인 API설정과 API로 데이터를 보낼 방식 설정.
-        URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty("Authorization", authorizations);
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
+            try (OutputStream outputStream = connection.getOutputStream()) {
+                outputStream.write(obj.toString().getBytes(StandardCharsets.UTF_8));
+            }
 
-        //보낼 데이터 입력
-        OutputStream outputStream = connection.getOutputStream();
-        //데이터 전송
-        outputStream.write(obj.toString().getBytes("UTF-8"));
+            int code = connection.getResponseCode();
+            InputStream responseStream = (code == 200) ? connection.getInputStream() : connection.getErrorStream();
 
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(new InputStreamReader(responseStream, StandardCharsets.UTF_8));
 
-        //응답 코드 확인.
-        int code = connection.getResponseCode();
-        boolean isSuccess = code == 200;
+            log.info("Response={} ", jsonObject.toJSONString());
+            log.info("status={}",code);
+            return ResponseEntity.status(code).body(jsonObject);
 
-        InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
-
-        // TODO: 결제 성공 및 실패 비즈니스 로직을 구현하세요.
-        Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
-        JSONObject jsonObject = (JSONObject) parser.parse(reader);
-        log.info(jsonBody);
-        responseStream.close();
-        return ResponseEntity.status(code).body(jsonObject);
+        } catch (IOException | org.json.simple.parser.ParseException e) {
+            log.error("Error during payment processing", e);
+            JSONObject errorResponse = new JSONObject();
+            errorResponse.put("error", "Payment processing failed");
+            return ResponseEntity.status(500).body(errorResponse);
+        }
     }
 
     @PostMapping("/payComplete")
     public ResponseEntity<Appointment> completeMatch(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment)
     {
+        log.info("결제 완료 후 request로 받은 Appointment = {}", appointment);
+        if(user.getUserType()== UserType.COMPANION){
+            appointment.setCompanionId(user.getId());
+        }else if(user.getUserType()==UserType.WHEELCHAIR)
+        {
+            appointment.setWheelchairId(user.getId());
+        }
         Appointment appliedAppointment = matchService.applyAppointment(appointment, user);
+        log.info("DB에 등록된 Appointment = {}", appliedAppointment);
         return ResponseEntity.ok().body(appliedAppointment);
     }
 
