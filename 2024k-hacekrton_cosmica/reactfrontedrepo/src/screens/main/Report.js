@@ -6,12 +6,13 @@ import {
   TextInput,
   Button,
   FlatList,
-  Text
+  Text,
+  Pressable,
+  TouchableOpacity
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import axios from 'axios';
 import {getLocation} from './Location';
-import { BottomTabBar } from '@react-navigation/bottom-tabs';
 
 const Report = ({apiUrl}) => {
   const [region, setRegion] = useState(null); // 지도에서 보여주는 현재 화면 (위치 및 지도 표시 영역 정의)
@@ -61,18 +62,32 @@ const Report = ({apiUrl}) => {
       );
       console.log(response.data); // 요청이 성공한 경우 응답 데이터 로그
       getData();  // db에 저장했으면 list 새로고침
+      setTitle('');
+      setContents('');  // 제목, 내용 초기화 ux 추가
     } catch (error) {
       console.error('Error posting data:', error); // 에러 발생 시 에러 로그
     }
   };
 
+  const handleItemPress = async (reportId) => {
+    try {
+      const response = await axios.get(`${apiUrl}/report/modify/${reportId}`);
+        console.log(response.data); // 요청이 성공한 경우 응답 데이터 로그
+    } catch (error) {
+        console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
+    }
+  };
+
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.title}>제목: {item.title}</Text>
-      <Text>내용: {item.contents}</Text>
-      <Text>등록 유저 id: {item.registuserId}</Text>
-      <Text>report id: {item.registedDate}</Text>
-    </View>
+   // 터치하면 수정 가능
+    <TouchableOpacity onPress={() => handleItemPress(item.reportId)}>
+      <View style={styles.itemContainer}>
+        <Text style={styles.title}>제목: {item.title}</Text>
+        <Text>내용: {item.contents}</Text>
+        <Text>등록 유저 id: {item.registuserId}</Text>
+        <Text>report id: {item.registedDate}</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   return (
