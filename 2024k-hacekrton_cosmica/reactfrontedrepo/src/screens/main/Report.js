@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import axios from 'axios';
-import {getLocation} from './Location';
+import {getLocation} from '../../components/Location';
 
 const Report = ({apiUrl}) => {
   const [region, setRegion] = useState(null); // 지도에서 보여주는 현재 화면 (위치 및 지도 표시 영역 정의)

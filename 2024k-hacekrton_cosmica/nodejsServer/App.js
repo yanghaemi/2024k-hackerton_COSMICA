@@ -36,7 +36,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
-Maria.connect(); //db 연결
+//Maria.connect(); //db 연결
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -60,5 +60,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.listen(port, () => {
+  console.log("listen") // 정상 작동
+}); 
 
 module.exports = app;
