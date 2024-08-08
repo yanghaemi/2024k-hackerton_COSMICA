@@ -70,10 +70,15 @@ public class UserController {
     }
 
     @PostMapping("/myInfo")
-    public ResponseEntity<User> getMyInfo(@SessionAttribute(name="user")User user) {
-        log.info("나의 정보: {}",user.toString());
+    public ResponseEntity<User> getMyInfo(@SessionAttribute(name="user", required=false) User user) {
+        if (user == null) {
+            log.info("로그인 안됨= {}",user);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        log.info("나의 정보: {}", user.toString());
         return ResponseEntity.ok().body(user);
     }
+
 
     private HttpHeaders getJSONHeader()
     {
