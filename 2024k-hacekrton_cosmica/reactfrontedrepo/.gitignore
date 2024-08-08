@@ -11,7 +11,15 @@ node_modules
 dist
 dist-ssr
 *.local
+.bundle
 
+/ios
+/android
+.env
+.yarn
+.gradle
+/ios
+/gradle
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -96,3 +104,9 @@ yarn-error.log
 *.njsproj
 *.sln
 *.sw?
+
+# Android build files
+reactfrontedrepo/android/app/build/outputs/apk/*.apk
+reactfrontedrepo/android/.gradle/
+reactfrontedrepo/android/app/build
+

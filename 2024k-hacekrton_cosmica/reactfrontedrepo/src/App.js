@@ -1,4 +1,4 @@
-import React from 'react';
+import Reactt, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,6 +8,8 @@ import MyPage from './screens/mypage/MyPage';
 import Login from './screens/companion/loginregister/Login';
 import Register from './screens/companion/loginregister/Register';
 import CompanionStack from "./screens/companion/CompanionStack.tsx";
+import Report from './screens/main/Report';
+import { REACT_APP_LOCAL_API_URL } from '@env';
 
 const Tab = createBottomTabNavigator(); //탭 네비
 const Stack = createNativeStackNavigator(); //스택 네비
@@ -21,7 +23,10 @@ const MainStackNavigator = () => { //map 페이지에서 길찾기 화면으로 
   );
 };
 
-function App(){
+function App() {
+  useEffect(() => {
+    console.log(REACT_APP_LOCAL_API_URL); // 환경 변수가 올바르게 로드되었는지 확인
+  }, [REACT_APP_LOCAL_API_URL]);
 
   return (
     <NavigationContainer>
@@ -32,6 +37,7 @@ function App(){
       <Tab.Screen name="Login" component={Login} />
       <Tab.Screen name="Register" component={Register} />
       <Tab.Screen name="Companion" component={CompanionStack} />
+      <Tab.Screen name="Report" children={() => <Report apiUrl={REACT_APP_LOCAL_API_URL} />} />
       <Tab.Screen name="마이페이지" //확인용 마이페이지
       component={MyPage}
       options={{ headerShown: true }} />
