@@ -6,7 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var reportRouter = require('./routes/reportAPI');
+var reportRouter = require('./routes/ReportAPI');
 
 //ORM Model영역의 sequelize 속성(DB연결객체)을 참조합니다.  
 var sequelize = require('./models/index.js').sequelize;
