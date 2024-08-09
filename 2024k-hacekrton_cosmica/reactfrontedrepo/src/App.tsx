@@ -1,14 +1,14 @@
-import Reactt, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MainScreen from './screens/main/MainScreen';
-import SearchScreen from './screens/main/SearchScreen';
-import MyPage from './screens/mypage/MyPage';
-import Login from './screens/companion/loginregister/Login';
-import Register from './screens/companion/loginregister/Register';
+import MainScreen from './screens/main/MainScreen.js';
+import SearchScreen from './screens/main/SearchScreen.js';
+import MyPage from './screens/mypage/MyPage.js';
+import Login from './screens/companion/loginregister/Login.jsx';
+import Register from './screens/companion/loginregister/Register.jsx';
 import CompanionStack from "./screens/companion/CompanionStack.tsx";
-import Report from './screens/main/Report';
+import Report from './screens/main/Report.js';
 import { REACT_APP_LOCAL_API_URL } from '@env';
 
 const Tab = createBottomTabNavigator(); //탭 네비
