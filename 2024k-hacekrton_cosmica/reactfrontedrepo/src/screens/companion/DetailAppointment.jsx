@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { ScrollView, Image, Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { fetchFunc2 } from "./fetch/FetchFunc2";
 import { useNavigation } from "@react-navigation/native";
 import fetchFunc3 from "./fetch/FetchFunc3";
 
-const DetailAppointment = ({ route }) => {
+const DetailAppointment = ({route}) => {
     const url = "/users/findById";
     const navigation = useNavigation();
     const { item } = route.params;
@@ -14,7 +14,6 @@ const DetailAppointment = ({ route }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // 비동기 데이터를 처리하는 fetchData 함수를 정의합니다.
         const request = item.companionId === 0 ? item.wheelchairId : item.companionId;
 
         const fetchData = async () => {
@@ -45,33 +44,149 @@ const DetailAppointment = ({ route }) => {
         return <Text>Error: {error.message}</Text>;
     }
 
-    // 버튼을 비활성화할 조건을 정의합니다.
     const isButtonDisabled = userData && myData && userData.userType === myData.userType;
 
     return (
-        <View style={styles.container}>
-            <Text>
-                {userData.userType === "WHEELCHAIR" ? `동행자: ${userData.userName}` : `휠체어 이용자: ${userData.userName}`}
-            </Text>
-            {/*item = appointment*/}
-            <Text>장소: {item.location} 날짜: {item.appointDate}</Text>
-            <Text>평점: {userData.rate} 금액: {item.bill}</Text>
-            <Text>총 동행 횟수: {userData.times}</Text>
-            <Button
-                title="신청하기"
-                onPress={() => navigation.navigate("CheckoutPage", { item })}
-                disabled={isButtonDisabled} // 버튼 활성화/비활성화
-            />
-        </View>
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.innerContainer}>
+
+                {/* Title */}
+                <Text style={styles.title}>
+                    {userData.userType === "WHEELCHAIR" ? `휠체어 이용자` : `동행자`}
+                </Text>
+                <View style={styles.separator} />
+
+                {/* Personal Information */}
+                <View style={styles.tableLayout}>
+                    <View style={styles.tableRow}>
+                        <View style={styles.imageContainer}>
+                            <Image
+                                style={styles.image}
+                                source={{ uri: 'https://via.placeholder.com/100' }}
+                            />
+                        </View>
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.infoText}>{userData.userName}</Text>
+                            <Text style={styles.label}>휴대폰:</Text>
+                            <Text style={styles.infoText}>{item.location}</Text>
+                            <Text style={styles.label}>날짜:</Text>
+                            <Text style={styles.infoText}>{item.appointDate}</Text>
+                            <Text style={styles.label}>비용:</Text>
+                            <Text style={styles.infoText}>{item.bill}</Text>
+                        </View>
+                    </View>
+                </View>
+
+                <Text style={styles.sectionTitle}>등급</Text>
+                <View style={styles.separator} />
+                <View style={styles.tableLayout}>
+                    <View style={styles.tableRow}>
+                        <Text style={styles.infoText}>{userData.rate}</Text>
+                    </View>
+                </View>
+
+                <Text style={styles.sectionTitle}>횟수</Text>
+                <View style={styles.separator} />
+                <View style={styles.tableLayout}>
+                    <View style={styles.tableRow}>
+                        <Text style={styles.infoText}>{userData.times}</Text>
+                    </View>
+                </View>
+
+                <Text style={styles.sectionTitle}>동행자 리뷰</Text>
+                <View style={styles.separator} />
+                <View style={styles.tableLayout}>
+                    <View style={styles.tableRow}>
+                        <Text style={styles.infoText}>"리뷰 내용"</Text>
+                    </View>
+                </View>
+
+                {/* Custom Button */}
+                <TouchableOpacity
+                    style={styles.customButton}
+                    onPress={() => {}}
+                    disabled={isButtonDisabled}
+                >
+                    <Text style={styles.buttonText}>신청 하기</Text>
+                </TouchableOpacity>
+
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         padding: 16,
-        backgroundColor: '#fff'
-    }
+    },
+    innerContainer: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    title: {
+        fontSize: 28, // Larger title font size
+        fontWeight: 'bold', // Bold font
+        color: '#333', // Darker color
+        textAlign: 'center',
+        marginBottom: 20, // Increased margin for spacing
+    },
+    tableLayout: {
+        marginBottom: 16,
+    },
+    tableRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+    },
+    imageContainer: {
+        padding: 8,
+    },
+    image: {
+        width: 100,
+        height: 100,
+        backgroundColor: 'darkgray',
+        borderRadius: 10, // Rounded corners for the image
+    },
+    infoContainer: {
+        flex: 1,
+        padding: 8,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#555',
+        marginBottom: 4,
+    },
+    infoText: {
+        fontSize: 16,
+        color: '#444', // Slightly darker text color for better readability
+        marginBottom: 10, // More spacing between text items
+        paddingHorizontal: 8,
+    },
+    sectionTitle: {
+        fontSize: 20, // Larger section title
+        fontWeight: '600', // Semi-bold font weight
+        color: '#444', // Consistent text color with other sections
+        paddingTop: 20,
+        paddingBottom: 8,
+    },
+    separator: {
+        borderBottomColor: '#bbb',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        marginVertical: 10,
+    },
+    customButton: {
+        backgroundColor: '#6200EE',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    buttonText: {
+        color: '#ffffff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
 });
 
 export default DetailAppointment;

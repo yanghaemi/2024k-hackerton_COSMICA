@@ -1,0 +1,240 @@
+import React from 'react';
+import {
+  ScrollView,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Button
+} from 'react-native';
+
+const App = () => {
+  return (
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
+
+        {/* 상단 프로필 섹션 */}
+        <View style={styles.profileSection}>
+          <Image
+            style={styles.profileImage}
+            source={{ uri: 'https://via.placeholder.com/50' }} // Placeholder image URL
+          />
+          <View style={styles.profileTextContainer}>
+            <Text style={styles.userName}>코스믹님</Text>
+            <Text style={styles.userType}>개인회원 / 등급: MVP / 프로필 수정하기</Text>
+          </View>
+        </View>
+
+        {/* 프로젝트 정보 섹션 */}
+        <View style={styles.projectInfoSection}>
+          <Text style={styles.sectionTitle}>나의 프로젝트</Text>
+          <View style={styles.infoRow}>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoLabel}>경로저장</Text>
+              <Text style={styles.infoValue}>8회</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoLabel}>리뷰</Text>
+              <Text style={styles.infoValue}>8회</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoLabel}>신고</Text>
+              <Text style={styles.infoValue}>8건</Text>
+            </View>
+          </View>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>간편결제</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>포인트 적립</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>결제내역</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* 기타 섹션 */}
+        <View style={styles.otherSection}>
+          <View style={styles.messageRow}>
+            <Image
+              style={styles.icon}
+              source={{ uri: 'https://via.placeholder.com/24' }} // Placeholder icon URL
+            />
+            <Text style={styles.messageText}>메시지</Text>
+            <Text style={styles.messageCount}>5건</Text>
+          </View>
+          <View style={styles.couponRow}>
+            <Image
+              style={styles.icon}
+              source={{ uri: 'https://via.placeholder.com/24' }} // Placeholder icon URL
+            />
+            <Text style={styles.messageText}>쿠폰</Text>
+            <Text style={styles.messageCount}>사용 가능 5장</Text>
+          </View>
+        </View>
+
+        {/* 계정 추가 및 로그아웃 섹션 */}
+        <View style={styles.accountSection}>
+          <View style={styles.separator} />
+          <View style={styles.accountRow}>
+            <Text style={styles.accountText}>계정 추가</Text>
+            <Image
+              style={styles.icon}
+              source={{ uri: 'https://via.placeholder.com/24' }} // Placeholder icon URL
+            />
+          </View>
+          <View style={styles.accountRow}>
+            <Text style={styles.accountText}>로그아웃</Text>
+            <Image
+              style={styles.icon}
+              source={{ uri: 'https://via.placeholder.com/24' }} // Placeholder icon URL
+            />
+          </View>
+        </View>
+
+        {/* 동행자 이력 섹션 */}
+        <View style={styles.historySection}>
+          <Text style={styles.historyTitle}>동행자 이력</Text>
+        </View>
+
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  profileSection: {
+    backgroundColor: '#f0f0f0',
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  profileTextContainer: {
+    marginLeft: 8,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  userType: {
+    fontSize: 14,
+  },
+  projectInfoSection: {
+    backgroundColor: '#ffffff',
+    padding: 16,
+    marginTop: 16,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    marginTop: 16,
+  },
+  infoBox: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  infoLabel: {
+    fontSize: 14,
+  },
+  infoValue: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    marginTop: 16,
+  },
+  button: {
+    flex: 1,
+    backgroundColor: '#f0f0f0',
+    padding: 8,
+    alignItems: 'center',
+    marginHorizontal: 4,
+  },
+  buttonText: {
+    fontSize: 14,
+  },
+  otherSection: {
+    backgroundColor: '#ffffff',
+    padding: 16,
+    marginTop: 16,
+    elevation: 2,
+  },
+  messageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  couponRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    marginRight: 16,
+  },
+  messageText: {
+    flex: 1,
+    fontSize: 14,
+  },
+  messageCount: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  accountSection: {
+    backgroundColor: '#f0f0f0',
+    padding: 16,
+    marginTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  separator: {
+    width: 1,
+    height: 75,
+    backgroundColor: '#000000',
+    position: 'absolute',
+    left: '50%',
+    marginLeft: -0.5,
+  },
+  accountRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  accountText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: 8,
+  },
+  historySection: {
+    backgroundColor: '#f0f0f0',
+    padding: 16,
+    marginTop: 16,
+  },
+  historyTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
+
+export default App;
