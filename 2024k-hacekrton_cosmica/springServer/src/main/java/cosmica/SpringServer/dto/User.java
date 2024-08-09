@@ -13,12 +13,10 @@ import java.sql.Date;
 @ToString
 public class User {
     private Integer id;
-    private Integer pw;
+    private String pw;
     private String userName;
     private UserType userType;
     private String location;
     private Double rate;
-    private Date possibleDate;
     private Integer times;
-
 }

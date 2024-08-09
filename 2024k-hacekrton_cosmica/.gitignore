@@ -8,8 +8,15 @@
 # testing
 /coverage
 
+/springServer
+
 # production
 /build
+
+.idea
+.gradle
+.vscode
+
 
 # misc
 .DS_Store
