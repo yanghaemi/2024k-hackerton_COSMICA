@@ -4,8 +4,15 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="false" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/2024k-hacekrton_cosmica/springServer" />
         <option name="gradleJvm" value="jbr-17" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/2024k-hacekrton_cosmica/springServer" />
+          </set>
+        </option>
         <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>

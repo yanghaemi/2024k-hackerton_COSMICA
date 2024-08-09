@@ -1,8 +1,9 @@
 import Config from "react-native-config";
+import {REACT_APP_SPRING_API_URL} from '@env'
 
 
 export const fetchFunc = (url, additionalData) => {
-    const defaultUrl = "http://172.30.129.248:8080";
+    const defaultUrl = REACT_APP_SPRING_API_URL;
     console.log(additionalData);
     const options = {
         method: 'POST',
