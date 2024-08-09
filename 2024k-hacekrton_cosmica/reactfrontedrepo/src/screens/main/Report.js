@@ -23,6 +23,7 @@ const Report = ({apiUrl}) => {
   const [reports, setReports] = useState([]); // 모든 신고 내용
 
 
+
   const getData =async () => {
       try {
         const response = await axios.get(`${apiUrl}/report`)
