@@ -14,7 +14,7 @@ const DetailAppointment = ({ route }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // 비동기 데이터를 처리하는 fetchData 함수를 정의합니다.
+        // 비동기 데이터를 처리하는 fetchData 함수를 정의합니다. null값일 때 0으로 나와서 0으로 3항연산자 사용하였습니다.
         const request = item.companionId === 0 ? item.wheelchairId : item.companionId;
 
         const fetchData = async () => {
@@ -51,7 +51,7 @@ const DetailAppointment = ({ route }) => {
     return (
         <View style={styles.container}>
             <Text>
-                {userData.userType === "WHEELCHAIR" ? `동행자: ${userData.userName}` : `휠체어 이용자: ${userData.userName}`}
+                {userData.userType === "WHEELCHAIR" ? `휠체어 이용자: ${userData.userName}` : `동행자: ${userData.userName}`}
             </Text>
             {/*item = appointment*/}
             <Text>장소: {item.location} 날짜: {item.appointDate}</Text>

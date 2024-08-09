@@ -79,6 +79,12 @@ public class JdbcMatchRepository implements MatchRepository {
         ms.addValue("wheelchairId",appointment.getWheelchairId());
         ms.addValue("companionId",appointment.getCompanionId());
         jdbcTemplate.update("update Appointment set wheelchairId=:wheelchairId,companionId=:companionId  where id=:id", ms);
+        MapSqlParameterSource ms2 = new MapSqlParameterSource();
+        ms2.addValue("id",appointment.getCompanionId());
+        jdbcTemplate.update("update User set times=times+1 where id=:id", ms2);
+        MapSqlParameterSource ms3 = new MapSqlParameterSource();
+        ms3.addValue("id",appointment.getWheelchairId());
+        jdbcTemplate.update("update User set times=times+1 where id=:id", ms3);
         return searchAppointmentById(appointment.getId());
     }
 

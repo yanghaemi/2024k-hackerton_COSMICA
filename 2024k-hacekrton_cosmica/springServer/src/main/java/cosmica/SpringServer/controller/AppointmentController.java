@@ -106,8 +106,7 @@ public class AppointmentController {
         log.info("결제 완료 후 request로 받은 Appointment = {}", appointment);
         if(user.getUserType()== UserType.COMPANION){
             appointment.setCompanionId(user.getId());
-        }else if(user.getUserType()==UserType.WHEELCHAIR)
-        {
+        }else if(user.getUserType()==UserType.WHEELCHAIR) {
             appointment.setWheelchairId(user.getId());
         }
         Appointment appliedAppointment = matchService.applyAppointment(appointment, user);
