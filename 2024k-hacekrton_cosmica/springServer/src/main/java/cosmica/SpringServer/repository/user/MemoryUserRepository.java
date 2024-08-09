@@ -20,6 +20,15 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> login(int id, String pw) {
+        User user = users.get(id);
+        if(user.getPw() == pw) {
+            return Optional.of(user);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<User> register(User user) {
         users.put(user.getId(),user);
         return Optional.of(user);
@@ -31,16 +40,4 @@ public class MemoryUserRepository implements UserRepository {
         return Optional.of(users.remove(id));
     }
 
-    @Override
-    public Optional<List<User>> findByDate(Date date) {
-        List<User> userList = new ArrayList<User>();
-         for (Map.Entry<Integer, User> entry: users.entrySet())
-         {
-             if(entry.getValue().getPossibleDate()==date)
-             {
-                 userList.add(entry.getValue());
-             }
-         }
-        return Optional.of(userList);
-    }
 }
