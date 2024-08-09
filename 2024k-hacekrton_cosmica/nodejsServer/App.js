@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var reportRouter = require('./routes/reportAPI');
+var reportRouter = require('./routes/ReportAPI');
 const Map = require('./routes/MapRouter');
 const MyPage =require('./routes/MyPageRouter');
 const Maria = require('./db/connect/Maria');

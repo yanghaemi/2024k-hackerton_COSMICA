@@ -24,9 +24,9 @@ const MainStackNavigator = () => { //map 페이지에서 길찾기 화면으로 
 };
 
 function App() {
-  useEffect(() => {
-    console.log(REACT_APP_LOCAL_API_URL); // 환경 변수가 올바르게 로드되었는지 확인
-  }, [REACT_APP_LOCAL_API_URL]);
+  // useEffect(() => {
+  //   console.log(REACT_APP_LOCAL_API_URL); // 환경 변수가 올바르게 로드되었는지 확인
+  // }, [REACT_APP_LOCAL_API_URL]);
 
   return (
     <NavigationContainer>
