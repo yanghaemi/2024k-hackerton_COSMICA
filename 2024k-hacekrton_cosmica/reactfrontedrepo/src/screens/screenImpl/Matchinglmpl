@@ -1,0 +1,163 @@
+import React from 'react';
+import { View, Text, Image, Button, StyleSheet, ScrollView } from 'react-native';
+
+const MainActivity = () => {
+    return (
+        <ScrollView contentContainerStyle={styles.container}>
+            {/* 제목 텍스트뷰 */}
+            <Text style={styles.title}>동행자 매칭내역</Text>
+
+            {/* 예약 아이템 1 */}
+            <View style={styles.itemContainer}>
+                {/* 이용 완료 텍스트뷰 */}
+                <Text style={styles.completedText}>예약완료</Text>
+
+                {/* 호텔 정보 레이아웃 */}
+                <View style={styles.hotelInfoContainer}>
+                    <Image source={require('./assets/person.png')} style={styles.image} />
+                    <View style={styles.hotelInfoTextContainer}>
+                        <Text style={styles.hotelName}>동행자1</Text>
+                        <Text>충청북도 청주시 사창동</Text>
+                    </View>
+                </View>
+
+                {/* 체크인, 체크아웃 정보 */}
+                <View style={styles.checkInOutContainer}>
+                    <Text style={styles.checkInOutText}>매칭 시작 8.7 (수) 10:30</Text>
+                    <Text style={styles.checkInOutText}>매칭 종료 8.7 (수) 12:30</Text>
+                </View>
+
+                {/* 버튼 레이아웃 */}
+                <View style={styles.buttonContainer}>
+                    <Button title="다시 매칭" onPress={() => {}} />
+                    <View style={styles.buttonSpacing} />
+                    <Button title="매칭 취소" onPress={() => {}} />
+                </View>
+            </View>
+
+            {/* 예약 아이템 2 */}
+            <View style={styles.itemContainer}>
+                {/* 예약 취소 텍스트뷰 */}
+                <Text style={styles.cancelledText}>예약 취소</Text>
+
+                {/* 호텔 정보 레이아웃 */}
+                <View style={styles.hotelInfoContainer}>
+                    <Image source={require('./assets/person.png')} style={styles.image} />
+                    <View style={styles.hotelInfoTextContainer}>
+                        <Text style={styles.hotelName}>동행자2</Text>
+                        <Text>충청북도 청주시 사창동</Text>
+                    </View>
+                </View>
+
+                {/* 체크인, 체크아웃 정보 */}
+                <View style={styles.checkInOutContainer}>
+                    <Text style={[styles.checkInOutText, styles.grayText]}>매칭 시작 8.6 (수) 10:30</Text>
+                    <Text style={[styles.checkInOutText, styles.grayText]}>매칭 종료 8.6 (수) 12:30</Text>
+                </View>
+
+                {/* 다시 예약 버튼 */}
+                <Button title="다시 매칭" onPress={() => {}} />
+            </View>
+
+            {/* 예약 아이템 3 */}
+            <View style={styles.itemContainer}>
+                {/* 이용 완료 텍스트뷰와 리뷰 쓰기 텍스트뷰를 수평으로 배치 */}
+                <View style={styles.reviewContainer}>
+                    <Text style={styles.completedText}>이용완료</Text>
+                    <Text style={styles.writeReviewText}>리뷰 쓰기</Text>
+                </View>
+
+                {/* 호텔 정보 레이아웃 */}
+                <View style={styles.hotelInfoContainer}>
+                    <Image source={require('./assets/person.png')} style={styles.image} />
+                    <View style={styles.hotelInfoTextContainer}>
+                        <Text style={styles.hotelName}>동행자3</Text>
+                        <Text>충청북도 청주시 사창동</Text>
+                    </View>
+                </View>
+
+                {/* 체크인, 체크아웃 정보 */}
+                <View style={styles.checkInOutContainer}>
+                    <Text style={styles.checkInOutText}>매칭 시작 8.5 (수) 10:30</Text>
+                    <Text style={styles.checkInOutText}>매칭 종료 8.5 (수) 12:30</Text>
+                </View>
+
+                {/* 다시 예약 버튼 */}
+                <Button title="다시 매칭" onPress={() => {}} />
+            </View>
+        </ScrollView>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 16,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 16,
+        marginStart: 16,
+    },
+    itemContainer: {
+        marginTop: 15,
+        padding: 16,
+        backgroundColor: '#f8f8f8',
+        borderRadius: 8,
+    },
+    completedText: {
+        fontWeight: 'bold',
+        marginBottom: 8,
+        color: '#1976D2', // holo_blue_dark equivalent
+    },
+    cancelledText: {
+        fontWeight: 'bold',
+        marginBottom: 8,
+        color: '#D32F2F', // holo_red_dark equivalent
+    },
+    hotelInfoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    hotelInfoTextContainer: {
+        flex: 1,
+        paddingStart: 16,
+    },
+    hotelName: {
+        fontWeight: 'bold',
+    },
+    image: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+    },
+    checkInOutContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 8,
+    },
+    checkInOutText: {
+        flex: 1,
+    },
+    grayText: {
+        color: '#A9A9A9', // darker_gray equivalent
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        marginTop: 8,
+    },
+    buttonSpacing: {
+        width: 8,
+    },
+    reviewContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8,
+    },
+    writeReviewText: {
+        color: '#64B5F6', // holo_blue_light equivalent
+        marginStart: 250,
+    },
+});
+
+export default MainActivity;

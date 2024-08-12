@@ -1,0 +1,127 @@
+import React from 'react';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+
+const PaymentHistory = () => {
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* 메뉴 버튼과 제목 텍스트 */}
+      <View style={styles.header}>
+        <Image
+          source={require('./assets/menu.png')}
+          style={styles.menuButton}
+        />
+        <Text style={styles.titleText}>결제내역</Text>
+      </View>
+
+      {/* 총 결제 금액 섹션 */}
+      <View style={styles.totalAmountContainer}>
+        <Text style={styles.totalAmountText}>총 결제 금액</Text>
+        <Text style={styles.amountText}>98,232원</Text>
+      </View>
+
+      {/* 입금내역 */}
+      <View style={styles.paymentDetails}>
+        {/* 첫 번째 입금 내역 */}
+        <View style={styles.paymentDetail}>
+          <Text style={styles.paymentDateText}>결제일</Text>
+          <Text style={styles.paymentDateValue}>22.04.29. (금)</Text>
+          <Text style={styles.serviceName}>동행자1</Text>
+          <Text style={styles.paymentAmountBlue}>14,475원</Text>
+        </View>
+
+        {/* 두 번째 입금 내역 */}
+        <View style={styles.paymentDetail}>
+          <Text style={styles.paymentDateText}>결제일</Text>
+          <Text style={styles.paymentDateValue}>22.04.29. (금)</Text>
+          <Text style={styles.serviceName}>동행자2</Text>
+          <Text style={styles.paymentAmountBlue}>19,823원</Text>
+        </View>
+
+        {/* 세 번째 입금 내역 */}
+        <View style={styles.paymentDetail}>
+          <Text style={styles.paymentDateText}>결제일</Text>
+          <Text style={styles.paymentDateValue}>22.04.29. (금)</Text>
+          <Text style={styles.serviceName}>동행자3</Text>
+          <Text style={styles.paymentAmountBlue}>19,823원</Text>
+        </View>
+
+        {/* 네 번째 입금 내역 */}
+        <View style={styles.paymentDetail}>
+          <Text style={styles.paymentDateText}>입금일</Text>
+          <Text style={styles.paymentDateValue}>22.04.29. (금)</Text>
+          <Text style={styles.serviceName}>동행자4</Text>
+          <Text style={styles.paymentAmountRed}>19,823원</Text>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  menuButton: {
+    width: 35,
+    height: 37,
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  totalAmountContainer: {
+    marginTop: 16,
+    marginBottom: 16,
+  },
+  totalAmountText: {
+    fontSize: 20,
+    color: '#A9A9A9',
+    marginBottom: 8,
+  },
+  amountText: {
+    fontSize: 26,
+    fontWeight: 'bold',
+  },
+  paymentDetails: {
+    marginTop: 16,
+  },
+  paymentDetail: {
+    padding: 8,
+    marginBottom: 8,
+  },
+  paymentDateText: {
+    fontSize: 18,
+    color: '#A9A9A9',
+  },
+  paymentDateValue: {
+    fontSize: 18,
+    marginTop: 4,
+  },
+  serviceName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  paymentAmountBlue: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    color: '#0000FF',
+    marginTop: 4,
+  },
+  paymentAmountRed: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    color: '#FF0000',
+    marginTop: 4,
+  },
+});
+
+export default PaymentHistory;
