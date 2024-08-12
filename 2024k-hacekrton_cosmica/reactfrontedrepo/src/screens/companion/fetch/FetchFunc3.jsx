@@ -1,7 +1,7 @@
 import Config from "react-native-config";
 
 export const fetchFunc3 = (url, additionalData = null) => {
-    const defaultUrl = "http://172.30.129.248:8080"; // 환경변수로 변경하려면 Config.API_URL 사용
+    const defaultUrl = "http://172.30.128.30:8080"; // 환경변수로 변경하려면 Config.API_URL 사용
 
     const options = {
         method: 'POST',

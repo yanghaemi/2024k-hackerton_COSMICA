@@ -2,7 +2,7 @@ import Config from "react-native-config";
 
 
 export const fetchFunc = (url, additionalData) => {
-    const defaultUrl = "http://172.30.129.248:8080";
+    const defaultUrl = "http://172.30.128.30:8080";
     console.log(additionalData);
     const options = {
         method: 'POST',
