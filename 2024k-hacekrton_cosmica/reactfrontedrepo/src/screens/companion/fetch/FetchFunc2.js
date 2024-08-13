@@ -2,7 +2,7 @@ import Config from "react-native-config";
 import {REACT_APP_SPRING_API_URL} from '@env'
 
 export const fetchFunc2 = (url, additionalData=null) => {
-    const defaultUrl = REACT_APP_SPRING_API_URL;
+    const defaultUrl = "http://172.30.128.214:8080";
     const params = new URLSearchParams();
 
     // additionalData 객체를 URLSearchParams 객체로 변환
@@ -29,3 +29,5 @@ export const fetchFunc2 = (url, additionalData=null) => {
             throw error;
         });
 };
+
+export default fetchFunc2;

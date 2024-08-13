@@ -62,18 +62,18 @@ const AppointmentRegister = ({ route }) => {
             )}
             <TextInput
                 style={styles.input}
-                placeholder="Location"
+                placeholder="위치를 입력해주세요"
                 value={location}
                 onChangeText={setLocation}
             />
             <TextInput
                 style={styles.input}
-                placeholder="Bill"
+                placeholder="가격을 입력해주세요"
                 keyboardType="numeric"
                 value={bill}
                 onChangeText={setBill}
             />
-            <Button title="Submit" onPress={() => handleSubmit('/appointment/register')} />
+            <Button title="등록" onPress={() => handleSubmit('/appointment/register')} color="#1976D2" />
         </View>
     );
 }
@@ -82,29 +82,36 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#fff',
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 32,
         textAlign: 'center',
     },
     input: {
-        height: 40,
+        height: 50,
         borderColor: '#ccc',
         borderWidth: 1,
-        borderRadius: 4,
-        paddingHorizontal: 8,
+        borderRadius: 5,
+        paddingHorizontal: 10,
         marginBottom: 16,
     },
     button: {
-        backgroundColor: '#fff', // 흰색 배경
+        backgroundColor: '#1976D2',
         borderColor: '#ccc', // 연한 회색 테두리
         borderWidth: 1, // 테두리 두께
-        borderRadius: 4, // 모서리 둥글기
+        borderRadius: 5,
         padding: 10, // 버튼 내부 여백
+        paddingVertical: 12,
         marginBottom: 16, // 버튼 아래 간격
+        marginTop: 32,
+    },
+    buttonText: {
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: 'bold',
     },
 });
 

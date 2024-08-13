@@ -15,6 +15,7 @@ public class User {
     private Integer id;
     private String pw;
     private String userName;
+    private Integer phoneNum;
     private UserType userType;
     private String location;
     private Double rate;

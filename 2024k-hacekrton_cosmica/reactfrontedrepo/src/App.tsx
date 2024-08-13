@@ -5,11 +5,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainScreen from './screens/main/MainScreen.js';
 import SearchScreen from './screens/main/SearchScreen.js';
 import MyPage from './screens/mypage/MyPage.js';
-import Login from './screens/companion/loginregister/Login.jsx';
-import Register from './screens/companion/loginregister/Register.jsx';
+import Login from './loginregister/Login.jsx';
+import Register from './loginregister/Register.jsx';
 import CompanionStack from "./screens/companion/CompanionStack.tsx";
 import Report from './screens/main/Report.js';
 import { REACT_APP_LOCAL_API_URL } from '@env';
+import {REACT_APP_SPRING_API_URL} from '@env';
 import fetchFunc3 from "./screens/companion/fetch/FetchFunc3";
 import {Alert} from "react-native";
 
@@ -26,9 +27,10 @@ const MainStackNavigator = () => { //map 페이지에서 길찾기 화면으로 
 };
 
 function App() {
-  // useEffect(() => {
-  //   console.log(REACT_APP_LOCAL_API_URL); // 환경 변수가 올바르게 로드되었는지 확인
-  // }, [REACT_APP_LOCAL_API_URL]);
+  useEffect(() => {
+    console.log(REACT_APP_LOCAL_API_URL);
+    console.log(REACT_APP_SPRING_API_URL)// 환경 변수가 올바르게 로드되었는지 확인
+  }, [REACT_APP_LOCAL_API_URL]);
 
   return (
     <NavigationContainer>

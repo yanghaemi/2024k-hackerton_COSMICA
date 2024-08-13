@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,13 +62,18 @@ public class UserController {
     }
 
     @PostMapping("/findById")
-    public ResponseEntity<User> findById(@RequestParam(value = "id")String id) {
-        log.info(id);
+    public ResponseEntity<User> findById(@RequestParam(value = "id") String id) {
+        log.info("Received ID: " + id);
         int id1 = Integer.parseInt(id);
-        Optional<User> user = userService.findById(id1);
-        System.out.println(user.get());
-        return ResponseEntity.of(user);
+        try {
+            Optional<User> user = userService.findById(id1);
+            return ResponseEntity.ok(user.get());
+        }
+        catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
+
 
     @PostMapping("/myInfo")
     public ResponseEntity<User> getMyInfo(@SessionAttribute(name="user", required=false) User user) {
