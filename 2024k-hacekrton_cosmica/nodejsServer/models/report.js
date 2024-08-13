@@ -29,6 +29,16 @@ module.exports = function(sequelize, DataTypes) {
     photo_path: {
       type: DataTypes.STRING(100),
       allowNull: true
+    },
+    latitude: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      defaultValue: 0
+    },
+    longitude: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      defaultValue: 0
     }
   }, {
     sequelize,
