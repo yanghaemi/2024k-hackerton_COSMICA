@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import fetchUserData from '../../components/FetchUserData'
+import {fetchUserData} from '../../components/FetchUserData'
 
 
 const MyPage= () =>{
@@ -43,7 +43,9 @@ const MyPage= () =>{
         <ScrollView
           contentInsetAdjustmentBehavior="automatic">
             <Text style={styles.userName}>{userData.name}</Text>
-            <Text style={styles.description}>{userData.role}{'\n'}{userData.rank}</Text>
+            <Text style={styles.description}>{userData.type}{'\n'}
+              {userData.locataion}{'\n'}
+              {userData.rate}</Text>
         </ScrollView>
       </View>
     </SafeAreaView>
