@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator(); //스택 네비
 const MainStackNavigator = () => { //map 페이지에서 길찾기 화면으로 이동할 때 사용할 스택네비게이션
   return (
     <Stack.Navigator initialRouteName="Main">
-      <Stack.Screen name="Map" component={MainScreen} />
+      <Stack.Screen name="Map" children={() => <MainScreen apiUrl={REACT_APP_LOCAL_API_URL} />}/>
       <Stack.Screen name="Search" component={SearchScreen} />
     </Stack.Navigator>
   );
@@ -27,7 +27,7 @@ function MyTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Main" component={MainStackNavigator} options={{ headerShown: false }} />
-      <Tab.Screen name="Login" component={Login} />
+      <Tab.Screen name="Login" children={() => <Login apiUrl={REACT_APP_LOCAL_API_URL} />}/>
       <Tab.Screen name="Register" component={Register} />
       <Tab.Screen name="Companion" component={CompanionStack} />
       <Tab.Screen name="마이페이지" //확인용 마이페이지
@@ -39,7 +39,7 @@ function MyTabs() {
 
 function App() {
   useEffect(() => {
-    console.log(REACT_APP_LOCAL_API_URL); // 환경 변수가 올바르게 로드되었는지 확인
+    // console.log(REACT_APP_LOCAL_API_URL); // 환경 변수가 올바르게 로드되었는지 확인
   }, [REACT_APP_LOCAL_API_URL]);
 
   return (
@@ -47,7 +47,6 @@ function App() {
     <Stack.Navigator>
       <Stack.Screen name="Tabs" component={MyTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Report" children={() => <Report apiUrl={REACT_APP_LOCAL_API_URL} />} />
-      
     </Stack.Navigator>
   </NavigationContainer>
   );
