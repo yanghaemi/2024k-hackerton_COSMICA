@@ -79,7 +79,7 @@ const MainScreen = ({apiUrl}) => {
     <View style={styles.container}>
       <TouchableOpacity //길 찾기 버튼
         style={styles.searchButton}
-        onPress={() => navigation.navigate('Search')} //클릭 시 검색 화면으로 이동
+        onPress={() => navigation.navigate('길 찾기')} //클릭 시 검색 화면으로 이동
       >
         <Text style={styles.buttonText}>길 찾기</Text>
       </TouchableOpacity>

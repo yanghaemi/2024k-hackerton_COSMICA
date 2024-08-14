@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
 import FetchJSONButton from "../fetch/FetchJSONButton";
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
     const [user, setUser] = useState({
         id: "",
         pw: "",
@@ -86,6 +86,7 @@ const Login = () => {
             <FetchJSONButton
                 url="/users/register"
                 additionalData1={user}
+                onLoginSuccess={onLoginSuccess} //로그인 성공 시 호출할 함수
             />
         </View>
     );

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, TextInput, Alert, StyleSheet } from "react-native";
+import { View, TextInput, Alert, StyleSheet, Button } from "react-native";
 import FetchJSONButton from "../fetch/FetchJSONButton";
 
-const Login = () => {
+const Login = ({ navigation, onLoginSuccess }) => {
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
 
@@ -33,6 +33,12 @@ const Login = () => {
             <FetchJSONButton
                 url="/users/login"
                 additionalData1={{id,password}}
+                onLoginSuccess={onLoginSuccess} //로그인 성공 시 호출할 함수
+            />
+            <Button //회원 가입 이동 버튼
+                title="회원 가입" 
+                onPress={() => navigation.navigate('Register')} // Register 화면으로 이동
+                color="blue"
             />
         </View>
     );

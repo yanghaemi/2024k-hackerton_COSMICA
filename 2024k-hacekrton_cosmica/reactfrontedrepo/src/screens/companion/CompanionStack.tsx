@@ -15,7 +15,6 @@ function CompanionStack() {
         <Stack.Navigator>
             <Stack.Screen name="CalendarPage" component={CalendarPage} />
             <Stack.Screen name="AppointmentRegister" component={AppointmentRegister} />
-            <Stack.Screen name="Main" component={mainScreen} />
             <Stack.Screen name="DetailAppointment" component={DetailAppointment} />
             <Stack.Screen name="CheckoutPage" component={CheckoutPage} />
         </Stack.Navigator>
