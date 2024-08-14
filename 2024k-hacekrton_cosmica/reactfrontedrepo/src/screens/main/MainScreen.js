@@ -21,8 +21,6 @@ const MainScreen = ({apiUrl}) => {
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 리포트
 
 
-
-
   const getData = async () => {
       try {
         const response = await axios.get(`${apiUrl}/report`);
@@ -36,7 +34,6 @@ const MainScreen = ({apiUrl}) => {
   useEffect(() => {
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
     getData();
-
   }, []);
 
    const handleItemPress = async (marker) => {
@@ -52,9 +49,6 @@ const MainScreen = ({apiUrl}) => {
    const handleCloseModal = () => { // 닫기 버튼 눌렀을 때
     setSelectedReport(null);
   };
-
-
-
 
   useEffect(() => { //길 찾기 장소
     if (origin && destination) { //출발지, 목적지 둘 다 정해진 경우
@@ -106,7 +100,9 @@ const MainScreen = ({apiUrl}) => {
         showsUserLocation={true} // 사용자 위치 표시
         showsMyLocationButton={true} // 위치 버튼 표시
       provider={PROVIDER_GOOGLE}
+      provider={PROVIDER_GOOGLE}
       >
+        {/* {location && ( //현재 위치 표시
         {/* {location && ( //현재 위치 표시
           <Marker coordinate={location} title="현재 위치" />
         )} */} 
@@ -156,6 +152,32 @@ const MainScreen = ({apiUrl}) => {
           />
         )}
       </MapView>
+      {selectedReport && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={selectedReport !== null}
+        // onRequestClose={handleCloseModal}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>{selectedReport.title}</Text>
+              <Text>{selectedReport.contents}</Text>
+              <Text>Latitude: {selectedReport.latitude}</Text>
+              <Text>Longitude: {selectedReport.longitude}</Text>
+              <Button title="Close" onPress={handleCloseModal} />
+            </View>
+          </View>
+        </Modal>)}
+      <TouchableOpacity // 신고버튼
+        style={styles.reportButton}
+        onPress={() => {
+          getData();
+          navigation.navigate('Report')
+        }} //클릭 시 검색 화면으로 이동
+      >
+        <Text style={{ color: '#fff', fontSize: 20}}>!</Text>
+      </TouchableOpacity>
       {selectedReport && (
         <Modal
           animationType="slide"

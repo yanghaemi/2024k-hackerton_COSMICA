@@ -60,8 +60,8 @@ public class JdbcUserRepository implements UserRepository {
         ms.addValue("userName", user.getUserName());
         ms.addValue("userType", user.getUserType().toString());
         ms.addValue("location", user.getLocation());
-        ms.addValue("rate",user.getRate());
-        ms.addValue("times", user.getTimes());
+        ms.addValue("rate",0.0);
+        ms.addValue("times", 0);
         jdbcTemplate.update("insert into user (id,pw,userName,userType,location,rate,times)" +
                 " values (:id,:pw,:userName,:userType,:location,:rate,:times)",ms);
         return Optional.of(user);

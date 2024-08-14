@@ -1,7 +1,8 @@
 import Config from "react-native-config";
+import {REACT_APP_SPRING_API_URL} from '@env'
 
 export const fetchFunc3 = (url, additionalData = null) => {
-    const defaultUrl = "http://172.18.13.36:8080"; // 환경변수로 변경하려면 Config.API_URL 사용
+    const defaultUrl = REACT_APP_SPRING_API_URL; // 환경변수로 변경하려면 Config.API_URL 사용
 
     const options = {
         method: 'POST',
@@ -12,14 +13,19 @@ export const fetchFunc3 = (url, additionalData = null) => {
     };
 
     return fetch(defaultUrl + url, options)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('성공:', data);
             return data;
         })
         .catch(error => {
             console.error('오류:', error);
-            throw error;
+            return null; // 오류가 발생하면 null을 반환하여 로그인되지 않은 상태로 간주
         });
 };
 
