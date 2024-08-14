@@ -100,7 +100,6 @@ const MainScreen = ({apiUrl}) => {
         showsUserLocation={true} // 사용자 위치 표시
         showsMyLocationButton={true} // 위치 버튼 표시
       provider={PROVIDER_GOOGLE}
-      provider={PROVIDER_GOOGLE}
       >
         {/* {location && ( //현재 위치 표시
         {/* {location && ( //현재 위치 표시
