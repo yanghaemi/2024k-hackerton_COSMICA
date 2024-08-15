@@ -3,14 +3,14 @@ import { StyleSheet, View, Button, Alert } from 'react-native';
 import { GooglePlacesAutocomplete  } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 
-const SearchScreen = ({ navigation }) => {
+const AddScreen = ({ navigation }) => {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
 
 
   const handleNavigate = () => {
     if (origin && destination) {
-      navigation.navigate('Route', { origin, destination }); //Main스크린 이동 및 출발지와 도착지 정보 보냄
+      navigation.navigate('Map', { origin, destination }); //Main스크린 이동 및 출발지와 도착지 정보 보냄
     } else {
       Alert.alert('경고', '두 장소를 모두 선택해야 합니다.');
     }
@@ -53,7 +53,7 @@ const SearchScreen = ({ navigation }) => {
         listViewDisplayed={true} // 목록
         styles={styles.search}
       />
-      <Button title="경로 기록" onPress={handleNavigate} />
+      <Button title="경로 찾기" onPress={handleNavigate} />
     </View>
   );
 };
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchScreen;
+export default AddScreen;

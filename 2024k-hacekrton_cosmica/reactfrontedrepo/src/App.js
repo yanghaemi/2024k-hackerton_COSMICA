@@ -9,7 +9,9 @@ import Login from './screens/companion/loginregister/Login';
 import Register from './screens/companion/loginregister/Register';
 import CompanionStack from "./screens/companion/CompanionStack.tsx";
 import Report from './screens/main/Report';
+import RouteAdd from './screens/main/RouteAdd.js'
 import { REACT_APP_LOCAL_API_URL } from '@env';
+import test from './screens/main/test.js'
 
 const Tab = createBottomTabNavigator(); //탭 네비
 const Stack = createNativeStackNavigator(); //스택 네비
@@ -26,12 +28,12 @@ const MainStackNavigator = () => { //map 페이지에서 길찾기 화면으로 
 function MyTabs() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Main" component={MainStackNavigator} options={{ headerShown: false }} />
       <Tab.Screen name="Login" children={() => <Login apiUrl={REACT_APP_LOCAL_API_URL} />}/>
+      <Tab.Screen name="Main" component={MainStackNavigator} options={{ headerShown: false }} />
       <Tab.Screen name="Register" component={Register} />
       <Tab.Screen name="Companion" component={CompanionStack} />
-      <Tab.Screen name="마이페이지" //확인용 마이페이지
-      component={MyPage}
+      <Tab.Screen name="test" //확인용 마이페이지
+      component={test}
       options={{ headerShown: true }} />
     </Tab.Navigator>
   )
@@ -47,6 +49,7 @@ function App() {
     <Stack.Navigator>
       <Stack.Screen name="Tabs" component={MyTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Report" children={() => <Report apiUrl={REACT_APP_LOCAL_API_URL} />} />
+      <Stack.Screen name="RouteAdd" children={() => <RouteAdd apiUrl={REACT_APP_LOCAL_API_URL} />} />
     </Stack.Navigator>
   </NavigationContainer>
   );

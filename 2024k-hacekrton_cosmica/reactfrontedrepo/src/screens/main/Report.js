@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,6 +15,7 @@ import axios from 'axios';
 import { getLocation } from '../../components/Location';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useFocusEffect } from '@react-navigation/native';
+// import { RNCamera } from 'react-native-camera'
 
 const Report = ({apiUrl}) => {
   const [region, setRegion] = useState(null); // 지도에서 보여주는 현재 화면 (위치 및 지도 표시 영역 정의)
@@ -29,7 +30,10 @@ const Report = ({apiUrl}) => {
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 리포트
   const [modifiedTitle, setModifiedTitle] = useState(''); // 신고 제목 상태
   const [modifiedContents, setModifiedContents] = useState(''); // 신고 내용 상태
-
+  const [cameraPermission, setCameraPermission] = useState(null); // 카메라 권한 상태
+  
+  const [isCameraVisible, setIsCameraVisible] = useState(false);
+  const cameraRef = useRef(null);
 
   const getData =async () => {
       try {
@@ -45,16 +49,55 @@ const Report = ({apiUrl}) => {
     getLocation(setLocation, setRegion, setLoading);
     setLatitude(location.latitude);
     setLongitude(location.longitude);
-    console.log("위치: ", latitude);
-    console.log("위치2: ", longitude);
+    // console.log("위치: ", latitude);
+    // console.log("위치2: ", longitude);
 
   }
 
+   const handleTakePicture = async () => {
+    if (cameraRef.current) {
+      const options = { quality: 0.5, base64: true };
+      const data = await cameraRef.current.takePictureAsync(options);
+      console.log(data.uri);
+      setIsCameraVisible(false); // 사진 찍은 후 카메라 닫기
+    }
+  };
+
+  if (isCameraVisible) {
+    return (
+      // <RNCamera
+      //   ref={cameraRef}
+      //   style={styles.camera}
+      //   type={RNCamera.Constants.Type.back}
+      //   captureAudio={false}
+      // >
+        <View style={styles.cameraButtonContainer}>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={handleTakePicture}
+          >
+            <Text style={styles.cameraButtonText}>촬영</Text>
+          </TouchableOpacity>
+        </View>
+      // </RNCamera>
+    );
+  }
+
+  const checkPermission = async () => {
+    // 카메라 권한 확인
+    const permission = await RNCamera.requestPermissionsAsync();
+    setCameraPermission(permission.status);
+
+    console.log("카메라 권한: ", cameraPermission);
+    
+  };
  
   
   useEffect(() => {
     
     getLocation2();
+
+    checkPermission();
 
     // 비동기 함수 호출
     getData();
@@ -223,6 +266,15 @@ const Report = ({apiUrl}) => {
           />
         ))}
         </MapView>
+
+        
+
+        <TouchableOpacity // 신고버튼
+          style={styles.reportButton}
+          onPress={() => setIsCameraVisible(true)}
+      >
+        <Text style={{ color: '#fff', fontSize: 20}}>카메라</Text>
+      </TouchableOpacity>
         
         {selectedReport && (
         <Modal

@@ -7,7 +7,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 
 
-const MainScreen = ({apiUrl}) => {
+const RouteAdd = ({apiUrl}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { origin, destination } = route.params || {}; // SearchScreen에서 받은 인자
@@ -63,7 +63,7 @@ const MainScreen = ({apiUrl}) => {
   }, [destination]);
 
   const handleResetDestination = () => { //길 찾기 종료 시
-    navigation.navigate('Map', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
+    navigation.navigate('AddScreen', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
     setRouteCoordinates([]); //경로 표시 제거
   };
 
@@ -89,14 +89,14 @@ const MainScreen = ({apiUrl}) => {
         style={styles.searchButton}
         onPress={() => navigation.navigate('Search')} //클릭 시 검색 화면으로 이동
       >
-        <Text style={styles.buttonText}>길 찾기</Text>
+        <Text style={styles.buttonText}>경로 저장</Text>
       </TouchableOpacity>
       {destination && ( // 도착지 값이 있는 경우 "길찾기 해제" 버튼 렌더링
         <TouchableOpacity
           style={styles.resetButton}
           onPress={handleResetDestination}
         >
-          <Text style={styles.buttonText}>길 찾기 종료</Text>
+          <Text style={styles.buttonText}>경로 저장 취소</Text>
         </TouchableOpacity>
       )}
       <MapView //지도
@@ -174,24 +174,7 @@ const MainScreen = ({apiUrl}) => {
             </View>
           </View>
         </Modal>)}
-      <TouchableOpacity // 경로 추가 버튼
-        style={styles.reportButton1}
-        onPress={() => {
-          getData();
-          navigation.navigate('RouteAdd');
-        }} //클릭 시 경로 추가 화면으로 이동
-      >
-        <Text style={{ color: '#fff', fontSize: 20}}>+</Text>
-      </TouchableOpacity>
-      <TouchableOpacity // 신고버튼
-        style={styles.reportButton}
-        onPress={() => {
-          getData();
-          navigation.navigate('Report')
-        }} //클릭 시 검색 화면으로 이동
-      >
-        <Text style={{ color: '#fff', fontSize: 20}}>!</Text>
-      </TouchableOpacity>
+      
       {selectedReport && (
         <Modal
           animationType="slide"
@@ -209,15 +192,7 @@ const MainScreen = ({apiUrl}) => {
             </View>
           </View>
         </Modal>)}
-      <TouchableOpacity // 신고버튼
-        style={styles.reportButton}
-        onPress={() => {
-          getData();
-          navigation.navigate('Report')
-        }} //클릭 시 검색 화면으로 이동
-      >
-        <Text style={{ color: '#fff', fontSize: 20}}>!</Text>
-      </TouchableOpacity>
+      
     </View>
   );
 };
@@ -315,4 +290,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MainScreen;
+export default RouteAdd;
