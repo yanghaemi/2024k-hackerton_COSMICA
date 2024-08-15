@@ -36,7 +36,7 @@ const Register = () => {
 
     const onChangeId = (text) => {
         if (/^\d*$/.test(text)) {
-            handleChange("id", text);
+            handleChange("id", Number(text)); // ID 값을 숫자로 변환하여 저장
         } else {
             Alert.alert("경고", "ID는 숫자만 입력 가능합니다.");
         }
@@ -74,7 +74,7 @@ const Register = () => {
     };
 
     const isRegisterButtonEnabled = () => {
-        return user.id !== 0 && !passwordMismatch && !phoneNumInvalid;
+        return user.id !== 0 && !passwordMismatch && !phoneNumInvalid &&user.userName!=="" && user.phoneNum!=="" && user.userType!=="" &&user.location!=="";
     };
 
     const checkDuplicateId = async () => {
@@ -95,6 +95,9 @@ const Register = () => {
                 }
             } else if (response.status === 404) {
                 Alert.alert("확인", "사용 가능한 아이디입니다.");
+            }
+            else if(response.status === 400){
+                Alert.alert("0은 아이디로 사용이 불가능합니다.")
             }
         } catch (EmptyResultDataAccessException) {
             Alert.alert("사용 가능한 아이디입니다.")
@@ -190,7 +193,7 @@ const Register = () => {
 
             <TouchableOpacity
                 style={[styles.button, !isRegisterButtonEnabled() && styles.buttonDisabled]}
-                onPress={() => fetchFunc("/users/register", { user })}
+                onPress={() => fetchFunc("/users/register", user )}
                 disabled={!isRegisterButtonEnabled()}
             >
                 <Text style={styles.buttonText}>회원가입</Text>
@@ -275,6 +278,9 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         marginBottom: 16,
+    },
+    buttonDisabled: {
+        backgroundColor: '#ccc', // 비활성화 상태의 버튼 색상
     },
 });
 

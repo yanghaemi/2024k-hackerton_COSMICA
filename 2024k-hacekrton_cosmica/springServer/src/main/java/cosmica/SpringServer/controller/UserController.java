@@ -64,6 +64,9 @@ public class UserController {
     @PostMapping("/findById")
     public ResponseEntity<User> findById(@RequestParam(value = "id") String id) {
         log.info("Received ID: " + id);
+        if(id.equals("0")){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         int id1 = Integer.parseInt(id);
         try {
             Optional<User> user = userService.findById(id1);

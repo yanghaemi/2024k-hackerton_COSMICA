@@ -52,7 +52,9 @@ router.post('/create', async (req, res) => {
             title: req.body.title,
             contents: req.body.contents,
             registedDate: Date.now(),
-            registuserId: 1
+            registuserId: 1,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude
         }
 
         const registedReport = await db.report.create(report);
@@ -72,6 +74,41 @@ router.post('/create', async (req, res) => {
 
     res.json(apiResult);
 });
+
+/**
+ * 신고 삭제 라우터
+ * 호출주소 : http://localhost:5000/report/delete/:idx
+ * 호출방식: post 
+ */
+router.post('/delete/:idx', async (req, res) => {
+    let apiResult = {
+        code: 400,
+        data: "",
+        msg: ""
+    };
+
+    try {
+
+        const reportIdx = req.params.idx;
+
+        const resultModify = await db.report.destroy({ where: { reportId: reportIdx } });
+        console.log("db에서 삭제된 결과: ", resultModify);
+
+        apiResult.code = 200;
+        apiResult.data = resultModify;
+        apiResult.msg = "삭제 Ok";
+    } catch (err) {
+        console.error("에러: ", err);
+
+        apiResult.code = 500;
+        apiResult.data = null;
+        apiResult.msg = "Failed";
+    }
+
+    res.json(apiResult);
+
+});
+
 
 
 /**
@@ -94,7 +131,9 @@ router.post('/modify/:idx', async (req, res) => {
             title: req.body.title,
             contents: req.body.contents,
             registedDate: Date.now(),
-            registuserId: 1
+            registuserId: 1,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude
         }
 
         const resultModify = await db.report.update(modifiedReport, { where: { reportId: reportIdx } });

@@ -3,8 +3,8 @@ import {REACT_APP_SPRING_API_URL} from '@env'
 
 
 export const fetchFunc = (url, additionalData) => {
-    const defaultUrl = "http://172.30.128.214:8080";
-    console.log()
+    const defaultUrl = REACT_APP_SPRING_API_URL;
+    console.log(additionalData)
     const options = {
         method: 'POST',
         headers: {
