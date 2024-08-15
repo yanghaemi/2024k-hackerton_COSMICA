@@ -104,7 +104,7 @@ const DetailAppointment = ({route}) => {
                 {/* Custom Button */}
                 <TouchableOpacity
                     style={styles.customButton}
-                    onPress={() => {}}
+                    onPress={() => navigation.navigate("CheckoutPage", { item })}
                     disabled={isButtonDisabled}
                 >
                     <Text style={styles.buttonText}>신청 하기</Text>

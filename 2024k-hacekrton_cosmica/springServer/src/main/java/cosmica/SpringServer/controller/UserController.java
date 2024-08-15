@@ -53,13 +53,16 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<User> logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<String> logout(HttpSession session) {
+        // 세션 무효화
+        session.removeAttribute("user");
+        session.invalidate();
+        // 로그 출력
+        log.info("Session invalidated: {}", session);
+        // 클라이언트에 로그아웃 성공 메시지와 상태 코드 반환
+        return ResponseEntity.ok("Logout successful");
     }
+
 
     @PostMapping("/findById")
     public ResponseEntity<User> findById(@RequestParam(value = "id") String id) {

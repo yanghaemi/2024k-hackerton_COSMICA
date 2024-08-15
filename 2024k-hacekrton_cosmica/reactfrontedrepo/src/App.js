@@ -4,12 +4,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainScreen from './screens/main/MainScreen';
 import SearchScreen from './screens/main/SearchScreen';
-import MyPage from './screens/mypage/MyPage';
 import CompanionStack from "./screens/companion/CompanionStack.tsx";
 import Report from './screens/main/Report';
 import { REACT_APP_LOCAL_API_URL } from '@env';
 import Login from "./loginregister/Login";
 import Register from "./loginregister/Register";
+import fetchFunc3 from "./screens/companion/fetch/FetchFunc3";
+import {Alert} from "react-native";
+import MyPageStack from "./screens/mypage/MyPageStack";
 
 const Tab = createBottomTabNavigator(); //탭 네비
 const Stack = createNativeStackNavigator(); //스택 네비
@@ -27,14 +29,13 @@ function MyTabs() {
     return (
         <Tab.Navigator>
             <Tab.Screen name="Main" component={MainStackNavigator} options={{ headerShown: false }} />
-            <Tab.Screen name="Login" children={() => <Login apiUrl={REACT_APP_LOCAL_API_URL} />}/>
-            <Tab.Screen name="Register" component={Register} />
-            <Tab.Screen name="Companion" component={CompanionStack} />
-            <Tab.Screen name="마이페이지" //확인용 마이페이지
-                        component={MyPage}
-                        options={{ headerShown: true }} />
+            <Tab.Screen name="Companion" component={CompanionStack}
+                listeners={({ navigation }) => ({
+                    tabPress: e => handleCompanionTabPress(e, navigation)
+                })}/>
+            <Tab.Screen name="마이페이지" component={MyPageStack} options={{ headerShown: true }} />
         </Tab.Navigator>
-    )
+    );
 }
 
 function App() {
@@ -52,6 +53,25 @@ function App() {
     );
 }
 
+
+const handleCompanionTabPress = async (e, navigation) => {
+    e.preventDefault(); // Prevent default action first
+
+    try {
+        const userInfo = await fetchFunc3("/users/myInfo");
+        console.log("userInfo: ", userInfo);
+        if (userInfo) {
+            navigation.navigate('Companion');
+        } else {
+            Alert.alert("로그인이 필요한 서비스입니다.");
+            navigation.navigate('Login');
+        }
+    } catch (error) {
+        Alert.alert("서버에 문제가 생겼습니다. 나중에 다시 이용해주세요.");
+        console.error('Error:', error);
+        navigation.navigate('Login');
+    }
+};
 
 
 export default App;

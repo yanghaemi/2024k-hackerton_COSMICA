@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import {View, TextInput, Alert, StyleSheet, ScrollView, Image, Text, TouchableOpacity} from "react-native";
-import FetchJSONButton from "../screens/companion/fetch/FetchJSONButton";
-import {useNavigation} from "@react-navigation/native";
+import { View, TextInput, Alert, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { fetchFunc } from "../screens/companion/fetch/FetchFunc";
 
-const Login = () => {  const [id, setId] = useState("");
+const Login = () => {
+    const [id, setId] = useState("");
     const [password, setPassword] = useState("");
     const navigation = useNavigation();
+
     const onChangeId = (text) => {
         if (/^\d*$/.test(text)) {
             setId(text);
@@ -13,6 +15,19 @@ const Login = () => {  const [id, setId] = useState("");
             Alert.alert("경고", "ID는 숫자만 입력 가능합니다.");
         }
     };
+
+    const handleLogin = () => {
+        fetchFunc("/users/login", { id, password })
+            .then(data => {
+                console.log('Success:', data);
+                    navigation.navigate("MyPage");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Alert.alert("로그인 실패", "서버에 문제가 발생했습니다. 나중에 다시 시도해 주세요.");
+            });
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Image
@@ -21,33 +36,34 @@ const Login = () => {  const [id, setId] = useState("");
                 accessibilityLabel="Logo"
             />
 
-            <TextInput
-                style={styles.input}
-                placeholderTextColor="#888"
-                placeholder="id(숫자만 입력 가능합니다)"
-                value={id}
-                onChangeText={onChangeId}
-                keyboardType="numeric"
-            />
-
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="#888"
-                secureTextEntry
-                onChangeText={setPassword}
-                value={password}
-            />
-
-            <View style={styles.linksContainer}>
-                <FetchJSONButton
-                    url="/users/login"
-                    additionalData1={{id,password}}
+            <View style={styles.formContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholderTextColor="#888"
+                    placeholder="아이디 (숫자만 입력 가능합니다)"
+                    value={id}
+                    onChangeText={onChangeId}
+                    keyboardType="numeric"
                 />
-                <Text style={styles.separator}> | </Text>
-                <TouchableOpacity>
-                    <Text style={styles.link} onPress={()=>navigation.navigate("Register")}>Register</Text>
+
+                <TextInput
+                    style={styles.input}
+                    placeholder="비밀번호"
+                    placeholderTextColor="#888"
+                    secureTextEntry
+                    onChangeText={setPassword}
+                    value={password}
+                />
+
+                <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                    <Text style={styles.loginButtonText}>로그인</Text>
                 </TouchableOpacity>
+
+                <View style={styles.linksContainer}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                        <Text style={styles.link}>회원가입</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </ScrollView>
     );
@@ -58,33 +74,54 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         padding: 16,
         alignItems: 'center',
+        backgroundColor: '#f5f5f5',
     },
     logo: {
-        width: 163, // 이전 크기의 절반
-        height: 168.5, // 이전 크기의 절반
-        marginBottom: 32,
+        width: 160, // 크기 조정
+        height: 160, // 크기 조정
+        marginBottom: 40,
+        resizeMode: 'contain',
+    },
+    formContainer: {
+        width: '100%',
+        maxWidth: 400,
+        backgroundColor: '#ffffff',
+        borderRadius: 8,
+        padding: 20,
+        elevation: 3, // 그림자 효과
     },
     input: {
         width: '100%',
-        height: 40,
+        height: 50,
         borderColor: '#ddd',
         borderWidth: 1,
-        borderRadius: 4,
-        paddingHorizontal: 8,
+        borderRadius: 8,
+        paddingHorizontal: 16,
         marginBottom: 16,
+        fontSize: 16,
+    },
+    loginButton: {
+        backgroundColor: '#000',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 4,
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    loginButtonText: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     linksContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 16,
+        justifyContent: 'center',
     },
     link: {
-        color: '#007BFF', // 링크 색상
-        fontSize: 14,
-    },
-    separator: {
-        color: '#888',
-        fontSize: 14,
+        color: '#000', // 링크 색상
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 
