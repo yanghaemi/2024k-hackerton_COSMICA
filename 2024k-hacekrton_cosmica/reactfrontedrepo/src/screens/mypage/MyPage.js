@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import fetchFunc3 from "../companion/fetch/FetchFunc3";
-import {useFocusEffect, useNavigation} from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const MyPage = () => {
     const [myData, setMyData] = useState(null);
+    const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigation = useNavigation();
@@ -16,6 +17,10 @@ const MyPage = () => {
                     const myDataResponse = await fetchFunc3("/users/myInfo");
                     setMyData(myDataResponse);
                     console.log("My info in MyPage", myDataResponse);
+
+                    const myAppointmentResponse = await fetchFunc3("/appointment/my");
+                    setAppointments(myAppointmentResponse);
+                    console.log("My appointments", myAppointmentResponse);
                 } catch (err) {
                     setError(err);
                     Alert.alert("Error", "Failed to load data.");
@@ -27,8 +32,7 @@ const MyPage = () => {
         }, [])
     );
 
-
-    const logout = async()=>{
+    const logout = async () => {
         try {
             const logoutData = await fetchFunc3("/users/logout");
             setMyData(null);
@@ -39,8 +43,7 @@ const MyPage = () => {
         } finally {
             setLoading(false);
         }
-    }
-
+    };
 
     if (loading) {
         return <View style={styles.loaderContainer}><ActivityIndicator size="large" color="#0000ff" /></View>;
@@ -122,13 +125,27 @@ const MyPage = () => {
                 </View>
             </View>
 
+            {/* Appointments Section */}
             <View style={styles.historySection}>
                 <Text style={styles.historyText}>동행자 이력</Text>
-                {/*<Image source={require('./assets/note.png')} style={styles.historyIcon} />*/}
+                {appointments !== null ? (
+                        appointments.map((appointment, index) => (
+                            <View key={index} style={styles.appointmentItem}>
+                                <Text>날짜: {appointment.appointDate}</Text>
+                                <Text>위치: {appointment.location}</Text>
+                                <Text>비용: {appointment.bill}원</Text>
+                                <Text>동행자 ID: {appointment.companionId}</Text>
+                                <Text>휠체어 ID: {appointment.wheelchairId}</Text>
+                            </View>
+                        ))
+                ) : (
+                    <Text>No appointments found.</Text>
+                )}
             </View>
         </ScrollView>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
@@ -259,7 +276,6 @@ const styles = StyleSheet.create({
         marginLeft: 8,
     },
     historySection: {
-        flexDirection: 'row',
         backgroundColor: '#ffffff',
         padding: 16,
         marginTop: 30,
@@ -272,6 +288,12 @@ const styles = StyleSheet.create({
     historyIcon: {
         width: 30,
         height: 36,
+    },
+    appointmentItem: {
+        padding: 10,
+        marginVertical: 5,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 8,
     },
 });
 

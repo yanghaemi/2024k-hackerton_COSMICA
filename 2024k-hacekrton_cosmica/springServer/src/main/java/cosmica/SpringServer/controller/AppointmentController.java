@@ -53,10 +53,11 @@ public class AppointmentController {
         return ResponseEntity.ok().body(appointments);
     }
 
-    @GetMapping("/my")
+    @PostMapping("/my")
     public ResponseEntity<List<Appointment>> lookupMyAppointment(@SessionAttribute(name="user")User user)
     {
         List<Appointment> appointments = matchService.searchAppointmentByUser(user);
+        log.info(appointments.toString());
         return ResponseEntity.ok().body(appointments);
     }
 

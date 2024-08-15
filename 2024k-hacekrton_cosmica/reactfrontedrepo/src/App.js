@@ -12,6 +12,7 @@ import Register from "./loginregister/Register";
 import fetchFunc3 from "./screens/companion/fetch/FetchFunc3";
 import {Alert} from "react-native";
 import MyPageStack from "./screens/mypage/MyPageStack";
+import React from "react";
 
 const Tab = createBottomTabNavigator(); //탭 네비
 const Stack = createNativeStackNavigator(); //스택 네비
@@ -28,6 +29,7 @@ const MainStackNavigator = () => { //map 페이지에서 길찾기 화면으로 
 function MyTabs() {
     return (
         <Tab.Navigator>
+            <Stack.Screen name="Login" component={Login} />
             <Tab.Screen name="Main" component={MainStackNavigator} options={{ headerShown: false }} />
             <Tab.Screen name="Companion" component={CompanionStack}
                 listeners={({ navigation }) => ({

@@ -60,7 +60,7 @@ const Login = () => {
                 </TouchableOpacity>
 
                 <View style={styles.linksContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Main")}>
                         <Text style={styles.link}>회원가입</Text>
                     </TouchableOpacity>
                 </View>

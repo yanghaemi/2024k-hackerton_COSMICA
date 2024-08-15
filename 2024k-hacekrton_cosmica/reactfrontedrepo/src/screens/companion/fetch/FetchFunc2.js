@@ -3,6 +3,7 @@ import {REACT_APP_SPRING_API_URL} from '@env'
 
 export const fetchFunc2 = (url, additionalData=null) => {
     const defaultUrl = REACT_APP_SPRING_API_URL;
+    console.log(defaultUrl);
     const params = new URLSearchParams();
 
     // additionalData 객체를 URLSearchParams 객체로 변환
