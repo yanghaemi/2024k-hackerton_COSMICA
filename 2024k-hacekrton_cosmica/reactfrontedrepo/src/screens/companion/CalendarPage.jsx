@@ -43,7 +43,7 @@ const CalendarPage = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.selectedDate}>{`${selectedDate} 가능 동행자`}</Text>
+            <Text style={styles.selectedDate}>{`${selectedDate} 이용자 목록`}</Text>
             {/*item= appointment*/}
             <FlatList
                 data={appointment}

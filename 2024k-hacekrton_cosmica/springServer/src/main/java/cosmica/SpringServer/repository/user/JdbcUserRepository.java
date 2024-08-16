@@ -58,12 +58,13 @@ public class JdbcUserRepository implements UserRepository {
         ms.addValue("id", user.getId());
         ms.addValue("pw", user.getPw());
         ms.addValue("userName", user.getUserName());
+        ms.addValue("phoneNum",user.getPhoneNum());
         ms.addValue("userType", user.getUserType().toString());
         ms.addValue("location", user.getLocation());
         ms.addValue("rate",0.0);
         ms.addValue("times", 0);
-        jdbcTemplate.update("insert into user (id,pw,userName,userType,location,rate,times)" +
-                " values (:id,:pw,:userName,:userType,:location,:rate,:times)",ms);
+        jdbcTemplate.update("insert into user (id,pw,userName,phoneNum,userType,location,rate,times)" +
+                " values (:id,:pw,:userName,:phoneNum,:userType,:location,:rate,:times)",ms);
         return Optional.of(user);
     }
 
@@ -81,6 +82,7 @@ public class JdbcUserRepository implements UserRepository {
             user.setId(rs.getInt("id"));
             user.setPw(rs.getString("pw"));
             user.setUserName(rs.getString("userName"));
+            user.setPhoneNum(rs.getString("phoneNum"));
             user.setUserType(rs.getString("userType").equals("WHEELCHAIR")? UserType.WHEELCHAIR:UserType.COMPANION);
             user.setLocation(rs.getString("location"));
             user.setRate(rs.getDouble("rate"));

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity, Modal, Button } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Text,FlatList, TouchableOpacity, Modal, Button } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { getLocation } from '../../components/Location';
 import { fetchRoute } from '../../components/FetchRoute';
@@ -19,46 +19,70 @@ const MainScreen = ({apiUrl}) => {
 
   const [reports, setReports] = useState([]); // 모든 신고 내용
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 리포트
+  const [routes, setRoutes] = useState([]); // 검색 후 동일 출발, 목적지 경로 추천
+  const [selectedRoute, setSelectedRoute] = useState(null); // 선택된 경로
+
 
 
   const getData = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/report`);
-        // console.log(response.data);
-        setReports(response.data);
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      const response = await axios.get(`${apiUrl}/report`);
+      // console.log(response.data);
+      setReports(response.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
     getData();
+
   }, []);
 
-   const handleItemPress = async (marker) => {
-     try {
-       setSelectedReport(marker);
-      const response = await axios.get(`${apiUrl}/report/modify/${marker.reportId}`);
-        console.log(response.data); // 요청이 성공한 경우 응답 데이터 로그
+  const handleItemPress = async (marker) => {
+    try {
+      console.log("럭키:",marker);
+      setSelectedRoute(marker.data);
+      console.log(selectedRoute); // 요청이 성공한 경우 응답 데이터 로그
     } catch (error) {
-        console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
+      console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
     }
   };
 
-   const handleCloseModal = () => { // 닫기 버튼 눌렀을 때
+  const handleCloseModal = () => { // 닫기 버튼 눌렀을 때
     setSelectedReport(null);
   };
 
+
+const getRoutes = async () => {
+        try{const response = await axios.get(`${apiUrl}/main/getRoute`, {
+          origin: origin,
+          destination: destination
+        });
+
+          console.log("루트3: ", response.data);
+          if (response.data) {
+            setRoutes(response.data.data);
+            console.log("제발:",routes);
+          }
+        } catch (error) {
+          console.error("에러?:", error);
+  }
+  }
+  
+
   useEffect(() => { //길 찾기 장소
     if (origin && destination) { //출발지, 목적지 둘 다 정해진 경우
-        setRegion({ //도착지를 기준으로 지도 포커스
-          latitude: destination.latitude,
-          longitude: destination.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        })
-        fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
+      setRegion({ //도착지를 기준으로 지도 포커스
+        latitude: destination.latitude,
+        longitude: destination.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      })
+      fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
+      
+      getRoutes();
     }
   }, [destination]);
 
@@ -67,19 +91,24 @@ const MainScreen = ({apiUrl}) => {
     setRouteCoordinates([]); //경로 표시 제거
   };
 
-  const getBus = async ()=>{
-    const response = await axios.get(`${apiUrl}/main/bus`)
 
-      console.log(response.data);      
-  }
+  const renderItem = ({ item }) => (
+      // 터치하면 해당 경로 띄우기
+      <TouchableOpacity onPress={() => handleItemPress(item)}>
+        <View style={styles.itemContainer}>
+          <Text style={styles.title}>경로 ID: {item.routeId}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+
 
   
 
   if (loading) { // 현재 위치 확인해서 표시해 줄 때까지 로딩 화면 보여주는 부분
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
     );
   }
 
@@ -112,6 +141,10 @@ const MainScreen = ({apiUrl}) => {
           <Marker coordinate={location} title="현재 위치" />
         )} */} 
         {/* 신고 표시랑 헷갈려서 마커만 지웠음 */}
+          
+        
+        
+
 
          {reports.map((marker, index) => (
           <Marker
@@ -138,7 +171,7 @@ const MainScreen = ({apiUrl}) => {
         {origin && ( //출발지
           <Marker
             coordinate={origin}
-            pinColor="red" // 색상 변경 가능
+            pinColor="#33ff93" // 색상 변경 가능
             title="출발지"
           />
         )}
@@ -155,8 +188,16 @@ const MainScreen = ({apiUrl}) => {
             strokeColor="#2363b2" // 경로 선 색상
             strokeWidth={4} // 경로 선 두께
           />
-        )}
+        )} 
+        {selectedRoute&&<Polyline   //추천 경로
+          coordinates={selectedRoute}
+          strokeColor="#eb34d5" // 경로의 색상
+          strokeWidth={4}      // 경로의 두께
+        />}
       </MapView>
+      {/* {routes && (
+        
+      )} */}
       {selectedReport && (
         <Modal
           animationType="slide"
@@ -174,11 +215,21 @@ const MainScreen = ({apiUrl}) => {
             </View>
           </View>
         </Modal>)}
+      {/* 경로 추천 */}
+      {routes && (
+        <View style={styles.routeList} id="routeList"> 
+        <FlatList
+          data={routes}
+          renderItem={renderItem}
+          // keyExtractor={(item) => item..toString()}
+        />
+        </View>
+      )}
       <TouchableOpacity // 경로 추가 버튼
         style={styles.reportButton1}
         onPress={() => {
-          getData();
-          navigation.navigate('RouteAdd');
+          // getData();
+          navigation.navigate('Add');
         }} //클릭 시 경로 추가 화면으로 이동
       >
         <Text style={{ color: '#fff', fontSize: 20}}>+</Text>
@@ -232,19 +283,28 @@ const styles = StyleSheet.create({
   searchButton: { //길 찾기 버튼
     position: 'absolute',
     top: 10,
-    left: 10, 
-    right: 70, 
+    left: 10,
+    right: 70,
     backgroundColor: 'white',
     padding: 12,
     borderRadius: 5,
     elevation: 3,
     zIndex: 1, // 버튼이 지도 위에 표시되도록 설정
   },
+   routeList: {
+      position: 'flex',
+      backgroundColor: 'white',
+     // marginBottom: 5,
+     height: 250,
+      padding:10,
+      borderRadius: 5,
+    
+    },
   resetButton: {
     position: 'absolute',
     bottom: 10,
-    left: 10, 
-    right: 10, 
+    left: 10,
+    right: 10,
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 5,
