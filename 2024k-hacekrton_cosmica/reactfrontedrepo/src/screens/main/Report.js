@@ -270,67 +270,67 @@ const Report = ({apiUrl}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
-  searchContainer: {
-    position: 'flex',
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 10,
-    elevation: 3,
-  },
-  searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  // reportList: {
-  //   position: 'flex',
-  //   backgroundColor: 'white',
-  //   // marginBottom: 5,
-  //   padding:10,
-  //   borderRadius: 5,
+    container: {
+        flex: 1,
+    },
+    map: {
+        flex: 1,
+    },
+    searchContainer: {
+        position: 'flex',
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 10,
+        elevation: 3,
+    },
+    searchInput: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    // reportList: {
+    //   position: 'flex',
+    //   backgroundColor: 'white',
+    //   // marginBottom: 5,
+    //   padding:10,
+    //   borderRadius: 5,
 
-  // }
-   modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    width: 300,
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  btnContainer:{
-    flexDirection: 'row'
-  },
-  reportBnt: {
-    margin: 10,
-    justifyContent: 'space-between', // 버튼 사이에 공간 균등 배치
-    marginTop: 10,
-  },
-   button: {
-    marginHorizontal: 5, // 버튼 간의 간격 설정
-  },
+    // }
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+        width: 300,
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    btnContainer:{
+        flexDirection: 'row'
+    },
+    reportBnt: {
+        margin: 10,
+        justifyContent: 'space-between', // 버튼 사이에 공간 균등 배치
+        marginTop: 10,
+    },
+    button: {
+        marginHorizontal: 5, // 버튼 간의 간격 설정
+    },
 });
 
 export default Report;

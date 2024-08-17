@@ -6,7 +6,6 @@ import React from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 import { PaymentWidgetProvider, usePaymentWidget, AgreementWidget, PaymentMethodWidget } from "@tosspayments/widget-sdk-react-native";
 import mainScreen from "../main/MainScreen";
-import MyPageStack from "../mypage/MyPageStack";
 const Stack = createStackNavigator();
 
 

@@ -21,50 +21,44 @@ const MainScreen = ({apiUrl}) => {
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 리포트
 
 
-
-
   const getData = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/report`);
-      // console.log(response.data);
-      setReports(response.data);
-    } catch (err) {
-      console.error(err);
-    }
+      try {
+        const response = await axios.get(`${apiUrl}/report`);
+        // console.log(response.data);
+        setReports(response.data);
+      } catch (err) {
+        console.error(err);
+      }
   };
 
   useEffect(() => {
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
     getData();
-
   }, []);
 
-  const handleItemPress = async (marker) => {
-    try {
-      setSelectedReport(marker);
+   const handleItemPress = async (marker) => {
+     try {
+       setSelectedReport(marker);
       const response = await axios.get(`${apiUrl}/report/modify/${marker.reportId}`);
-      console.log(response.data); // 요청이 성공한 경우 응답 데이터 로그
+        console.log(response.data); // 요청이 성공한 경우 응답 데이터 로그
     } catch (error) {
-      console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
+        console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
     }
   };
 
-  const handleCloseModal = () => { // 닫기 버튼 눌렀을 때
+   const handleCloseModal = () => { // 닫기 버튼 눌렀을 때
     setSelectedReport(null);
   };
 
-
-
-
   useEffect(() => { //길 찾기 장소
     if (origin && destination) { //출발지, 목적지 둘 다 정해진 경우
-      setRegion({ //도착지를 기준으로 지도 포커스
-        latitude: destination.latitude,
-        longitude: destination.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      })
-      fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
+        setRegion({ //도착지를 기준으로 지도 포커스
+          latitude: destination.latitude,
+          longitude: destination.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        })
+        fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
     }
   }, [destination]);
 
@@ -73,116 +67,113 @@ const MainScreen = ({apiUrl}) => {
     setRouteCoordinates([]); //경로 표시 제거
   };
 
-
-
   if (loading) { // 현재 위치 확인해서 표시해 줄 때까지 로딩 화면 보여주는 부분
     return (
-        <View style={styles.container}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     );
   }
 
   return (
-      <View style={styles.container}>
-        <TouchableOpacity //길 찾기 버튼
-            style={styles.searchButton}
-            onPress={() => navigation.navigate('Search')} //클릭 시 검색 화면으로 이동
+    <View style={styles.container}>
+      <TouchableOpacity //길 찾기 버튼
+        style={styles.searchButton}
+        onPress={() => navigation.navigate('길 찾기')} //클릭 시 검색 화면으로 이동
+      >
+        <Text style={styles.buttonText}>길 찾기</Text>
+      </TouchableOpacity>
+      {destination && ( // 도착지 값이 있는 경우 "길찾기 해제" 버튼 렌더링
+        <TouchableOpacity
+          style={styles.resetButton}
+          onPress={handleResetDestination}
         >
-          <Text style={styles.buttonText}>길 찾기</Text>
+          <Text style={styles.buttonText}>길 찾기 종료</Text>
         </TouchableOpacity>
-        {destination && ( // 도착지 값이 있는 경우 "길찾기 해제" 버튼 렌더링
-            <TouchableOpacity
-                style={styles.resetButton}
-                onPress={handleResetDestination}
-            >
-              <Text style={styles.buttonText}>길 찾기 종료</Text>
-            </TouchableOpacity>
-        )}
-        <MapView //지도
-            style={styles.map}
-            region={region}
-            onRegionChangeComplete={setRegion} // 지역 변경 시 상태를 업데이트
-            showsUserLocation={true} // 사용자 위치 표시
-            showsMyLocationButton={true} // 위치 버튼 표시
-            provider={PROVIDER_GOOGLE}
-        >
-          {/* {location && ( //현재 위치 표시
+      )}
+      <MapView //지도
+        style={styles.map}
+        region={region}
+        onRegionChangeComplete={setRegion} // 지역 변경 시 상태를 업데이트
+        showsUserLocation={true} // 사용자 위치 표시
+        showsMyLocationButton={true} // 위치 버튼 표시
+      provider={PROVIDER_GOOGLE}
+      >
+        {/* {location && ( //현재 위치 표시
           <Marker coordinate={location} title="현재 위치" />
-        )} */}
-          {/* 신고 표시랑 헷갈려서 마커만 지웠음 */}
+        )} */} 
+        {/* 신고 표시랑 헷갈려서 마커만 지웠음 */}
 
-          {reports.map((marker, index) => (
-              <Marker
-                  key={index}
-                  coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude,
-                  }}
-                  title={marker.title} // 마커의 타이틀 (예: 장소 이름)
-                  description={marker.contents} // 마커의 설명 (예: 간단한 설명)
-                  onPress={()=>handleItemPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
-
-              />
-          ))}
-          {selectedLocation && ( // 선택한 장소 표시
-              <Marker
-                  coordinate={{
-                    latitude: selectedLocation.latitude,
-                    longitude: selectedLocation.longitude,
-                  }}
-                  title={selectedLocation.name}
-              />
-          )}
-          {origin && ( //출발지
-              <Marker
-                  coordinate={origin}
-                  pinColor="red" // 색상 변경 가능
-                  title="출발지"
-              />
-          )}
-          {destination && ( //도착지
-              <Marker
-                  coordinate={destination}
-                  pinColor="#3A4CA8" // 색상 변경 가능
-                  title="도착지"
-              />
-          )}
-          {routeCoordinates.length > 0 && ( //경로
-              <Polyline
-                  coordinates={routeCoordinates}
-                  strokeColor="#2363b2" // 경로 선 색상
-                  strokeWidth={4} // 경로 선 두께
-              />
-          )}
-        </MapView>
-        {selectedReport && (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={selectedReport !== null}
-                // onRequestClose={handleCloseModal}
-            >
-              <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                  <Text style={styles.modalTitle}>{selectedReport.title}</Text>
-                  <Text>{selectedReport.contents}</Text>
-                  <Text>Latitude: {selectedReport.latitude}</Text>
-                  <Text>Longitude: {selectedReport.longitude}</Text>
-                  <Button title="Close" onPress={handleCloseModal} />
-                </View>
-              </View>
-            </Modal>)}
-        <TouchableOpacity // 신고버튼
-            style={styles.reportButton}
-            onPress={() => {
-              getData();
-              navigation.navigate('Report')
-            }} //클릭 시 검색 화면으로 이동
+        { (reports || []).map((marker, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+            latitude: marker.latitude,
+            longitude: marker.longitude,
+           }}
+            title={marker.title}
+            description={marker.contents}
+            onPress={() => handleItemPress(marker)}
+            />
+        ))}
+        {selectedLocation && ( // 선택한 장소 표시
+          <Marker
+            coordinate={{
+              latitude: selectedLocation.latitude,
+              longitude: selectedLocation.longitude,
+            }}
+            title={selectedLocation.name}
+          />
+        )}
+        {origin && ( //출발지
+          <Marker
+            coordinate={origin}
+            pinColor="red" // 색상 변경 가능
+            title="출발지"
+          />
+        )}
+        {destination && ( //도착지
+          <Marker
+            coordinate={destination}
+            pinColor="#3A4CA8" // 색상 변경 가능
+            title="도착지"
+          />
+        )}
+        {routeCoordinates.length > 0 && ( //경로
+          <Polyline
+            coordinates={routeCoordinates}
+            strokeColor="#2363b2" // 경로 선 색상
+            strokeWidth={4} // 경로 선 두께
+          />
+        )}
+      </MapView>
+      {selectedReport && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={selectedReport !== null}
+        // onRequestClose={handleCloseModal}
         >
-          <Text style={{ color: '#fff', fontSize: 20}}>!</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>{selectedReport.title}</Text>
+              <Text>{selectedReport.contents}</Text>
+              <Text>Latitude: {selectedReport.latitude}</Text>
+              <Text>Longitude: {selectedReport.longitude}</Text>
+              <Button title="Close" onPress={handleCloseModal} />
+            </View>
+          </View>
+        </Modal>)}
+      <TouchableOpacity // 신고버튼
+        style={styles.reportButton}
+        onPress={() => {
+          getData();
+          navigation.navigate('Report')
+        }} //클릭 시 검색 화면으로 이동
+      >
+        <Text style={{ color: '#fff', fontSize: 20}}>!</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -196,8 +187,8 @@ const styles = StyleSheet.create({
   searchButton: { //길 찾기 버튼
     position: 'absolute',
     top: 10,
-    left: 10,
-    right: 70,
+    left: 10, 
+    right: 70, 
     backgroundColor: 'white',
     padding: 12,
     borderRadius: 5,
@@ -207,8 +198,8 @@ const styles = StyleSheet.create({
   resetButton: {
     position: 'absolute',
     bottom: 10,
-    left: 10,
-    right: 10,
+    left: 10, 
+    right: 10, 
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 5,
