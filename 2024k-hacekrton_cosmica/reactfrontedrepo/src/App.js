@@ -7,12 +7,13 @@ import SearchScreen from './screens/main/SearchScreen';
 import CompanionStack from "./screens/companion/CompanionStack.tsx";
 import Report from './screens/main/Report';
 import { REACT_APP_LOCAL_API_URL } from '@env';
-import Login from "./loginregister/Login";
-import Register from "./loginregister/Register";
-import fetchFunc3 from "./screens/companion/fetch/FetchFunc3";
+import Login from "./screens/mypage/loginregister/Login";
+import Register from "./screens/mypage/loginregister/Register";
+import fetchFunc3 from "./fetch/FetchFunc3";
 import {Alert} from "react-native";
 import MyPageStack from "./screens/mypage/MyPageStack";
 import React from "react";
+import BusStack from "./screens/Bus/BusStack";
 
 const Tab = createBottomTabNavigator(); //탭 네비
 const Stack = createNativeStackNavigator(); //스택 네비
@@ -29,13 +30,13 @@ const MainStackNavigator = () => { //map 페이지에서 길찾기 화면으로 
 function MyTabs() {
     return (
         <Tab.Navigator>
-            <Stack.Screen name="Login" component={Login} />
             <Tab.Screen name="Main" component={MainStackNavigator} options={{ headerShown: false }} />
-            <Tab.Screen name="Companion" component={CompanionStack}
+            <Tab.Screen name="동행자 매칭" component={CompanionStack} options={{ headerShown: false }}
                 listeners={({ navigation }) => ({
                     tabPress: e => handleCompanionTabPress(e, navigation)
                 })}/>
-            <Tab.Screen name="마이페이지" component={MyPageStack} options={{ headerShown: true }} />
+            <Tab.Screen name="마이페이지" component={MyPageStack} options={{ headerShown: false }} />
+            <Tab.Screen name = "버스" component={BusStack} options={{ headerShown: false }}/>
         </Tab.Navigator>
     );
 }
@@ -63,7 +64,7 @@ const handleCompanionTabPress = async (e, navigation) => {
         const userInfo = await fetchFunc3("/users/myInfo");
         console.log("userInfo: ", userInfo);
         if (userInfo) {
-            navigation.navigate('Companion');
+            navigation.navigate('CompanionStack');
         } else {
             Alert.alert("로그인이 필요한 서비스입니다.");
             navigation.navigate('Login');

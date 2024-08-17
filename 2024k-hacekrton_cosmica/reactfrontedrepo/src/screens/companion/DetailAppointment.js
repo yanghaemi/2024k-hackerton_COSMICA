@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, Image, Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { fetchFunc2 } from "./fetch/FetchFunc2";
+import { fetchFunc2 } from "../../fetch/FetchFunc2";
 import { useNavigation } from "@react-navigation/native";
-import fetchFunc3 from "./fetch/FetchFunc3";
+import fetchFunc3 from "../../fetch/FetchFunc3";
 
 const DetailAppointment = ({route}) => {
     const url = "/users/findById";
@@ -13,6 +13,7 @@ const DetailAppointment = ({route}) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    //item 매칭 정보
     useEffect(() => {
         const request = item.companionId === 0 ? item.wheelchairId : item.companionId;
 
@@ -66,13 +67,10 @@ const DetailAppointment = ({route}) => {
                             />
                         </View>
                         <View style={styles.infoContainer}>
-                            <Text style={styles.infoText}>{userData.userName}</Text>
-                            <Text style={styles.label}>휴대폰:</Text>
-                            <Text style={styles.infoText}>{item.location}</Text>
-                            <Text style={styles.label}>날짜:</Text>
-                            <Text style={styles.infoText}>{item.appointDate}</Text>
-                            <Text style={styles.label}>비용:</Text>
-                            <Text style={styles.infoText}>{item.bill}</Text>
+                            <Text style={styles.label}>이름:  {userData.userName}</Text>
+                            <Text style={styles.label}>위치:  {item.location}</Text>
+                            <Text style={styles.label}>날짜:  {item.appointDate}</Text>
+                            <Text style={styles.label}>비용:  {item.bill}</Text>
                         </View>
                     </View>
                 </View>
@@ -103,8 +101,10 @@ const DetailAppointment = ({route}) => {
 
                 {/* Custom Button */}
                 <TouchableOpacity
-                    style={styles.customButton}
-                    onPress={() => navigation.navigate("CheckoutPage", { item })}
+                    style={[styles.customButton,
+                        isButtonDisabled && styles.disabledButton // disabledButton 스타일을 추가
+                    ]}
+                    onPress={() => navigation.navigate("CheckoutPage", { item,userData })}
                     disabled={isButtonDisabled}
                 >
                     <Text style={styles.buttonText}>신청 하기</Text>
@@ -176,12 +176,16 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     customButton: {
-        backgroundColor: '#6200EE',
+        backgroundColor: '#6200EE', // 기본 버튼 색상
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
         marginTop: 20,
     },
+    disabledButton: {
+        backgroundColor: '#aaaaaa', // 버튼 비활성화 시 회색
+    },
+
     buttonText: {
         color: '#ffffff',
         fontSize: 18,

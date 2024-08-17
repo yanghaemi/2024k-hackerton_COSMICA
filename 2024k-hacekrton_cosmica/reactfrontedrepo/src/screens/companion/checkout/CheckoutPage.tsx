@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Alert, Button } from "react-native";
-import { PaymentWidgetProvider, usePaymentWidget, AgreementWidget, PaymentMethodWidget } from "@tosspayments/widget-sdk-react-native";
-import type { AgreementWidgetControl, PaymentMethodWidgetControl, AgreementStatus } from "@tosspayments/widget-sdk-react-native";
+import {  usePaymentWidget, AgreementWidget, PaymentMethodWidget } from "@tosspayments/widget-sdk-react-native";
+import type { AgreementWidgetControl, PaymentMethodWidgetControl} from "@tosspayments/widget-sdk-react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { fetchFunc } from "../fetch/FetchFunc";
+import { fetchFunc } from "../../../fetch/FetchFunc";
 
 const CheckoutPage = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { item } = route.params;
+    const { item,userData } = route.params;
     const paymentWidgetControl = usePaymentWidget();
     const [paymentMethodWidgetControl, setPaymentMethodWidgetControl] = useState<PaymentMethodWidgetControl | null>(null);
     const [agreementWidgetControl, setAgreementWidgetControl] = useState<AgreementWidgetControl | null>(null);
@@ -34,10 +34,10 @@ const CheckoutPage = () => {
             if (result?.success) {
                 console.log("ResultSuccess: ", result.success);
                 fetchFunc("/appointment/pay", result.success)
-                    .then(({status,data})=>{
+                    .then(()=>{
                         fetchFunc("/appointment/payComplete",item)
-                            .then(response=>{
-                                Alert.alert("신청이 완료되었습니다.");
+                            .then(()=>{
+                                Alert.alert("신청이 완료되었습니다.", `상대방 휴대폰 번호는 ${userData.phoneNum}입니다.`);
                             })
                     })
             } else if (result?.fail) {

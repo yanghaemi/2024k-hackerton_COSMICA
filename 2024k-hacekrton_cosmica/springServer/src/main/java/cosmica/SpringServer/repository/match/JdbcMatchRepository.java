@@ -66,8 +66,15 @@ public class JdbcMatchRepository implements MatchRepository {
     @Override
     public List<Appointment> searchAppointmentByUser(User user) {
         MapSqlParameterSource ms = new MapSqlParameterSource();
-        ms.addValue("userId",user.getId());
-        List<Appointment> appointmentList = jdbcTemplate.query("select * from Appointment as a join UserAppointment as u on a.id =u.appointmentId where u.userId = :userId", ms, appointmentRowMapper1());
+        List<Appointment> appointmentList;
+        if(user.getUserType()==UserType.WHEELCHAIR) {
+            ms.addValue("wheelchairId",user.getId());
+             appointmentList= jdbcTemplate.query("select * from appointment where wheelchairId=:wheelchairId", ms, appointmentRowMapper1());
+        }
+        else{
+            ms.addValue("companionId",user.getId());
+            appointmentList = jdbcTemplate.query("select * from appointment where companionId=:companionId", ms, appointmentRowMapper1());
+        }
         return appointmentList;
     }
 

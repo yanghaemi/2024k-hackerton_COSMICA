@@ -7,9 +7,7 @@ import cosmica.SpringServer.dto.forMapping.DateMapping;
 import cosmica.SpringServer.dto.forMapping.OrderMapping;
 import cosmica.SpringServer.enums.UserType;
 import cosmica.SpringServer.service.match.MatchService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,7 +22,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RequiredArgsConstructor

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
-import { fetchFunc } from "./fetch/FetchFunc";
+import { fetchFunc } from "../../fetch/FetchFunc";
 import Config from "react-native-config";
 
 const CalendarPage = () => {

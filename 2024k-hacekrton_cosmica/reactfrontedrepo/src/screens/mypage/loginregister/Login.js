@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, Alert, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { fetchFunc } from "../screens/companion/fetch/FetchFunc";
+import { fetchFunc } from "../../../fetch/FetchFunc";
 
 const Login = () => {
     const [id, setId] = useState("");
@@ -31,7 +31,7 @@ const Login = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Image
-                source={require('../image/11zon_cropped.png')} // 로고 이미지 경로를 맞게 설정하세요
+                source={require('../../../image/로그인화면.png')} // 로고 이미지 경로를 맞게 설정하세요
                 style={styles.logo}
                 accessibilityLabel="Logo"
             />
@@ -60,7 +60,7 @@ const Login = () => {
                 </TouchableOpacity>
 
                 <View style={styles.linksContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate("Main")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Register")}>
                         <Text style={styles.link}>회원가입</Text>
                     </TouchableOpacity>
                 </View>

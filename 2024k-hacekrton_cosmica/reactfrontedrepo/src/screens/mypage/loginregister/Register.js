@@ -9,7 +9,7 @@ import {
     Alert
 } from 'react-native';
 import {REACT_APP_SPRING_API_URL} from '@env';
-import {fetchFunc} from "../screens/companion/fetch/FetchFunc";
+import {fetchFunc} from "../../../fetch/FetchFunc";
 
 const Register = () => {
     const [user, setUser] = useState({

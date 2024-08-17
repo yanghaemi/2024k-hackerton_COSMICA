@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { fetchFunc } from "./fetch/FetchFunc";
-import {useNavigation} from "@react-navigation/native";
+import { fetchFunc } from "../../fetch/FetchFunc";
+import { useNavigation } from "@react-navigation/native";
 
 const AppointmentRegister = ({ route }) => {
-    // route.params에서 item을 추출
-    const { selectedDate } = route.params; // 여기서 selectedDate가 전달된 날짜 값입니다.
+    const { selectedDate } = route.params;
     const [wheelchairId, setWheelchairId] = useState('');
     const [companionId, setCompanionId] = useState('');
-    const [appointDate, setAppointDate] = useState(new Date(selectedDate)); // selectedDate로 초기화
+    const [appointDate, setAppointDate] = useState(new Date(selectedDate));
     const [location, setLocation] = useState('');
     const [bill, setBill] = useState('');
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -26,7 +25,7 @@ const AppointmentRegister = ({ route }) => {
         const appointmentData = {
             wheelchairId: parseInt(wheelchairId, 10),
             companionId: parseInt(companionId, 10),
-            appointDate: appointDate.toISOString(), // Date 객체를 ISO 문자열로 변환
+            appointDate: appointDate.toISOString(),
             location,
             bill: parseFloat(bill),
         };
@@ -44,13 +43,17 @@ const AppointmentRegister = ({ route }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Appointment Register</Text>
+            <Text style={styles.title}>매칭 등록</Text>
+
             <TouchableOpacity
-                style={styles.button}
+                style={styles.dateButton}
                 onPress={() => setShowDatePicker(true)}
             >
-                <Text>Select Date: {appointDate.toDateString()}</Text>
+                <Text style={styles.dateButtonText}>
+                    {appointDate ? appointDate.toDateString() : "Select Date"}
+                </Text>
             </TouchableOpacity>
+
             {showDatePicker && (
                 <DateTimePicker
                     testID="dateTimePicker"
@@ -60,20 +63,28 @@ const AppointmentRegister = ({ route }) => {
                     onChange={onDateChange}
                 />
             )}
+
             <TextInput
                 style={styles.input}
-                placeholder="위치를 입력해주세요"
+                placeholder="만날 장소를 입력하세요"
                 value={location}
                 onChangeText={setLocation}
             />
+
             <TextInput
                 style={styles.input}
-                placeholder="가격을 입력해주세요"
+                placeholder="금액을 입력하세요"
                 keyboardType="numeric"
                 value={bill}
                 onChangeText={setBill}
             />
-            <Button title="등록" onPress={() => handleSubmit('/appointment/register')} color="#1976D2" />
+
+            <TouchableOpacity
+                style={styles.submitButton}
+                onPress={() => handleSubmit('/appointment/register')}
+            >
+                <Text style={styles.submitButtonText}>등록하기</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -81,36 +92,51 @@ const AppointmentRegister = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        padding: 20,
         justifyContent: 'center',
+        backgroundColor: '#f4f4f9',
     },
     title: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
-        marginBottom: 32,
+        color: '#333',
         textAlign: 'center',
+        marginBottom: 20,
+    },
+    dateButton: {
+        backgroundColor: '#4CAF50',
+        borderRadius: 10,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        marginBottom: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    dateButtonText: {
+        fontSize: 18,
+        color: '#fff',
     },
     input: {
         height: 50,
-        borderColor: '#ccc',
+        borderColor: '#ddd',
         borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginBottom: 16,
+        borderRadius: 10,
+        paddingHorizontal: 15,
+        marginBottom: 15,
+        backgroundColor: '#fff',
+        fontSize: 16,
     },
-    button: {
-        backgroundColor: '#1976D2',
-        borderColor: '#ccc', // 연한 회색 테두리
-        borderWidth: 1, // 테두리 두께
-        borderRadius: 5,
-        padding: 10, // 버튼 내부 여백
-        paddingVertical: 12,
-        marginBottom: 16, // 버튼 아래 간격
-        marginTop: 32,
+    submitButton: {
+        backgroundColor: 'black',
+        borderRadius: 10,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    buttonText: {
-        color: 'white',
-        textAlign: 'center',
+    submitButtonText: {
+        fontSize: 18,
+        color: '#fff',
         fontWeight: 'bold',
     },
 });

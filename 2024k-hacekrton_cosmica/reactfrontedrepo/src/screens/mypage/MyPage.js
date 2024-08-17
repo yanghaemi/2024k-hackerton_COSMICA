@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import fetchFunc3 from "../companion/fetch/FetchFunc3";
+import fetchFunc3 from "../../fetch/FetchFunc3";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const MyPage = () => {
@@ -8,36 +8,41 @@ const MyPage = () => {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refresh, setRefresh] = useState(false); // 페이지 새로 고침을 위한 상태 추가
     const navigation = useNavigation();
+
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const myDataResponse = await fetchFunc3("/users/myInfo");
+            setMyData(myDataResponse);
+            console.log("My info in MyPage", myDataResponse);
+
+            const myAppointmentResponse = await fetchFunc3("/appointment/my");
+            setAppointments(myAppointmentResponse);
+            console.log("My appointments", myAppointmentResponse);
+        } catch (err) {
+            setError(err);
+            Alert.alert("Error", "Failed to load data.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useFocusEffect(
         React.useCallback(() => {
-            const fetchData = async () => {
-                try {
-                    const myDataResponse = await fetchFunc3("/users/myInfo");
-                    setMyData(myDataResponse);
-                    console.log("My info in MyPage", myDataResponse);
-
-                    const myAppointmentResponse = await fetchFunc3("/appointment/my");
-                    setAppointments(myAppointmentResponse);
-                    console.log("My appointments", myAppointmentResponse);
-                } catch (err) {
-                    setError(err);
-                    Alert.alert("Error", "Failed to load data.");
-                } finally {
-                    setLoading(false);
-                }
-            };
             fetchData();
-        }, [])
+        }, [refresh]) // `refresh`가 변경될 때마다 호출
     );
 
     const logout = async () => {
+        setLoading(true);
         try {
-            const logoutData = await fetchFunc3("/users/logout");
+            await fetchFunc3("/users/logout");
             setMyData(null);
-        }
-        catch (err) {
+            setAppointments([]); // 로그아웃 시 appointments 초기화
+            setRefresh(prev => !prev); // 새로 고침 트리거
+        } catch (err) {
             setError(err);
             Alert.alert("Error", "로그아웃 실패");
         } finally {
@@ -129,15 +134,15 @@ const MyPage = () => {
             <View style={styles.historySection}>
                 <Text style={styles.historyText}>동행자 이력</Text>
                 {appointments !== null ? (
-                        appointments.map((appointment, index) => (
-                            <View key={index} style={styles.appointmentItem}>
-                                <Text>날짜: {appointment.appointDate}</Text>
-                                <Text>위치: {appointment.location}</Text>
-                                <Text>비용: {appointment.bill}원</Text>
-                                <Text>동행자 ID: {appointment.companionId}</Text>
-                                <Text>휠체어 ID: {appointment.wheelchairId}</Text>
-                            </View>
-                        ))
+                    appointments.map((appointment, index) => (
+                        <View key={index} style={styles.appointmentItem}>
+                            <Text>날짜: {appointment.appointDate}</Text>
+                            <Text>위치: {appointment.location}</Text>
+                            <Text>비용: {appointment.bill}원</Text>
+                            <Text>동행자 ID: {appointment.companionId}</Text>
+                            <Text>휠체어 ID: {appointment.wheelchairId}</Text>
+                        </View>
+                    ))
                 ) : (
                     <Text>No appointments found.</Text>
                 )}
@@ -145,7 +150,6 @@ const MyPage = () => {
         </ScrollView>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
