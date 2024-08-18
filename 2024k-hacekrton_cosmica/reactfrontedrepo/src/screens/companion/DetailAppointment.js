@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Image, Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import { fetchFunc2 } from "../../fetch/FetchFunc2";
 import { useNavigation } from "@react-navigation/native";
-import fetchFunc4 from "../../fetch/FetchFunc4";
 import fetchFunc3 from "../../fetch/FetchFunc3";
+import {fetchFunc} from "../../fetch/FetchFunc"; // fetchFunc을 가져옴
 
 const DetailAppointment = ({route}) => {
     const url = "/users/findById";
@@ -47,6 +47,21 @@ const DetailAppointment = ({route}) => {
     }
 
     const isButtonDisabled = userData && myData && userData.userType === myData.userType;
+
+    const handlePress = () => {
+        if (myData.userType === "WHEELCHAIR") {
+            navigation.navigate("CheckoutPage", { item, userData });
+        } else if (myData.userType === "COMPANION") {
+            fetchFunc("/appointment/payComplete", item)
+                .then(() => {
+                    Alert.alert("신청이 완료되었습니다.", `상대방 휴대폰 번호는 ${userData.phoneNum}입니다.`);
+                    navigation.navigate("CalendarPage");
+                })
+                .catch(error => {
+                    Alert.alert("신청 중 오류가 발생했습니다.", error.message);
+                });
+        }
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -102,11 +117,12 @@ const DetailAppointment = ({route}) => {
 
                 {/* Custom Button */}
                 <TouchableOpacity
-                    style={[styles.customButton,
+                    style={[
+                        styles.customButton,
                         isButtonDisabled && styles.disabledButton // disabledButton 스타일을 추가
                     ]}
-                    onPress={() => navigation.navigate("CheckoutPage", { item,userData })}
-                    disabled={isButtonDisabled}
+                    onPress={handlePress} // Handle press based on userType
+                    disabled={isButtonDisabled} // Button disabled condition
                 >
                     <Text style={styles.buttonText}>신청 하기</Text>
                 </TouchableOpacity>
@@ -186,7 +202,6 @@ const styles = StyleSheet.create({
     disabledButton: {
         backgroundColor: '#aaaaaa', // 버튼 비활성화 시 회색
     },
-
     buttonText: {
         color: '#ffffff',
         fontSize: 18,
