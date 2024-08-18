@@ -1,5 +1,6 @@
 package cosmica.SpringServer.service.user;
 
+import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
 import cosmica.SpringServer.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,12 @@ public class UserServiceImpl implements UserService {
     public Optional<User> deleteById(int id) {
         return userRepository.deleteById(id);
     }
+
+    @Override
+    public void updateRate(Appointment appointment) {
+        userRepository.updateRate(appointment);
+    }
+
 
 //    @Override
 //    public Optional<List<User>> findByDate(Date date){

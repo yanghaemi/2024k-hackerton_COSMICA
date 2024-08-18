@@ -15,4 +15,5 @@ public interface MatchService {
     public List<Appointment> searchAppointmentByUser(User user);
     public Appointment applyAppointment(Appointment appointment,User I);
     public Appointment cancelAppointment(int id);
+    public Appointment updateAppointment(Appointment appointment);
 }

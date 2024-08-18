@@ -104,6 +104,16 @@ public class JdbcMatchRepository implements MatchRepository {
         return appointment;
     }
 
+    @Override
+    public Appointment updateAppointment(Appointment appointment) {
+        MapSqlParameterSource ms = new MapSqlParameterSource();
+        ms.addValue("id",appointment.getId());
+        ms.addValue("review",appointment.getReview());
+        ms.addValue("rate",appointment.getRate());
+        jdbcTemplate.update("update appointment set review =:review, rate =:rate where id=:id", ms);
+        return searchAppointmentById(appointment.getId());
+    }
+
 
     private RowMapper<Appointment> appointmentRowMapper1(){
         return((rs,rowNum)->{
@@ -114,6 +124,8 @@ public class JdbcMatchRepository implements MatchRepository {
             appointment.setAppointDate(rs.getDate("appointDate"));
             appointment.setLocation(rs.getString("location"));
             appointment.setBill(rs.getInt("bill"));
+            appointment.setReview(rs.getString("review"));
+            appointment.setRate(rs.getDouble("rate"));
             return appointment;
         });
     }

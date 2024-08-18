@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, Image, Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { fetchFunc2 } from "../../fetch/FetchFunc2";
 import { useNavigation } from "@react-navigation/native";
+import fetchFunc4 from "../../fetch/FetchFunc4";
 import fetchFunc3 from "../../fetch/FetchFunc3";
 
 const DetailAppointment = ({route}) => {

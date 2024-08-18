@@ -7,6 +7,7 @@ import cosmica.SpringServer.dto.forMapping.DateMapping;
 import cosmica.SpringServer.dto.forMapping.OrderMapping;
 import cosmica.SpringServer.enums.UserType;
 import cosmica.SpringServer.service.match.MatchService;
+import cosmica.SpringServer.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -32,6 +33,7 @@ import java.util.*;
 public class AppointmentController {
 
     private final MatchService matchService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<Map<Date,Appointment>> dateRegister(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment)
@@ -119,6 +121,13 @@ public class AppointmentController {
         return ResponseEntity.ok().body(appointment);
     }
 
+    @PostMapping("/review")
+    public ResponseEntity<Appointment>registerReview(@RequestBody Appointment appointment){
+        log.info("리뷰 등록된 매칭기록={}",appointment.toString());
+        Appointment updateAppointment = matchService.updateAppointment(appointment);
+        userService.updateRate(appointment);
+        return ResponseEntity.ok().body(updateAppointment);
+    }
 
     private String getAuthorization()
     {

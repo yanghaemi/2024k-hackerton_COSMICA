@@ -37,7 +37,6 @@ const BusStopSearchScreen = () => {
                 return response.json();
             })
             .then(data => {
-                console.log(JSON.stringify(data, null, 2));
                 const body = data.response.body || {};
                 const items = body.items ? body.items.item : [];
                 const sortedItems = items.sort((a, b) => a.cityname.localeCompare(b.cityname)); // 이름 순으로 정렬
@@ -82,6 +81,8 @@ const BusStopSearchScreen = () => {
     const selectCity = (cityCode, cityName) => {
         setSelectedCityCode(cityCode);
         setSelectedCityName(cityName);
+        console.log("선택된 도시 코드:",cityCode);
+        console.log("선택된 도시 이름:",cityName);
         setCityModalVisible(false);
     };
 
@@ -146,7 +147,7 @@ const BusStopSearchScreen = () => {
                     style={styles.busItems}
                     renderItem={({ item }) => (
                         <TouchableOpacity style={styles.busItem} onPress={() => navigation.navigate("Bus", { item, selectedCityCode })}>
-                            <Text style={styles.busName}>정류소 ID: {item.nodeno}</Text>
+                            <Text style={styles.busName}>정류소 ID: {item.nodeid}</Text>
                             <Text style={styles.busName}>정류소 이름: {item.nodenm}</Text>
                         </TouchableOpacity>
                     )}

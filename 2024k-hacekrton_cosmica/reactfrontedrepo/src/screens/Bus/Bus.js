@@ -25,7 +25,7 @@ const Bus = ({ route }) => {
             pageNo: pageNo,
             _type: 'json',
             cityCode: selectedCityCode,
-            nodeId: item.nodeno,
+            nodeId: item.nodeid,
         };
 
         const queryString = new URLSearchParams(params).toString();
@@ -44,7 +44,14 @@ const Bus = ({ route }) => {
             .then(data => {
                 console.log(JSON.stringify(data, null, 2));
                 const body = data.response.body || {};
-                const items = body.items ? body.items.item : [];
+                let items = body.items ? body.items.item : [];
+
+                // 도착 예상 시간으로 정렬 (오름차순)
+                items = items.sort((a, b) => a.arrtime - b.arrtime);
+
+                // 도착 예상 시간이 30분(1800초) 이하인 항목만 필터링
+                items = items.filter(item => item.arrtime <= 1800);
+
                 setBus(prevBus => [...prevBus, ...items]); // Append new items to existing ones
                 setTotalCount(body.totalCount || 0);
                 setHasMore(items.length > 0 && bus.length < totalCount); // Check if more items are available
@@ -74,7 +81,6 @@ const Bus = ({ route }) => {
     return (
         <FlatList
             data={bus}
-            keyExtractor={item => item.routeid} // 고유한 ID를 사용하여 keyExtractor 설정
             style={styles.busItems}
             renderItem={renderItem}
             ListEmptyComponent={<Text style={styles.emptyText}>No bus information found</Text>}
@@ -121,6 +127,15 @@ const styles = StyleSheet.create({
         marginTop: 20,
         fontSize: 16,
         color: '#aaa',
+    },
+    lowFloorBusItem: {
+        flex: 1,
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        backgroundColor: '#e0f7fa', // 저상버스일 경우 배경 색을 밝은 파란색으로 설정
+        borderColor: '#006064',     // 경계선을 진한 파란색으로 설정
     },
 });
 
