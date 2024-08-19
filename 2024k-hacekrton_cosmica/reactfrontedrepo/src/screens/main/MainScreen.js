@@ -20,7 +20,7 @@ const MainScreen = ({apiUrl}) => {
   const [reports, setReports] = useState([]); // 모든 신고 내용
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 리포트
   const [routes, setRoutes] = useState([]); // 검색 후 동일 출발, 목적지 경로 추천
-  const [selectedRoute, setSelectedRoute] = useState(null); // 선택된 경로
+  const [selectedRoute, setSelectedRoute] = useState([]); // 선택된 경로
 
 
 
@@ -37,12 +37,12 @@ const MainScreen = ({apiUrl}) => {
   useEffect(() => {
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
     getData();
+    
 
   }, []);
 
   const handleItemPress = async (marker) => {
     try {
-      console.log("럭키:",marker);
       setSelectedRoute(marker.data);
       console.log(selectedRoute); // 요청이 성공한 경우 응답 데이터 로그
     } catch (error) {
@@ -61,14 +61,12 @@ const getRoutes = async () => {
           destination: destination
         });
 
-          console.log("루트3: ", response.data);
           if (response.data) {
             setRoutes(response.data.data);
-            console.log("제발:",routes);
           }
         } catch (error) {
           console.error("에러?:", error);
-  }
+    }
   }
   
 
@@ -89,18 +87,20 @@ const getRoutes = async () => {
   const handleResetDestination = () => { //길 찾기 종료 시
     navigation.navigate('Map', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
     setRouteCoordinates([]); //경로 표시 제거
+    setRoutes([]);
+    setSelectedRoute([]);
   };
 
 
-  const renderItem = ({ item }) => (
-      // 터치하면 해당 경로 띄우기
-      <TouchableOpacity onPress={() => handleItemPress(item)}>
-        <View style={styles.itemContainer}>
-          <Text style={styles.title}>경로 ID: {item.routeId}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-
+ const renderItem = ({ item }) => (
+  // 터치하면 해당 경로 띄우기
+  <TouchableOpacity onPress={() => handleItemPress(item)} style={styles.touchable}>
+    <View style={styles.itemContainer}>
+       <Text style={styles.title}>경로 ID: {item.routeId}</Text>
+       <Text>작성자: cosmica</Text>
+    </View>
+  </TouchableOpacity>
+);
 
   
 
@@ -146,19 +146,20 @@ const getRoutes = async () => {
         
 
 
-         {reports.map((marker, index) => (
-          <Marker
-            key={index}
-            coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
-            }}
-            title={marker.title} // 마커의 타이틀 (예: 장소 이름)
-             description={marker.contents} // 마커의 설명 (예: 간단한 설명)
-            onPress={()=>handleItemPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
-             
-          />
-        ))}
+      {reports.map((marker, index) => (
+        <Marker
+          key={index}
+          coordinate={{
+            latitude: marker.latitude,
+            longitude: marker.longitude,
+          }}
+          title={marker.title} // 마커의 타이틀 (예: 장소 이름)
+            description={marker.contents} // 마커의 설명 (예: 간단한 설명)
+          onPress={()=>handleItemPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
+            
+        />
+      ))}
+        
         {selectedLocation && ( // 선택한 장소 표시
           <Marker
             coordinate={{
@@ -189,7 +190,7 @@ const getRoutes = async () => {
             strokeWidth={4} // 경로 선 두께
           />
         )} 
-        {selectedRoute&&<Polyline   //추천 경로
+        {selectedRoute.length > 0 &&<Polyline   //추천 경로
           coordinates={selectedRoute}
           strokeColor="#eb34d5" // 경로의 색상
           strokeWidth={4}      // 경로의 두께
@@ -215,9 +216,10 @@ const getRoutes = async () => {
             </View>
           </View>
         </Modal>)}
-      {/* 경로 추천 */}
-      {routes && (
+      {/* 경로 추천  리스트*/}
+      {routes?.length > 0 && (
         <View style={styles.routeList} id="routeList"> 
+          <Text style={styles.listTitle}>⭐ 다른 사용자들의 추천 경로 ⭐</Text>
         <FlatList
           data={routes}
           renderItem={renderItem}
@@ -280,6 +282,18 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
+   itemContainer: {
+    backgroundColor: '#ffffff',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3, // 안드로이드에서 그림자 표시
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
   searchButton: { //길 찾기 버튼
     position: 'absolute',
     top: 10,
@@ -295,7 +309,7 @@ const styles = StyleSheet.create({
       position: 'flex',
       backgroundColor: 'white',
      // marginBottom: 5,
-     height: 250,
+     height: 350,
       padding:10,
       borderRadius: 5,
     
@@ -372,6 +386,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  listTitle: {
+ fontWeight: 'bold',
+    fontSize: 24, // 타이틀이 좀 더 눈에 띄게
+    textAlign: 'center', // 텍스트를 중앙에 배치
+    color: '#333', // 텍스트 색상
+    marginVertical: 10, // 위아래 여백
   }
 });
 
