@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const SerachLocation = require('../controllers/SearchLocation');
-const axios = require('axios');
 
 var db = require('../models/index');
 const { DESCRIBE } = require('sequelize/lib/query-types');
