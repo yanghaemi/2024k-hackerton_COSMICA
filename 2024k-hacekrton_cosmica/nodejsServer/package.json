@@ -6,12 +6,13 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "axios": "^1.7.4",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "mariadb": "^3.3.1",
     "morgan": "~1.9.1",

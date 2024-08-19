@@ -44,5 +44,7 @@ db.Sequelize = Sequelize;
 
 //회원모델 모듈파일 참조하고 db속성정의하기
 db.report = require('./report.js')(sequelize,Sequelize);
+db.route = require('./route.js')(sequelize,Sequelize);
+
 
 module.exports = db;

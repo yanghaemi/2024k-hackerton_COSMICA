@@ -3,7 +3,7 @@ import { StyleSheet, View, Button, Alert } from 'react-native';
 import { GooglePlacesAutocomplete  } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 
-const SearchScreen = ({ navigation }) => {
+const AddScreen = ({ navigation }) => {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
 
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchScreen;
+export default AddScreen;

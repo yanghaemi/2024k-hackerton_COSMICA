@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ActivityIndicator, Text,FlatList, TouchableOpacity, Modal, Button } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { getLocation } from '../../components/Location';
 import { fetchRoute } from '../../components/FetchRoute';
@@ -7,7 +7,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 
 
-const MainScreen = ({apiUrl}) => {
+const RouteAdd = ({apiUrl}) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { origin, destination } = route.params || {}; // SearchScreen에서 받은 인자
@@ -19,88 +19,59 @@ const MainScreen = ({apiUrl}) => {
 
   const [reports, setReports] = useState([]); // 모든 신고 내용
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 리포트
-  const [routes, setRoutes] = useState([]); // 검색 후 동일 출발, 목적지 경로 추천
-  const [selectedRoute, setSelectedRoute] = useState([]); // 선택된 경로
-
 
 
   const getData = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/report`);
-      // console.log(response.data);
-      setReports(response.data);
-    } catch (err) {
-      console.error(err);
-    }
+      try {
+        const response = await axios.get(`${apiUrl}/report`);
+        // console.log(response.data);
+        setReports(response.data);
+      } catch (err) {
+        console.error(err);
+      }
   };
 
   useEffect(() => {
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
     getData();
-    
-
   }, []);
 
-  const handleItemPress = async (marker) => {
-    try {
-      setSelectedRoute(marker.data);
-      console.log(selectedRoute); // 요청이 성공한 경우 응답 데이터 로그
+   const handleItemPress = async (marker) => {
+     try {
+       setSelectedReport(marker);
+      const response = await axios.get(`${apiUrl}/report/modify/${marker.reportId}`);
+        console.log(response.data); // 요청이 성공한 경우 응답 데이터 로그
     } catch (error) {
-      console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
+        console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
     }
   };
 
-  const handleCloseModal = () => { // 닫기 버튼 눌렀을 때
+   const handleCloseModal = () => { // 닫기 버튼 눌렀을 때
     setSelectedReport(null);
   };
 
-
-const getRoutes = async () => {
-        try{const response = await axios.get(`${apiUrl}/main/getRoute`, {
-          origin: origin,
-          destination: destination
-        });
-
-          if (response.data) {
-            setRoutes(response.data.data);
-          }
-        } catch (error) {
-          console.error("에러?:", error);
-    }
-  }
-  
-
   useEffect(() => { //길 찾기 장소
     if (origin && destination) { //출발지, 목적지 둘 다 정해진 경우
-      setRegion({ //도착지를 기준으로 지도 포커스
-        latitude: destination.latitude,
-        longitude: destination.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      })
-      fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
-      
-      getRoutes();
+        setRegion({ //도착지를 기준으로 지도 포커스
+          latitude: destination.latitude,
+          longitude: destination.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        })
+        fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
     }
   }, [destination]);
 
   const handleResetDestination = () => { //길 찾기 종료 시
-    navigation.navigate('Map', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
+    navigation.navigate('AddScreen', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
     setRouteCoordinates([]); //경로 표시 제거
-    setRoutes([]);
-    setSelectedRoute([]);
   };
 
+  const getBus = async ()=>{
+    const response = await axios.get(`${apiUrl}/main/bus`)
 
- const renderItem = ({ item }) => (
-  // 터치하면 해당 경로 띄우기
-  <TouchableOpacity onPress={() => handleItemPress(item)} style={styles.touchable}>
-    <View style={styles.itemContainer}>
-       <Text style={styles.title}>경로 ID: {item.routeId}</Text>
-       <Text>작성자: cosmica</Text>
-    </View>
-  </TouchableOpacity>
-);
+      console.log(response.data);      
+  }
 
   
 
@@ -118,14 +89,14 @@ const getRoutes = async () => {
         style={styles.searchButton}
         onPress={() => navigation.navigate('Search')} //클릭 시 검색 화면으로 이동
       >
-        <Text style={styles.buttonText}>길 찾기</Text>
+        <Text style={styles.buttonText}>경로 저장</Text>
       </TouchableOpacity>
       {destination && ( // 도착지 값이 있는 경우 "길찾기 해제" 버튼 렌더링
         <TouchableOpacity
           style={styles.resetButton}
           onPress={handleResetDestination}
         >
-          <Text style={styles.buttonText}>길 찾기 종료</Text>
+          <Text style={styles.buttonText}>경로 저장 취소</Text>
         </TouchableOpacity>
       )}
       <MapView //지도
@@ -141,25 +112,20 @@ const getRoutes = async () => {
           <Marker coordinate={location} title="현재 위치" />
         )} */} 
         {/* 신고 표시랑 헷갈려서 마커만 지웠음 */}
-          
-        
-        
 
-
-      {reports.map((marker, index) => (
-        <Marker
-          key={index}
-          coordinate={{
-            latitude: marker.latitude,
-            longitude: marker.longitude,
-          }}
-          title={marker.title} // 마커의 타이틀 (예: 장소 이름)
-            description={marker.contents} // 마커의 설명 (예: 간단한 설명)
-          onPress={()=>handleItemPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
-            
-        />
-      ))}
-        
+         {reports.map((marker, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: marker.latitude,
+              longitude: marker.longitude,
+            }}
+            title={marker.title} // 마커의 타이틀 (예: 장소 이름)
+             description={marker.contents} // 마커의 설명 (예: 간단한 설명)
+            onPress={()=>handleItemPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
+             
+          />
+        ))}
         {selectedLocation && ( // 선택한 장소 표시
           <Marker
             coordinate={{
@@ -172,7 +138,7 @@ const getRoutes = async () => {
         {origin && ( //출발지
           <Marker
             coordinate={origin}
-            pinColor="#33ff93" // 색상 변경 가능
+            pinColor="red" // 색상 변경 가능
             title="출발지"
           />
         )}
@@ -189,16 +155,8 @@ const getRoutes = async () => {
             strokeColor="#2363b2" // 경로 선 색상
             strokeWidth={4} // 경로 선 두께
           />
-        )} 
-        {selectedRoute.length > 0 &&<Polyline   //추천 경로
-          coordinates={selectedRoute}
-          strokeColor="#eb34d5" // 경로의 색상
-          strokeWidth={4}      // 경로의 두께
-        />}
+        )}
       </MapView>
-      {/* {routes && (
-        
-      )} */}
       {selectedReport && (
         <Modal
           animationType="slide"
@@ -216,35 +174,7 @@ const getRoutes = async () => {
             </View>
           </View>
         </Modal>)}
-      {/* 경로 추천  리스트*/}
-      {routes?.length > 0 && (
-        <View style={styles.routeList} id="routeList"> 
-          <Text style={styles.listTitle}>⭐ 다른 사용자들의 추천 경로 ⭐</Text>
-        <FlatList
-          data={routes}
-          renderItem={renderItem}
-          // keyExtractor={(item) => item..toString()}
-        />
-        </View>
-      )}
-      <TouchableOpacity // 경로 추가 버튼
-        style={styles.reportButton1}
-        onPress={() => {
-          // getData();
-          navigation.navigate('Add');
-        }} //클릭 시 경로 추가 화면으로 이동
-      >
-        <Text style={{ color: '#fff', fontSize: 20}}>+</Text>
-      </TouchableOpacity>
-      <TouchableOpacity // 신고버튼
-        style={styles.reportButton}
-        onPress={() => {
-          getData();
-          navigation.navigate('Report')
-        }} //클릭 시 검색 화면으로 이동
-      >
-        <Text style={{ color: '#fff', fontSize: 20}}>!</Text>
-      </TouchableOpacity>
+      
       {selectedReport && (
         <Modal
           animationType="slide"
@@ -262,15 +192,7 @@ const getRoutes = async () => {
             </View>
           </View>
         </Modal>)}
-      <TouchableOpacity // 신고버튼
-        style={styles.reportButton}
-        onPress={() => {
-          getData();
-          navigation.navigate('Report')
-        }} //클릭 시 검색 화면으로 이동
-      >
-        <Text style={{ color: '#fff', fontSize: 20}}>!</Text>
-      </TouchableOpacity>
+      
     </View>
   );
 };
@@ -281,18 +203,6 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-  },
-   itemContainer: {
-    backgroundColor: '#ffffff',
-    padding: 15,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3, // 안드로이드에서 그림자 표시
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
   },
   searchButton: { //길 찾기 버튼
     position: 'absolute',
@@ -305,15 +215,6 @@ const styles = StyleSheet.create({
     elevation: 3,
     zIndex: 1, // 버튼이 지도 위에 표시되도록 설정
   },
-   routeList: {
-      position: 'flex',
-      backgroundColor: 'white',
-     // marginBottom: 5,
-     height: 350,
-      padding:10,
-      borderRadius: 5,
-    
-    },
   resetButton: {
     position: 'absolute',
     bottom: 10,
@@ -386,14 +287,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-  },
-  listTitle: {
- fontWeight: 'bold',
-    fontSize: 24, // 타이틀이 좀 더 눈에 띄게
-    textAlign: 'center', // 텍스트를 중앙에 배치
-    color: '#333', // 텍스트 색상
-    marginVertical: 10, // 위아래 여백
   }
 });
 
-export default MainScreen;
+export default RouteAdd;

@@ -1,13 +1,12 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('userappointment', {
+  return sequelize.define('appointment', {
     id: {
-      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    userId: {
+    wheelchairId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -15,17 +14,29 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    appointmentId: {
+    companionId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'appointment',
+        model: 'user',
         key: 'id'
       }
+    },
+    appointDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    location: {
+      type: DataTypes.STRING(20),
+      allowNull: false
+    },
+    bill: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'userappointment',
+    tableName: 'appointment',
     timestamps: false,
     indexes: [
       {
@@ -37,17 +48,17 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "userId",
+        name: "wheelchairId",
         using: "BTREE",
         fields: [
-          { name: "userId" },
+          { name: "wheelchairId" },
         ]
       },
       {
-        name: "appointmentId",
+        name: "companionId",
         using: "BTREE",
         fields: [
-          { name: "appointmentId" },
+          { name: "companionId" },
         ]
       },
     ]
