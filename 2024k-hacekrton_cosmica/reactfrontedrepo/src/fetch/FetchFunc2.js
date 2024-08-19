@@ -2,7 +2,7 @@ import Config from "react-native-config";
 import {REACT_APP_SPRING_API_URL} from '@env'
 
 export const fetchFunc2 = (url, additionalData=null) => {
-    const defaultUrl = "http://172.18.13.36:8080";
+    const defaultUrl = REACT_APP_SPRING_API_URL;
     console.log(defaultUrl);
     const params = new URLSearchParams();
 

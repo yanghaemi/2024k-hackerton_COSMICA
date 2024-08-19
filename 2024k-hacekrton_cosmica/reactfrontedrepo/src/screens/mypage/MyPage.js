@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import fetchFunc3 from "../../fetch/FetchFunc3";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {fetchUserData} from '../../components/FetchUserData'
 
 
 const MyPage = () => {
