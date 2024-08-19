@@ -17,6 +17,8 @@ public class Appointment {
     private Date appointDate;
     private String location;
     private int bill;
+    private String review;
+    private Double rate;
 
     public void DefaultSetting(User user){
        switch (user.getUserType()){

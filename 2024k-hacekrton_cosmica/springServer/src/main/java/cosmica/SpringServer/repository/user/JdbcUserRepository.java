@@ -1,5 +1,6 @@
 package cosmica.SpringServer.repository.user;
 
+import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
 import cosmica.SpringServer.enums.UserType;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,31 @@ public class JdbcUserRepository implements UserRepository {
         return findById(id);
     }
 
-    public RowMapper<User> userRowMapper() {
+    public void updateRate(Appointment appointment) {
+        MapSqlParameterSource ms = new MapSqlParameterSource();
+        ms.addValue("companionId", appointment.getCompanionId());
+
+        List<Long> longList = jdbcTemplate.query("select rate from appointment where companionId=:companionId and rate!=0", ms, userRateRowMapper());
+        for (Long l : longList) {
+            log.info("long={}", l);
+        }
+        log.info("longList.size()={}", longList.size());
+        Double sum = 0.0;
+        for (Long l : longList) sum += l;
+        log.info("sum={}", sum);
+        Double rate = sum / (longList.size());
+        log.info("rate={}", rate);
+        ms.addValue("rate", rate);
+        jdbcTemplate.update("update user set rate = :rate where id=:companionId", ms);
+
+    }
+
+    public RowMapper<Long> userRateRowMapper() {
+        return (rs, rowNum) -> rs.getLong("rate");
+    }
+
+
+        public RowMapper<User> userRowMapper() {
         return ((rs, rowNum) ->{
             User user=new User();
             user.setId(rs.getInt("id"));

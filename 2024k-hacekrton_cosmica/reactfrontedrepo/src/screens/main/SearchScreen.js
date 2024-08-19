@@ -8,6 +8,7 @@ const SearchScreen = ({ navigation }) => {
   const [destination, setDestination] = useState(null);
 
   const handleNavigate = () => {
+    console.log(GOOGLE_MAPS_API_KEY);
     if (origin && destination) {
       navigation.navigate('Map', { origin, destination }); //Main스크린 이동 및 출발지와 도착지 정보 보냄
     } else {

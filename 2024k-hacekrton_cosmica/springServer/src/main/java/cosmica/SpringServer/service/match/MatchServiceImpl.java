@@ -48,5 +48,10 @@ public class MatchServiceImpl implements MatchService {
     public Appointment cancelAppointment(int id) {
         return matchRepository.cancelAppointment(id);
     }
+
+    @Override
+    public Appointment updateAppointment(Appointment appointment) {
+        return matchRepository.updateAppointment(appointment);
+    }
 }
 

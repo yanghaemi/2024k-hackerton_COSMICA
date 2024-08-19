@@ -6,6 +6,7 @@ import React from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 import { PaymentWidgetProvider, usePaymentWidget, AgreementWidget, PaymentMethodWidget } from "@tosspayments/widget-sdk-react-native";
 import mainScreen from "../main/MainScreen";
+import MyPageStack from "../mypage/MyPageStack";
 const Stack = createStackNavigator();
 
 
@@ -17,7 +18,6 @@ function CompanionStack() {
             <Stack.Screen name="AppointmentRegister" component={AppointmentRegister} options={{ headerShown: false }}/>
             <Stack.Screen name="DetailAppointment" component={DetailAppointment} options={{ headerShown: false }}/>
             <Stack.Screen name="CheckoutPage" component={CheckoutPage} options={{ headerShown: false }}/>
-            <Stack.Screen name="MyPageStack" component={MyPageStack} options={{ headerShown: false }}/>
         </Stack.Navigator>
         </PaymentWidgetProvider>
     );

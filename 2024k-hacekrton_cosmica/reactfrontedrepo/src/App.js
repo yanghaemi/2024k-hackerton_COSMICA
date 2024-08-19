@@ -7,13 +7,11 @@ import SearchScreen from './screens/main/SearchScreen';
 import CompanionStack from "./screens/companion/CompanionStack.tsx";
 import Report from './screens/main/Report';
 import { REACT_APP_LOCAL_API_URL } from '@env';
-import Login from "./screens/mypage/loginregister/Login";
-import Register from "./screens/mypage/loginregister/Register";
-import fetchFunc3 from "./fetch/FetchFunc3";
 import {Alert} from "react-native";
 import MyPageStack from "./screens/mypage/MyPageStack";
 import React from "react";
 import BusStack from "./screens/Bus/BusStack";
+import fetchFunc4 from "./fetch/FetchFunc4";
 
 const Tab = createBottomTabNavigator(); //탭 네비
 const Stack = createNativeStackNavigator(); //스택 네비
@@ -22,7 +20,7 @@ const MainStackNavigator = () => { //map 페이지에서 길찾기 화면으로 
     return (
         <Stack.Navigator initialRouteName="Main">
             <Stack.Screen name="Map" children={() => <MainScreen apiUrl={REACT_APP_LOCAL_API_URL} />}/>
-            <Stack.Screen name="Search" component={SearchScreen} />
+            <Stack.Screen name="길 찾기" component={SearchScreen} />
         </Stack.Navigator>
     );
 };
@@ -32,9 +30,9 @@ function MyTabs() {
         <Tab.Navigator>
             <Tab.Screen name="Main" component={MainStackNavigator} options={{ headerShown: false }} />
             <Tab.Screen name="동행자 매칭" component={CompanionStack} options={{ headerShown: false }}
-                listeners={({ navigation }) => ({
-                    tabPress: e => handleCompanionTabPress(e, navigation)
-                })}/>
+                        listeners={({ navigation }) => ({
+                            tabPress: e => handleCompanionTabPress(e, navigation)
+                        })}/>
             <Tab.Screen name="마이페이지" component={MyPageStack} options={{ headerShown: false }} />
             <Tab.Screen name = "버스" component={BusStack} options={{ headerShown: false }}/>
         </Tab.Navigator>
@@ -61,13 +59,13 @@ const handleCompanionTabPress = async (e, navigation) => {
     e.preventDefault(); // Prevent default action first
 
     try {
-        const userInfo = await fetchFunc3("/users/myInfo");
+        const userInfo = await fetchFunc4("/users/myInfo");
         console.log("userInfo: ", userInfo);
-        if (userInfo) {
-            navigation.navigate('CompanionStack');
-        } else {
+        if (userInfo.status===401 ||userInfo.status===400) {
             Alert.alert("로그인이 필요한 서비스입니다.");
             navigation.navigate('Login');
+        } else {
+            navigation.navigate('CompanionStack');
         }
     } catch (error) {
         Alert.alert("서버에 문제가 생겼습니다. 나중에 다시 이용해주세요.");

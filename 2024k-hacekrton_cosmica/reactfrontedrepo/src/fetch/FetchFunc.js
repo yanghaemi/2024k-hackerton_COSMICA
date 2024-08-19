@@ -4,8 +4,7 @@ import {REACT_APP_SPRING_API_URL} from '@env'
 
 export const fetchFunc = (url, additionalData) => {
     const defaultUrl = REACT_APP_SPRING_API_URL;
-    console.log(additionalData)
-    console.log(defaultUrl);
+    console.log(REACT_APP_SPRING_API_URL);
     const options = {
         method: 'POST',
         headers: {

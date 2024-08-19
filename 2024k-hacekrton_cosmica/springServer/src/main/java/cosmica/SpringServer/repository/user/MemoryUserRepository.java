@@ -1,5 +1,6 @@
 package cosmica.SpringServer.repository.user;
 
+import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -39,5 +40,10 @@ public class MemoryUserRepository implements UserRepository {
 
         return Optional.of(users.remove(id));
     }
+
+    @Override
+    public void updateRate(Appointment appointment) {
+    }
+
 
 }

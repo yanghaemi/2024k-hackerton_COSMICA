@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import {
-    ScrollView,
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    Alert
-} from 'react-native';
+import {ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import {REACT_APP_SPRING_API_URL} from '@env';
 import {fetchFunc} from "../../../fetch/FetchFunc";
+import {useNavigation} from "@react-navigation/native";
 
 const Register = () => {
+    const navigation = useNavigation();
     const [user, setUser] = useState({
         id: 0,
         pw: "",
@@ -76,6 +70,11 @@ const Register = () => {
     const isRegisterButtonEnabled = () => {
         return user.id !== 0 && !passwordMismatch && !phoneNumInvalid &&user.userName!=="" && user.phoneNum!=="" && user.userType!=="" &&user.location!=="";
     };
+
+    const doRegister=()=>{
+        fetchFunc("/users/register", user );
+        navigation.navigate("MyPage");
+    }
 
     const checkDuplicateId = async () => {
         try {
@@ -193,7 +192,7 @@ const Register = () => {
 
             <TouchableOpacity
                 style={[styles.button, !isRegisterButtonEnabled() && styles.buttonDisabled]}
-                onPress={() => fetchFunc("/users/register", user )}
+                onPress={() => {doRegister()}}
                 disabled={!isRegisterButtonEnabled()}
             >
                 <Text style={styles.buttonText}>회원가입</Text>
