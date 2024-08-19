@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, ActivityIndicator} from 'react-native';
 import { BUS_API_URL, E_BUS_API_SERVICE_KEY, BUS_INFO_SERVICE, CITY_INFO_F, BUS_STOP_SERVICE, NAME_TO_CODE_F } from '@env';
 import { useNavigation } from "@react-navigation/native";
+import CustomComponent from "../../components/CustomComponent";
 
 const BusStopSearchScreen = () => {
     const [searchText, setSearchText] = useState('');
@@ -162,6 +163,7 @@ const BusStopSearchScreen = () => {
             </View>
 
             {renderCityModal()}
+            <CustomComponent />
         </View>
     );
 };

@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator
 import fetchFunc3 from "../../fetch/FetchFunc3";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {fetchFunc} from "../../fetch/FetchFunc";
+import CustomComponent from "../../components/CustomComponent";
 
 const MyPage = () => {
     const [myData, setMyData] = useState(null);
@@ -92,105 +93,111 @@ const MyPage = () => {
     }
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.profileSection}>
-                <View style={styles.profileText}>
-                    <Text style={styles.userName}>{myData?.userName || '사용자 이름'}</Text>
-                    <Text style={styles.userType}>사용자 유형: {getUserType(myData?.userType)}
-                        {myData?.userType === 'COMPANION' && ` | 평점: ${myData?.rate}`}
-                    </Text>
-                </View>
-            </View>
-
-            <View style={styles.projectSection}>
-                <Text style={styles.sectionTitle}>나의 활동 내역</Text>
-                <View style={styles.projectInfo}>
-                    <View style={styles.projectItem}>
-                        <Text style={styles.itemLabel}>경로저장</Text>
-                        <Text style={styles.itemValue}>{myData?.projectInfo?.routesSaved || 'N/A'}</Text>
-                    </View>
-                    <View style={styles.projectItem}>
-                        <Text style={styles.itemLabel}>리뷰</Text>
-                        <Text style={styles.itemValue}>{reviewCount || 'N/A'}</Text>
-                    </View>
-                    <View style={styles.projectItem}>
-                        <Text style={styles.itemLabel}>신고</Text>
-                        <Text style={styles.itemValue}>{myData?.projectInfo?.reports || 'N/A'}</Text>
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                {/* All other content goes here */}
+                <View style={styles.profileSection}>
+                    <View style={styles.profileText}>
+                        <Text style={styles.userName}>{myData?.userName || '사용자 이름'}</Text>
+                        <Text style={styles.userType}>사용자 유형: {getUserType(myData?.userType)}
+                            {myData?.userType === 'COMPANION' && ` | 평점: ${myData?.rate}`}
+                        </Text>
                     </View>
                 </View>
 
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.customButton} onPress={() => {}}>
-                        <Text style={styles.buttonText}>저장한 경로</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate("MyReview", { appointments })}>
-                        <Text style={styles.buttonText}>리뷰 내역</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.customButton} onPress={() => {}}>
-                        <Text style={styles.buttonText}>신고 내역</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+                <View style={styles.projectSection}>
+                    <Text style={styles.sectionTitle}>나의 활동 내역</Text>
+                    <View style={styles.projectInfo}>
+                        <View style={styles.projectItem}>
+                            <Text style={styles.itemLabel}>경로저장</Text>
+                            <Text style={styles.itemValue}>{myData?.projectInfo?.routesSaved || 'N/A'}</Text>
+                        </View>
+                        <View style={styles.projectItem}>
+                            <Text style={styles.itemLabel}>리뷰</Text>
+                            <Text style={styles.itemValue}>{reviewCount || 'N/A'}</Text>
+                        </View>
+                        <View style={styles.projectItem}>
+                            <Text style={styles.itemLabel}>신고</Text>
+                            <Text style={styles.itemValue}>{myData?.projectInfo?.reports || 'N/A'}</Text>
+                        </View>
+                    </View>
 
-            <View style={styles.otherSection}>
-                <View style={styles.otherItem}>
-                    <Text style={styles.otherText}>동행 횟수</Text>
-                    <Text style={styles.otherCount}>{myData?.times || '0'}</Text>
-                </View>
-                <View style={styles.otherItem}>
-                    <Text style={styles.otherText}>거주 지역</Text>
-                    <Text style={styles.otherCount}>{myData?.location || '거주지역'}</Text>
-                </View>
-            </View>
-
-            <View style={styles.accountSection}>
-                <View style={styles.accountItem}>
-                    {myData ? (
-                        <TouchableOpacity style={styles.customButton} onPress={logout}>
-                            <Text style={styles.buttonText}>로그아웃</Text>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.customButton} onPress={() => {}}>
+                            <Text style={styles.buttonText}>저장한 경로</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate("MyReview", { appointments })}>
+                            <Text style={styles.buttonText}>리뷰 내역</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.customButton} onPress={() => {}}>
+                            <Text style={styles.buttonText}>신고 내역</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <View style={styles.otherSection}>
+                    <View style={styles.otherItem}>
+                        <Text style={styles.otherText}>동행 횟수</Text>
+                        <Text style={styles.otherCount}>{myData?.times || '0'}</Text>
+                    </View>
+                    <View style={styles.otherItem}>
+                        <Text style={styles.otherText}>거주 지역</Text>
+                        <Text style={styles.otherCount}>{myData?.location || '거주지역'}</Text>
+                    </View>
+                </View>
+
+                <View style={styles.accountSection}>
+                    <View style={styles.accountItem}>
+                        {myData ? (
+                            <TouchableOpacity style={styles.customButton} onPress={logout}>
+                                <Text style={styles.buttonText}>로그아웃</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={styles.customButton} onPress={() => { navigation.navigate("Login") }}>
+                                <Text style={styles.buttonText}>로그인</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </View>
+
+                <View style={styles.historySection}>
+                    <Text style={styles.historyText}>동행 이력</Text>
+                    {appointments.length ? (
+                        appointments.map((appointment, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={[
+                                    styles.appointmentItem,
+                                    !appointment.review && styles.noReviewItem, // review가 없으면 스타일 변경
+                                ]}
+                                onPress={() => {
+                                    if (myData?.userType === 'WHEELCHAIR') {
+                                        if(appointment.wheelchairId && appointment.companionId) {
+                                            openReviewModal(appointment); // Modal 열기
+                                        } else {
+                                            Alert.alert("매칭 상대 미정","아직 매칭상대가 정해지지 않아 리뷰를 등록할 수 없습니다.")
+                                        }
+                                    } else {
+                                        Alert.alert("권한 없음", "리뷰 등록은 휠체어 이용자만 가능합니다.");
+                                    }
+                                }} // Modal 열기
+                            >
+                                <Text>날짜: {appointment.appointDate}</Text>
+                                <Text>위치: {appointment.location}</Text>
+                                <Text>비용: {appointment.bill}원</Text>
+                                {!appointment.review && myData?.userType === 'WHEELCHAIR' && (
+                                    <Text style={styles.noReviewText}>리뷰 등록하기</Text> // 리뷰가 없는 경우 표시
+                                )}
+                            </TouchableOpacity>
+                        ))
                     ) : (
-                        <TouchableOpacity style={styles.customButton} onPress={() => { navigation.navigate("Login") }}>
-                            <Text style={styles.buttonText}>로그인</Text>
-                        </TouchableOpacity>
+                        <Text>No appointments found.</Text>
                     )}
                 </View>
-            </View>
+            </ScrollView>
 
-            <View style={styles.historySection}>
-                <Text style={styles.historyText}>동행 이력</Text>
-                {appointments.length ? (
-                    appointments.map((appointment, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={[
-                                styles.appointmentItem,
-                                !appointment.review && styles.noReviewItem, // review가 없으면 스타일 변경
-                            ]}
-                            onPress={() => {
-                                if (myData?.userType === 'WHEELCHAIR') {
-                                    if(appointment.wheelchairId && appointment.companionId) {
-                                        openReviewModal(appointment); // Modal 열기
-                                    } else {
-                                        Alert.alert("매칭 상대 미정","아직 매칭상대가 정해지지 않아 리뷰를 등록할 수 없습니다.")
-                                    }
-                                } else {
-                                    Alert.alert("권한 없음", "리뷰 등록은 휠체어 이용자만 가능합니다.");
-                                }
-                            }} // Modal 열기
-                        >
-                            <Text>날짜: {appointment.appointDate}</Text>
-                            <Text>위치: {appointment.location}</Text>
-                            <Text>비용: {appointment.bill}원</Text>
-                            {!appointment.review && myData?.userType === 'WHEELCHAIR' && (
-                                <Text style={styles.noReviewText}>리뷰 등록하기</Text> // 리뷰가 없는 경우 표시
-                            )}
-                        </TouchableOpacity>
-                    ))
-                ) : (
-                    <Text>No appointments found.</Text>
-                )}
-            </View>
+            {/* CustomComponent fixed at the bottom */}
+            <CustomComponent />
 
             {/* 리뷰 작성 Modal */}
             <Modal
@@ -219,133 +226,99 @@ const MyPage = () => {
                         </View>
                         <Text>리뷰:</Text>
                         <TextInput
-                            style={styles.input}
-                            multiline
+                            style={styles.reviewInput}
                             value={reviewText}
                             onChangeText={setReviewText}
+                            multiline
+                            placeholder="리뷰를 작성해주세요."
                         />
-                        <View style={styles.buttonRow}>
+                        <View style={styles.modalButtonContainer}>
                             <TouchableOpacity
-                                style={[styles.modalButton, styles.blackButton]}
-                                onPress={submitReview}
-                            >
-                                <Text style={styles.buttonText}>제출</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.modalButton}
+                                style={[styles.modalButton, styles.cancelButton]}
                                 onPress={() => setModalVisible(false)}
                             >
-                                <Text>취소</Text>
+                                <Text style={styles.modalButtonText}>취소</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.modalButton, styles.submitButton]}
+                                onPress={submitReview}
+                            >
+                                <Text style={styles.modalButtonText}>제출</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </Modal>
-        </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ffffff',
+    },
+    scrollContainer: {
+        flexGrow: 1,
+        paddingBottom: 100, // Enough padding to make room for the fixed footer
     },
     loaderContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#ffffff',
     },
     errorContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#ffffff',
     },
     errorText: {
         color: 'red',
-        fontSize: 16,
+        fontSize: 18,
     },
     profileSection: {
-        flexDirection: 'row',
-        backgroundColor: '#ffffff',
-        padding: 16,
+        padding: 10,
+        backgroundColor: '#f8f8f8',
     },
     profileText: {
-        marginLeft: 8,
+        marginLeft: 10,
     },
     userName: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     userType: {
-        fontSize: 14,
-        marginTop: 4,
-    },
-    ratingContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginVertical: 10,
-    },
-    ratingButton: {
-        backgroundColor: '#ddd',
-        padding: 10,
-        borderRadius: 5,
-        width: 40,
-        alignItems: 'center',
-    },
-    selectedRatingButton: {
-        backgroundColor: '#000',
-    },
-    ratingButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    modalButton: {
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
-        width: '48%',
-        alignItems: 'center',
-    },
-    blackButton: {
-        backgroundColor: '#000',
+        fontSize: 16,
+        marginTop: 5,
     },
     projectSection: {
-        backgroundColor: '#ffffff',
-        marginTop: 16,
-        padding: 16,
-        elevation: 2,
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: '#fff',
     },
     sectionTitle: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
+        marginBottom: 10,
     },
     projectInfo: {
         flexDirection: 'row',
-        marginTop: 16,
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
     },
     projectItem: {
+        flex: 1,
         alignItems: 'center',
     },
     itemLabel: {
-        fontSize: 14,
+        fontSize: 16,
     },
     itemValue: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: 'bold',
-        marginTop: 4,
     },
     buttonContainer: {
+        marginTop: 20,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginTop: 16,
     },
     customButton: {
         backgroundColor: '#000',
@@ -354,88 +327,121 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     buttonText: {
-        color: '#ffffff',
-        fontSize: 14,
+        color: '#fff',
+        fontSize: 16,
     },
     otherSection: {
-        backgroundColor: '#ffffff',
-        padding: 16,
-        marginTop: 16,
-        elevation: 2,
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: '#f8f8f8',
     },
     otherItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 8,
+        marginBottom: 10,
     },
     otherText: {
-        fontSize: 14,
-    },
-    otherCount: {
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
-    accountSection: {
-        backgroundColor: '#ffffff',
-        padding: 16,
-        marginTop: 16,
-        elevation: 2,
-    },
-    accountItem: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-    },
-    historySection: {
-        backgroundColor: '#ffffff',
-        padding: 16,
-        marginTop: 16,
-        elevation: 2,
-    },
-    historyText: {
         fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 8,
+    },
+    otherCount: {
+        fontSize: 16,
+    },
+    accountSection: {
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: '#fff',
+    },
+    accountItem: {
+        alignItems: 'center',
+    },
+    historySection: {
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: '#f8f8f8',
+    },
+    historyText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
     appointmentItem: {
         padding: 10,
-        marginVertical: 5,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: '#d3d3d3',
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        marginBottom: 10,
     },
     noReviewItem: {
-        borderColor: 'red', // review가 없을 때 테두리 색깔 변경
+        backgroundColor: '#f8d7da',
     },
     noReviewText: {
-        marginTop: 5,
-        color: 'red', // "리뷰 등록하기" 텍스트 색깔 설정
+        color: '#721c24',
         fontWeight: 'bold',
+        marginTop: 5,
     },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        backgroundColor: '#fff',
-        padding: 20,
-        borderRadius: 10,
         width: '80%',
+        padding: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        alignItems: 'center',
     },
     modalTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 20,
     },
-    input: {
-        height: 40,
+    ratingContainer: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
+    ratingButton: {
+        padding: 10,
+        backgroundColor: '#ddd',
+        borderRadius: 5,
+        marginHorizontal: 5,
+    },
+    selectedRatingButton: {
+        backgroundColor: '#3498db',
+    },
+    ratingButtonText: {
+        fontSize: 16,
+        color: '#fff',
+    },
+    reviewInput: {
+        width: '100%',
+        height: 100,
         borderColor: '#ddd',
         borderWidth: 1,
-        marginBottom: 10,
-        padding: 10,
         borderRadius: 5,
+        padding: 10,
+        marginBottom: 20,
+    },
+    modalButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    modalButton: {
+        flex: 1,
+        paddingVertical: 10,
+        alignItems: 'center',
+        borderRadius: 5,
+    },
+    cancelButton: {
+        backgroundColor: '#ccc',
+        marginRight: 10,
+    },
+    submitButton: {
+        backgroundColor: '#3498db',
+    },
+    modalButtonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 });
 

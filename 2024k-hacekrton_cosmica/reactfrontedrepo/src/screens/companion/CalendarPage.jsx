@@ -4,6 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
 import { fetchFunc } from "../../fetch/FetchFunc";
 import Config from "react-native-config";
+import CustomComponent from "../../components/CustomComponent";
 
 const CalendarPage = () => {
     const navigation = useNavigation();
@@ -68,6 +69,7 @@ const CalendarPage = () => {
                 }}
                 style={styles.calendarView}
             />
+            <CustomComponent />
         </SafeAreaView>
     );
 };
