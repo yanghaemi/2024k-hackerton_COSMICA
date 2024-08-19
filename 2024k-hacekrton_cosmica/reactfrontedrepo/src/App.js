@@ -6,36 +6,54 @@ import SearchScreen from './screens/main/SearchScreen';
 import CompanionStack from "./screens/companion/CompanionStack";
 import Report from './screens/main/Report';
 import MyPageStack from "./screens/mypage/MyPageStack";
-import RouteAdd from "./screens/main/route/RouteAdd.js";
-import AddScreen from "./screens/main/route/AddScreen.js";
+import RouteAdd from "./screens/main/route/RouteAdd";
+import AddScreen from "./screens/main/route/AddScreen";
 import BusStack from "./screens/Bus/BusStack";
 import { REACT_APP_LOCAL_API_URL } from '@env';
-import { Alert } from 'react-native';
-import fetchFunc4 from "./fetch/FetchFunc4";
-import CustomComponent from './components/CustomComponent'; // CustomComponent import
+import ScreenWrapper from './components/ScreenWrapper'; // 경로 확인
 
-const Stack = createNativeStackNavigator(); // 스택 네비게이션
+const Stack = createNativeStackNavigator();
 
 const MainStackNavigator = () => {
     return (
-        <Stack.Navigator initialRouteName="Map">
-            <Stack.Screen name="Map" children={() => <MainScreen apiUrl={REACT_APP_LOCAL_API_URL} />} />
-            <Stack.Screen name="길 찾기" component={SearchScreen} />
-            <Stack.Screen name="Add" component={RouteAddStackNavigator} options={{ headerShown: false }}/>
+        <Stack.Navigator>
+            <Stack.Screen name="Map">
+                {() => (
+                    <ScreenWrapper>
+                        <MainScreen apiUrl={REACT_APP_LOCAL_API_URL} />
+                    </ScreenWrapper>
+                )}
+            </Stack.Screen>
+            <Stack.Screen name="길 찾기">
+                {() => (
+                    <ScreenWrapper>
+                        <SearchScreen />
+                    </ScreenWrapper>
+                )}
+            </Stack.Screen>
+            <Stack.Screen name="Add">
+                {() => (
+                    <ScreenWrapper>
+                        <RouteAddStackNavigator />
+                    </ScreenWrapper>
+                )}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 };
 
-const RouteAddStackNavigator = () => { //RouteAdd 페이지에서 길찾기 화면으로 이동할 때 사용할 스택네비게이션
+const RouteAddStackNavigator = () => {
     return (
-        <Stack.Navigator initialRouteName="Add">
-            <Stack.Screen name="RouteAdd" children={() => <RouteAdd apiUrl={REACT_APP_LOCAL_API_URL} />}/>
-            <Stack.Screen name="AddScreen" component={AddScreen} />
-            
+        <Stack.Navigator>
+            <Stack.Screen name="RouteAdd">
+                {() => (<RouteAdd apiUrl={REACT_APP_LOCAL_API_URL} />)}
+            </Stack.Screen>
+            <Stack.Screen name="AddScreen">
+                {() => (<AddScreen />)}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 };
-
 
 const App = () => {
     useEffect(() => {
@@ -46,13 +64,13 @@ const App = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-
                 <Stack.Screen name="MainStack" component={MainStackNavigator} options={{ headerShown: false }} />
                 <Stack.Screen name="CompanionStack" component={CompanionStack} options={{ headerShown: false }} />
                 <Stack.Screen name="MyPageStack" component={MyPageStack} options={{ headerShown: false }} />
                 <Stack.Screen name="BusStack" component={BusStack} options={{ headerShown: false }} />
-                <Stack.Screen name="Report" children={() => <Report apiUrl={REACT_APP_LOCAL_API_URL} />} />
-                <Stack.Screen name="CustomComponent" component={CustomComponent} options={{ headerShown: false }} />
+                <Stack.Screen name="Report">
+                    {() => <ScreenWrapper><Report apiUrl={REACT_APP_LOCAL_API_URL} /></ScreenWrapper>}
+                </Stack.Screen>
             </Stack.Navigator>
         </NavigationContainer>
     );
