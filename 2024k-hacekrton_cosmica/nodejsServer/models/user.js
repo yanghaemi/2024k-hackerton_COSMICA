@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
+    },
+    phoneNum: {
+      type: DataTypes.STRING(20),
+      allowNull: true
     }
   }, {
     sequelize,

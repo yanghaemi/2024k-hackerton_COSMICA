@@ -33,6 +33,14 @@ module.exports = function(sequelize, DataTypes) {
     bill: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    review: {
+      type: DataTypes.STRING(200),
+      allowNull: true
+    },
+    rate: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     sequelize,
