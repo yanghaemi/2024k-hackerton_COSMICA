@@ -12,7 +12,6 @@ import Bus from "./Bus";
 function BusStack() {
 
     const Stack = createStackNavigator();
-    const navigation = useNavigation();
     return (
             <Stack.Navigator>
                 <Stack.Screen name={"BusMain"} component={BusStopSearchScreen} options={{ headerShown: false }}/>

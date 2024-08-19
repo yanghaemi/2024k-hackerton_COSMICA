@@ -5,16 +5,16 @@ import { getLocation } from '../../components/Location';
 import { fetchRoute } from '../../components/FetchRoute';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
+import CustomComponent from "../../components/CustomComponent"; // Assuming CustomComponent is in the same directory
 
-
-const MainScreen = ({apiUrl}) => {
+const MainScreen = ({ apiUrl }) => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { origin, destination } = route.params || {}; // SearchScreen에서 받은 인자
-  const [region, setRegion] = useState(null); // 지도에서 보여주는 현재 화면 (위치 및 지도 표시 영역 정의)
-  const [location, setLocation] = useState(null); // 사용자 위치
-  const [loading, setLoading] = useState(true); // 로딩 상태 (현재 위치 불러올 때 생기는 텀 방지)
-  const [selectedLocation, setSelectedLocation] = useState(null); // 사용자가 선택한 장소
+  const { origin, destination } = route.params || {};
+  const [region, setRegion] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
 
   const [reports, setReports] = useState([]); // 모든 신고 내용
@@ -35,7 +35,7 @@ const MainScreen = ({apiUrl}) => {
   };
 
   useEffect(() => {
-    getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
+    getLocation(setLocation, setRegion, setLoading, destination);
     getData();
     
 
@@ -104,11 +104,11 @@ const getRoutes = async () => {
 
   
 
-  if (loading) { // 현재 위치 확인해서 표시해 줄 때까지 로딩 화면 보여주는 부분
+  if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
+        <View style={styles.container}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
     );
   }
 
@@ -297,8 +297,8 @@ const styles = StyleSheet.create({
   searchButton: { //길 찾기 버튼
     position: 'absolute',
     top: 10,
-    left: 10, 
-    right: 70, 
+    left: 10,
+    right: 70,
     backgroundColor: 'white',
     padding: 12,
     borderRadius: 5,
@@ -317,13 +317,13 @@ const styles = StyleSheet.create({
   resetButton: {
     position: 'absolute',
     bottom: 10,
-    left: 10, 
-    right: 10, 
+    left: 10,
+    right: 10,
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 5,
     elevation: 3,
-    zIndex: 1, // 버튼이 지도 위에 표시되도록 설정
+    zIndex: 1,
   },
   buttonText: {
     color: 'black',
