@@ -29,7 +29,7 @@ router.post('/addRoute', async (req, res) => {
             origin: JSON.stringify(req.body.origin),
             destination: JSON.stringify(req.body.destination)
         };
-            console.log(route);
+            console.log("route: ",route);
         
         
         const registedRoute = await db.route.create(route);
@@ -72,7 +72,7 @@ router.get('/getRoute', async (req, res) => {
             // data: JSON.parse(route.dataValues.data),
             data: JSON.parse(route.dataValues.data),
             destination: JSON.parse(route.dataValues.destination),
-            origin: JSON.parse(route.dataValues.origin)
+            // origin: JSON.parse(route.dataValues.origin)
         };
     });
         

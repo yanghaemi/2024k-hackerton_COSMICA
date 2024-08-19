@@ -25,18 +25,10 @@ const MainStackNavigator = () => {
                 )}
             </Stack.Screen>
             <Stack.Screen name="길 찾기">
-                {() => (
-                    <ScreenWrapper>
-                        <SearchScreen />
-                    </ScreenWrapper>
-                )}
+                {() => (<SearchScreen />)}
             </Stack.Screen>
             <Stack.Screen name="Add">
-                {() => (
-                    <ScreenWrapper>
-                        <RouteAddStackNavigator />
-                    </ScreenWrapper>
-                )}
+                {() => (<RouteAddStackNavigator />)}
             </Stack.Screen>
         </Stack.Navigator>
     );

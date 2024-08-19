@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Button, Alert } from 'react-native';
 import { GooglePlacesAutocomplete  } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_API_KEY } from '@env';
+import { useNavigation } from '@react-navigation/native';
 
-const SearchScreen = ({ navigation }) => {
+const SearchScreen = () => {
+  const navigation = useNavigation();
+
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
 
