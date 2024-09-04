@@ -64,8 +64,10 @@ public class JdbcUserRepository implements UserRepository {
         ms.addValue("location", user.getLocation());
         ms.addValue("rate",0.0);
         ms.addValue("times", 0);
-        jdbcTemplate.update("insert into user (id,pw,userName,phoneNum,userType,location,rate,times)" +
-                " values (:id,:pw,:userName,:phoneNum,:userType,:location,:rate,:times)",ms);
+        ms.addValue("car",user.getCar());
+        ms.addValue("verify",user.getVerify());
+        jdbcTemplate.update("insert into user (id,pw,userName,phoneNum,userType,location,rate,times,car,verify)" +
+                " values (:id,:pw,:userName,:phoneNum,:userType,:location,:rate,:times,:car,:verify)",ms);
         return Optional.of(user);
     }
 
@@ -93,7 +95,6 @@ public class JdbcUserRepository implements UserRepository {
         log.info("rate={}", rate);
         ms.addValue("rate", rate);
         jdbcTemplate.update("update user set rate = :rate where id=:companionId", ms);
-
     }
 
     public RowMapper<Long> userRateRowMapper() {
@@ -112,6 +113,8 @@ public class JdbcUserRepository implements UserRepository {
             user.setLocation(rs.getString("location"));
             user.setRate(rs.getDouble("rate"));
             user.setTimes(rs.getInt("times"));
+            user.setCar(rs.getString("car"));
+            user.setVerify(rs.getBoolean("verify"));
             return user;
         });
     }

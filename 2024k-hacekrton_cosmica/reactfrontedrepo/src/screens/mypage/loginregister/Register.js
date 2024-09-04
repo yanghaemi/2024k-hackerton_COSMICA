@@ -15,11 +15,14 @@ const Register = () => {
         location: "",
         rate: "",
         times: "",
+        car:"",
+        verify: false
     });
 
     const [confirmPw, setConfirmPw] = useState("");
     const [passwordMismatch, setPasswordMismatch] = useState(false);
     const [phoneNumInvalid, setPhoneNumInvalid] = useState(false);
+    const [hasCar, setHasCar]= useState(false);
 
     const handleChange = (name, value) => {
         setUser({
@@ -67,12 +70,18 @@ const Register = () => {
         handleChange("userType", type);
     };
 
+    const onChangeHasCar=(boolean)=>{
+        setHasCar(boolean);
+    }
+
+
     const isRegisterButtonEnabled = () => {
         return user.id !== 0 && !passwordMismatch && !phoneNumInvalid &&user.userName!=="" && user.phoneNum!=="" && user.userType!=="" &&user.location!=="";
     };
 
     const doRegister=()=>{
         fetchFunc("/users/register", user );
+        Alert.alert("회원가입이 완료되었습니다.");
         navigation.navigate("MyPage");
     }
 
@@ -160,7 +169,7 @@ const Register = () => {
             )}
 
             <View style={styles.radioContainer}>
-                <Text style={styles.label}>User Type:</Text>
+                <Text style={styles.label}>이용자 유형:</Text>
                 <View style={styles.radioButton}>
                     <TouchableOpacity
                         style={[
@@ -169,7 +178,7 @@ const Register = () => {
                         ]}
                         onPress={() => onUserTypeSelect("WHEELCHAIR")}
                     >
-                        <Text>Wheelchair</Text>
+                        <Text>휠체어 이용자</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[
@@ -178,17 +187,50 @@ const Register = () => {
                         ]}
                         onPress={() => onUserTypeSelect("COMPANION")}
                     >
-                        <Text>Companion</Text>
+                        <Text>동행자</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
+            <View style={styles.radioContainer}>
+                <Text style={styles.label}>차량 유무:</Text>
+                <View style={styles.radioButton}>
+                    <TouchableOpacity
+                        style={[
+                            styles.radio,
+                            hasCar === true && styles.selectedRadio,
+                        ]}
+                        onPress={()=>{onChangeHasCar(true)}}
+                    >
+                        <Text>유</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.radio,
+                            hasCar === false && styles.selectedRadio,
+                        ]}
+                        onPress={()=>{onChangeHasCar(false)}}
+                    >
+                        <Text>무</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <TextInput
+                style={[
+                    styles.input,
+                    hasCar===false && styles.inputDisabled
+                ]}
+                placeholder="차 종"
+                editable={hasCar}
+                onChangeText={(text)=>handleChange("car",text)}
+            />
             <TextInput
                 style={styles.input}
-                placeholder="Location"
+                placeholder="거주 지역"
                 value={user.location}
                 onChangeText={(text) => handleChange("location", text)}
             />
+
 
             <TouchableOpacity
                 style={[styles.button, !isRegisterButtonEnabled() && styles.buttonDisabled]}
@@ -218,8 +260,10 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         paddingHorizontal: 8,
         backgroundColor: '#fff',
-        flex: 1,
         marginBottom: 16,
+    },
+    inputDisabled:{
+        backgroundColor: '#aaaaaa'
     },
     inputContainer: {
         flexDirection: 'row',

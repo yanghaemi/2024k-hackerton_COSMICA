@@ -39,6 +39,7 @@ public class AppointmentController {
     public ResponseEntity<Map<Date,Appointment>> dateRegister(@SessionAttribute(name="user")User user, @RequestBody Appointment appointment)
     {
         log.info(user.toString());
+        log.info(appointment.toString());
         Appointment registeredAppointment = matchService.registerAppointment(user, appointment);
         Map<Date,Appointment> mapAppointment = new HashMap<Date,Appointment>();
         mapAppointment.put(registeredAppointment.getAppointDate(),registeredAppointment);

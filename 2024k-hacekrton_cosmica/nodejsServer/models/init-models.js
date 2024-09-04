@@ -1,14 +1,12 @@
 var DataTypes = require("sequelize").DataTypes;
 var _appointment = require("./appointment");
 var _report = require("./report");
-var _route = require("./route");
 var _user = require("./user");
 var _userappointment = require("./userappointment");
 
 function initModels(sequelize) {
   var appointment = _appointment(sequelize, DataTypes);
   var report = _report(sequelize, DataTypes);
-  var route = _route(sequelize, DataTypes);
   var user = _user(sequelize, DataTypes);
   var userappointment = _userappointment(sequelize, DataTypes);
 
@@ -24,7 +22,6 @@ function initModels(sequelize) {
   return {
     appointment,
     report,
-    route,
     user,
     userappointment,
   };

@@ -5,6 +5,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {fetchFunc} from "../../fetch/FetchFunc";
 import CustomComponent from "../../components/CustomComponent";
 
+
 const MyPage = () => {
     const [myData, setMyData] = useState(null);
     const [appointments, setAppointments] = useState([]); // Initialize as an empty array
@@ -98,10 +99,10 @@ const MyPage = () => {
                 {/* All other content goes here */}
                 <View style={styles.profileSection}>
                     <View style={styles.profileText}>
-                        <Text style={styles.userName}>{myData?.userName || '사용자 이름'}</Text>
-                        <Text style={styles.userType}>사용자 유형: {getUserType(myData?.userType)}
-                            {myData?.userType === 'COMPANION' && ` | 평점: ${myData?.rate}`}
-                        </Text>
+                            <Text style={styles.userName}>{myData?.userName || '사용자 이름'}</Text>
+                            <Text style={styles.userType}>사용자 유형: {getUserType(myData?.userType)}
+                                {myData?.userType === 'COMPANION' && ` | 평점: ${myData?.rate}`}
+                            </Text>
                     </View>
                 </View>
 
@@ -149,9 +150,16 @@ const MyPage = () => {
                 <View style={styles.accountSection}>
                     <View style={styles.accountItem}>
                         {myData ? (
-                            <TouchableOpacity style={styles.customButton} onPress={logout}>
-                                <Text style={styles.buttonText}>로그아웃</Text>
-                            </TouchableOpacity>
+                            <View style={styles.accountItem}>
+                                <TouchableOpacity style={styles.customButton} onPress={logout}>
+                                    <Text style={styles.buttonText}>로그아웃</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.customButton,myData?.userType!=='COMPANION' &&styles.buttonDisabled]}
+                                                  disabled={myData?.userType!=='COMPANION'}
+                                                  onPress={()=>{}}>
+                                    <Text style={styles.buttonText}>사회 복지사 인증</Text>
+                                </TouchableOpacity>
+                            </View>
                         ) : (
                             <TouchableOpacity style={styles.customButton} onPress={() => { navigation.navigate("Login") }}>
                                 <Text style={styles.buttonText}>로그인</Text>
@@ -325,6 +333,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 8,
+        marginHorizontal: 5, // 추가된 부분
     },
     buttonText: {
         color: '#fff',
@@ -351,7 +360,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     accountItem: {
-        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center',  // 이 부분을 추가하세요.
     },
     historySection: {
         marginTop: 10,
@@ -442,6 +452,9 @@ const styles = StyleSheet.create({
     modalButtonText: {
         color: '#fff',
         fontSize: 16,
+    },
+    buttonDisabled: {
+        backgroundColor: '#ccc', // 비활성화 상태의 버튼 색상
     },
 });
 

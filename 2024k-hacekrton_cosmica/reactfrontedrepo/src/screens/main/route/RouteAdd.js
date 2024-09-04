@@ -4,6 +4,7 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { getLocation } from '../../../components/Location';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
+import {REACT_APP_LOCAL_API_URL} from "@env";
 
 
 const RouteAdd = ({apiUrl}) => {
@@ -14,11 +15,8 @@ const RouteAdd = ({apiUrl}) => {
   const [location, setLocation] = useState(null); // 사용자 위치
   const [loading, setLoading] = useState(true); // 로딩 상태 (현재 위치 불러올 때 생기는 텀 방지)
   const [routeCoordinates, setRouteCoordinates] = useState([]);
-
   const [reports, setReports] = useState([]); // 모든 신고 내용
-
   const [selectedLocation, setSelectedLocation] = useState([]); // 터치된 위치 저장
-
 
 
   const getData = async () => {

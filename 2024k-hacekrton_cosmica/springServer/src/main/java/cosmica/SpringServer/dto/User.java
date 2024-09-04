@@ -21,4 +21,6 @@ public class User {
     private String location;
     private Double rate;
     private Integer times;
+    private String car;
+    private Boolean verify;
 }

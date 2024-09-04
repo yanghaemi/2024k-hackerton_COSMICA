@@ -49,18 +49,14 @@ const DetailAppointment = ({route}) => {
     const isButtonDisabled = userData && myData && userData.userType === myData.userType;
 
     const handlePress = () => {
-        if (myData.userType === "WHEELCHAIR") {
-            navigation.navigate("CheckoutPage", { item, userData });
-        } else if (myData.userType === "COMPANION") {
-            fetchFunc("/appointment/payComplete", item)
-                .then(() => {
-                    Alert.alert("신청이 완료되었습니다.", `상대방 휴대폰 번호는 ${userData.phoneNum}입니다.`);
-                    navigation.navigate("CalendarPage");
-                })
-                .catch(error => {
-                    Alert.alert("신청 중 오류가 발생했습니다.", error.message);
-                });
-        }
+        fetchFunc("/appointment/payComplete", item)
+            .then(() => {
+                Alert.alert("신청이 완료되었습니다.", `상대방 휴대폰 번호는 ${userData.phoneNum}입니다.`);
+                navigation.navigate("CalendarPage");
+            })
+            .catch(error => {
+                Alert.alert("신청 중 오류가 발생했습니다.", error.message);
+            });
     };
 
     return (

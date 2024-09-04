@@ -83,6 +83,7 @@ public class UserController {
 
     @PostMapping("/myInfo")
     public ResponseEntity<User> getMyInfo(@SessionAttribute(name="user", required=false) User user) {
+        log.info("abc");
         if (user == null) {
             log.info("로그인 안됨= {}",user);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

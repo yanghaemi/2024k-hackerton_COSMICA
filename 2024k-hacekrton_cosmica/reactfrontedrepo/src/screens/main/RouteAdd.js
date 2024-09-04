@@ -24,7 +24,7 @@ const RouteAdd = ({apiUrl}) => {
   const getData = async () => {
       try {
         const response = await axios.get(`${apiUrl}/report`);
-        // console.log(response.data);
+        console.log(response.data);
         setReports(response.data);
       } catch (err) {
         console.error(err);

@@ -16,6 +16,7 @@ import axios from 'axios';
 import { getLocation } from '../../components/Location';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useFocusEffect } from '@react-navigation/native';
+import {REACT_APP_LOCAL_API_URL} from "@env";
 // import { RNCamera } from 'react-native-camera'
 
 const Report = ({ apiUrl }) => {
@@ -33,10 +34,8 @@ const Report = ({ apiUrl }) => {
   const [modifiedTitle, setModifiedTitle] = useState(''); // 신고 제목 상태
   const [modifiedContents, setModifiedContents] = useState(''); // 신고 내용 상태
   const [cameraPermission, setCameraPermission] = useState(null); // 카메라 권한 상태
-  
   const [isCameraVisible, setIsCameraVisible] = useState(false);
   const cameraRef = useRef(null);
-
   const getData = async () => {
     try {
       const response = await axios.get(`${apiUrl}/report`);
@@ -51,7 +50,9 @@ const Report = ({ apiUrl }) => {
   const getLocation2 = async () => {
     getLocation(setLocation, setRegion, setLoading);
     setLatitude(location.latitude);
+    console.log(latitude);
     setLongitude(location.longitude);
+    console.log(longitude);
     // console.log("위치: ", latitude);
     // console.log("위치2: ", longitude);
 
@@ -130,6 +131,8 @@ const Report = ({ apiUrl }) => {
   const handleSave = async () => {
     try {
       getLocation2();
+      console.log("latitude",selectedLocation.latitude);
+      console.log("longitude",selectedLocation.longitude);
       const response = await axios.post(
         `${apiUrl}/report/create`,
         {
@@ -137,10 +140,9 @@ const Report = ({ apiUrl }) => {
           contents: contents,
           latitude: selectedLocation.latitude,
           longitude: selectedLocation.longitude
-         
         },
       );
-      console.log(response.data); // 요청이 성공한 경우 응답 데이터 로그
+      console.log("dd: ",response.data); // 요청이 성공한 경우 응답 데이터 로그
       getData();  // db에 저장했으면 list 새로고침
       setTitle('');
       setContents('');  // 제목, 내용 초기화 ux 추가

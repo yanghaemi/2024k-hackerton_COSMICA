@@ -9,8 +9,9 @@ import MyPageStack from "./screens/mypage/MyPageStack";
 import RouteAdd from "./screens/main/route/RouteAdd";
 import AddScreen from "./screens/main/route/AddScreen";
 import BusStack from "./screens/Bus/BusStack";
-import { REACT_APP_LOCAL_API_URL } from '@env';
-import ScreenWrapper from './components/ScreenWrapper'; // 경로 확인
+import { REACT_APP_LOCAL_API_URL, REACT_APP_SPRING_API_URL } from '@env';
+import ScreenWrapper from './components/ScreenWrapper';
+import Login from "./screens/mypage/loginregister/Login"; // 경로 확인
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,8 @@ const MainStackNavigator = () => {
             <Stack.Screen name="Add">
                 {() => (<RouteAddStackNavigator />)}
             </Stack.Screen>
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
+            <Stack.Screen name="CompanionStack" component={CompanionStack} options={{ headerShown: false }}/>
         </Stack.Navigator>
     );
 };
@@ -49,8 +52,8 @@ const RouteAddStackNavigator = () => {
 
 const App = () => {
     useEffect(() => {
-        // 환경 변수가 올바르게 로드되었는지 확인
-        // console.log(REACT_APP_LOCAL_API_URL);
+        console.log(REACT_APP_SPRING_API_URL);
+        console.log(REACT_APP_LOCAL_API_URL);
     }, []);
 
     return (
