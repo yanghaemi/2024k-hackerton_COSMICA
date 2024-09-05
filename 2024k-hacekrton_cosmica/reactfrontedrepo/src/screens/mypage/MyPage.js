@@ -4,6 +4,8 @@ import fetchFunc3 from "../../fetch/FetchFunc3";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {fetchFunc} from "../../fetch/FetchFunc";
 import CustomComponent from "../../components/CustomComponent";
+import DocumentPicker from 'react-native-document-picker';
+import {REACT_APP_SPRING_API_URL} from "@env";
 
 
 const MyPage = () => {
@@ -73,6 +75,32 @@ const MyPage = () => {
         setModalVisible(true);
     };
 
+    const uploadPdf = async (fileUri) => {
+        const formData = new FormData();
+        formData.append('file', {
+            uri: fileUri,
+            type: 'application/pdf', // MIME 타입
+            name: 'file.pdf',        // 서버에서 저장될 파일 이름
+        });
+
+        try {
+
+            const response = await fetch(REACT_APP_SPRING_API_URL+'/users/verify', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     const submitReview = () => {
         console.log('Submitted Review:', reviewText, 'Rating:', rating);
         selectedAppointment.review = reviewText;
@@ -80,6 +108,26 @@ const MyPage = () => {
         fetchFunc("/appointment/review",selectedAppointment);
         console.log("선택된 매칭 리뷰 작성 결과:", selectedAppointment);
         setModalVisible(false);
+    };
+
+    const selectFile = async () => {
+        try {
+            console.log("selectFile 실행 됨.")
+            // 파일 선택
+            const res = await DocumentPicker.pick({
+                type: [DocumentPicker.types.pdf], // PDF 파일만 선택 가능
+            });
+
+            console.log('선택된 파일:', res);
+            const fileUri = res[0].uri;       // 선택된 파일의 URI
+            uploadPdf(fileUri);               // 파일 전송 함수 호출
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                console.log('파일 선택이 취소되었습니다.');
+            } else {
+                console.error('파일 선택 중 오류 발생:', err);
+            }
+        }
     };
 
     // Ensure appointments is an array before calling filter
@@ -145,6 +193,14 @@ const MyPage = () => {
                         <Text style={styles.otherText}>거주 지역</Text>
                         <Text style={styles.otherCount}>{myData?.location || '거주지역'}</Text>
                     </View>
+                    { myData &&(
+                        myData.userType==='COMPANION' && (
+                            <View style={styles.otherItem}>
+                                <Text style={styles.otherText}>복지사 인증 현황</Text>
+                                <Text style={styles.otherCount}>{myData?.verify ? '인증 완료' :'인증 미완료'}</Text>
+                            </View>
+                        )
+                    )}
                 </View>
 
                 <View style={styles.accountSection}>
@@ -156,7 +212,7 @@ const MyPage = () => {
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.customButton,myData?.userType!=='COMPANION' &&styles.buttonDisabled]}
                                                   disabled={myData?.userType!=='COMPANION'}
-                                                  onPress={()=>{}}>
+                                                  onPress={selectFile}>
                                     <Text style={styles.buttonText}>사회 복지사 인증</Text>
                                 </TouchableOpacity>
                             </View>

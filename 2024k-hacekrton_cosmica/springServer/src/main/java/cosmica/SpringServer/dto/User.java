@@ -23,4 +23,5 @@ public class User {
     private Integer times;
     private String car;
     private Boolean verify;
+    private String verifyFilePath;
 }

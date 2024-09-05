@@ -17,7 +17,7 @@ const DetailAppointment = ({route}) => {
     //item 매칭 정보
     useEffect(() => {
         const request = item.companionId === 0 ? item.wheelchairId : item.companionId;
-
+        console.log(item);
         const fetchData = async () => {
             try {
                 const userDataResponse = await fetchFunc2(url, { id: request });
@@ -45,6 +45,13 @@ const DetailAppointment = ({route}) => {
     if (error) {
         return <Text>Error: {error.message}</Text>;
     }
+
+    const formatTime = (dateString) => {
+        const date = new Date(dateString);
+        const hours = date.getHours().toString().padStart(2, '0');  // 시
+        const minutes = date.getMinutes().toString().padStart(2, '0');  // 분
+        return `${hours}:${minutes}`;
+    };
 
     const isButtonDisabled = userData && myData && userData.userType === myData.userType;
 
@@ -82,6 +89,7 @@ const DetailAppointment = ({route}) => {
                             <Text style={styles.label}>이름:  {userData.userName}</Text>
                             <Text style={styles.label}>위치:  {item.location}</Text>
                             <Text style={styles.label}>날짜:  {item.appointDate}</Text>
+                            <Text style={styles.label}>시간:  {formatTime(item.start)} ~ {formatTime(item.end)}</Text>
                             <Text style={styles.label}>비용:  {item.bill}</Text>
                         </View>
                     </View>

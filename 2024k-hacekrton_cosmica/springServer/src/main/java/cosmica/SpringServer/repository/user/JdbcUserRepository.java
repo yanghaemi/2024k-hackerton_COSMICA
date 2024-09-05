@@ -97,6 +97,29 @@ public class JdbcUserRepository implements UserRepository {
         jdbcTemplate.update("update user set rate = :rate where id=:companionId", ms);
     }
 
+    @Override
+    public Optional<User> updateUser(User user) {
+        MapSqlParameterSource ms = new MapSqlParameterSource();
+        ms.addValue("id", user.getId());
+        ms.addValue("pw", user.getPw());
+        ms.addValue("userName", user.getUserName());
+        ms.addValue("phoneNum", user.getPhoneNum());
+        ms.addValue("userType", user.getUserType().toString());
+        ms.addValue("location", user.getLocation());
+        ms.addValue("rate", user.getRate());
+        ms.addValue("times", user.getTimes());
+        ms.addValue("car", user.getCar());
+        ms.addValue("verify", user.getVerify());
+        ms.addValue("verifyFilePath", user.getVerifyFilePath());
+        jdbcTemplate.update("update User set id=:id, pw=:pw, userName=:userName, phoneNum=:phoneNum, userType=:userType, location=:location, rate=:rate, times=:times, car=:car, verify=:verify, verifyFilePath=:verifyFilePath where id=:id",ms);
+        return findById(user.getId());
+    }
+
+    @Override
+    public List<User> findAll() {
+        return jdbcTemplate.query("select * from user",userRowMapper());
+    }
+
     public RowMapper<Long> userRateRowMapper() {
         return (rs, rowNum) -> rs.getLong("rate");
     }
@@ -115,6 +138,7 @@ public class JdbcUserRepository implements UserRepository {
             user.setTimes(rs.getInt("times"));
             user.setCar(rs.getString("car"));
             user.setVerify(rs.getBoolean("verify"));
+            user.setVerifyFilePath(rs.getString("verifyFilePath"));
             return user;
         });
     }

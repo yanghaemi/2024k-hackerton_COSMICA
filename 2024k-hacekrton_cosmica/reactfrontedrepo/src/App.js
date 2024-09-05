@@ -52,8 +52,9 @@ const RouteAddStackNavigator = () => {
 
 const App = () => {
     useEffect(() => {
-        console.log(REACT_APP_SPRING_API_URL);
+        console.log("ad");
         console.log(REACT_APP_LOCAL_API_URL);
+        console.log(REACT_APP_SPRING_API_URL);
     }, []);
 
     return (

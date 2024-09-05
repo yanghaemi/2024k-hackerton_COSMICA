@@ -59,6 +59,14 @@ const AppointmentRegister = ({ route }) => {
         return new Intl.DateTimeFormat('ko-KR', options).format(date);
     };
 
+    const formatTime = (time) => {
+        const options = {
+            hour: '2-digit',
+            minute: '2-digit',
+        };
+        return new Intl.DateTimeFormat('ko-KR', options).format(time);
+    };
+
     const calculateTotalBill = () => {
         const start = new Date(startTime);
         const end = new Date(endTime);
@@ -70,7 +78,6 @@ const AppointmentRegister = ({ route }) => {
         const options = {
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit',
             timeZone: 'Asia/Seoul',  // 한국 시간대로 설정
             hour12: false  // 24시간 형식
         };
@@ -91,11 +98,13 @@ const AppointmentRegister = ({ route }) => {
 
     const onStartTimeChange = (event, selectedDate) => {
         setShowStartPicker(false);
+        console.log(selectedDate);
         if (selectedDate) setStartTime(selectedDate);
     };
 
     const onEndTimeChange = (event, selectedDate) => {
-        setShowEndPicker(false);
+        setShowEndPicker(false)
+        console.log(selectedDate);
         if (selectedDate) setEndTime(selectedDate);
     };
 
@@ -159,7 +168,7 @@ const AppointmentRegister = ({ route }) => {
 
             <View style={styles.timeContainer}>
                 <TouchableOpacity style={styles.timeButton} onPress={() => setShowStartPicker(true)}>
-                    <Text style={styles.timeButtonText}>시작: {formatTimeInKorean(startTime)}</Text>
+                    <Text style={styles.timeButtonText}>시작: {formatTime(startTime)}</Text>
                 </TouchableOpacity>
                 {showStartPicker && (
                     <DateTimePicker
@@ -171,7 +180,7 @@ const AppointmentRegister = ({ route }) => {
                 )}
                 <Text>~</Text>
                 <TouchableOpacity style={styles.timeButton} onPress={() => setShowEndPicker(true)}>
-                    <Text style={styles.timeButtonText}>종료: {formatTimeInKorean(endTime)}</Text>
+                    <Text style={styles.timeButtonText}>종료: {formatTime(endTime)}</Text>
                 </TouchableOpacity>
                 {showEndPicker && (
                     <DateTimePicker
@@ -216,7 +225,6 @@ const AppointmentRegister = ({ route }) => {
                     keyboardType="numeric"
                     value={bill}
                     onChangeText={setBill}
-                    editable={payType !== '건급'}
                 />
             </View>
 

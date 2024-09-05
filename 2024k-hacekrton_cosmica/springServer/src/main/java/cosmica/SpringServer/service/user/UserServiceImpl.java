@@ -41,6 +41,14 @@ public class UserServiceImpl implements UserService {
         userRepository.updateRate(appointment);
     }
 
+    @Override
+    public Optional<User> updateUser(User user) {return userRepository.updateUser(user);}
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
 
 //    @Override
 //    public Optional<List<User>> findByDate(Date date){

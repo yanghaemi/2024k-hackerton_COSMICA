@@ -4,6 +4,7 @@ import com.sun.jna.platform.win32.Sspi;
 import cosmica.SpringServer.enums.UserType;
 import lombok.Data;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
 //신청한 동행 정보
 @Data
 @ToString
-
+@Slf4j
 public class Appointment {
     private Integer id;
     private Integer wheelchairId;
