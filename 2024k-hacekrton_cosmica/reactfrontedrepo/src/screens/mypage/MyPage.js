@@ -6,6 +6,7 @@ import {fetchFunc} from "../../fetch/FetchFunc";
 import CustomComponent from "../../components/CustomComponent";
 import DocumentPicker from 'react-native-document-picker';
 import {REACT_APP_SPRING_API_URL} from "@env";
+import fetchFunc2 from "../../fetch/FetchFunc2";
 
 
 const MyPage = () => {
@@ -18,6 +19,8 @@ const MyPage = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [reviewText, setReviewText] = useState('');
     const [rating, setRating] = useState(0);
+    const [historyModalVisible, setHistoryModalVisible] = useState(false);
+    const [opponent,setOpponent]=useState(null);
     const navigation = useNavigation();
 
     const fetchData = async () => {
@@ -43,6 +46,18 @@ const MyPage = () => {
             fetchData();
         }, [refresh])
     );
+
+    const getOpponent = (selected)=>{
+        const request = myData.userType==='COMPANION'? selected.wheelchairId : selected.companionId;
+        console.log(request);
+        fetchFunc2("/users/findById", { id: request })
+            .then(
+                data=>{
+                    setOpponent(data);
+                    console.log(data);
+                }
+            )
+    }
 
     const getUserType = (type) => {
         switch (type) {
@@ -73,6 +88,12 @@ const MyPage = () => {
     const openReviewModal = (appointment) => {
         setSelectedAppointment(appointment);
         setModalVisible(true);
+    };
+
+    const openHistoryModal = (appointment) => {
+        setSelectedAppointment(appointment);
+        getOpponent(appointment);
+        setHistoryModalVisible(true);
     };
 
     const uploadPdf = async (fileUri) => {
@@ -147,10 +168,10 @@ const MyPage = () => {
                 {/* All other content goes here */}
                 <View style={styles.profileSection}>
                     <View style={styles.profileText}>
-                            <Text style={styles.userName}>{myData?.userName || '사용자 이름'}</Text>
-                            <Text style={styles.userType}>사용자 유형: {getUserType(myData?.userType)}
-                                {myData?.userType === 'COMPANION' && ` | 평점: ${myData?.rate}`}
-                            </Text>
+                        <Text style={styles.userName}>{myData?.userName || '사용자 이름'}</Text>
+                        <Text style={styles.userType}>사용자 유형: {getUserType(myData?.userType)}
+                            {myData?.userType === 'COMPANION' && ` | 평점: ${myData?.rate}`}
+                        </Text>
                     </View>
                 </View>
 
@@ -234,17 +255,7 @@ const MyPage = () => {
                                     styles.appointmentItem,
                                     !appointment.review && styles.noReviewItem, // review가 없으면 스타일 변경
                                 ]}
-                                onPress={() => {
-                                    if (myData?.userType === 'WHEELCHAIR') {
-                                        if(appointment.wheelchairId && appointment.companionId) {
-                                            openReviewModal(appointment); // Modal 열기
-                                        } else {
-                                            Alert.alert("매칭 상대 미정","아직 매칭상대가 정해지지 않아 리뷰를 등록할 수 없습니다.")
-                                        }
-                                    } else {
-                                        Alert.alert("권한 없음", "리뷰 등록은 휠체어 이용자만 가능합니다.");
-                                    }
-                                }} // Modal 열기
+                                onPress={()=>openHistoryModal(appointment)}
                             >
                                 <Text>날짜: {appointment.appointDate}</Text>
                                 <Text>위치: {appointment.location}</Text>
@@ -263,7 +274,58 @@ const MyPage = () => {
             {/* CustomComponent fixed at the bottom */}
             <CustomComponent />
 
-            {/* 리뷰 작성 Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={historyModalVisible}
+                onRequestClose={() => setHistoryModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>동행 이력</Text>
+                        {selectedAppointment && opponent? (
+                            <View style={styles.appointmentItem}>
+                                <Text style={styles.modalText}>날짜: {selectedAppointment.appointDate}</Text>
+                                <Text style={styles.modalText}>위치: {selectedAppointment.location}</Text>
+                                <Text style={styles.modalText}>비용: {selectedAppointment.bill}원</Text>
+                                <Text style={styles.modalText}>상대방 번호:{opponent.phoneNum}</Text>
+                                <View style={styles.modalButtonContainer}>
+                                    <TouchableOpacity
+                                        style={styles.customButton}
+                                        onPress={() => {
+                                            if (myData?.userType === 'WHEELCHAIR') {
+                                                if(selectedAppointment.wheelchairId && selectedAppointment.companionId) {
+                                                    openReviewModal(selectedAppointment); // Modal 열기
+                                                } else {
+                                                    Alert.alert("매칭 상대 미정","아직 매칭상대가 정해지지 않아 리뷰를 등록할 수 없습니다.")
+                                                }
+                                            } else {
+                                                Alert.alert("권한 없음", "리뷰 등록은 휠체어 이용자만 가능합니다.");
+                                            }
+                                        }} // Modal 열기
+                                    >
+                                        <Text style={styles.buttonText}>리뷰 등록</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.customButton}
+                                                      onPress={()=>navigation.navigate("CheckoutPage", { selectedAppointment, opponent })}
+                                    >
+                                        <Text style={styles.buttonText}>결제하기</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : (
+                            <Text>동행 이력이 없습니다.</Text>
+                        )}
+                        <TouchableOpacity
+                            style={styles.customButton}
+                            onPress={() => setHistoryModalVisible(false)}
+                        >
+                            <Text style={styles.buttonText}>닫기</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -510,7 +572,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     buttonDisabled: {
-        backgroundColor: '#ccc', // 비활성화 상태의 버튼 색상
+        backgroundColor: '#ccc',
+    },
+    modalText: {
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 10,
+        lineHeight: 22,
+        textAlign: 'left',
     },
 });
 

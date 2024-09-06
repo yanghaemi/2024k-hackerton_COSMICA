@@ -8,7 +8,7 @@ import { fetchFunc } from "../../../fetch/FetchFunc";
 const CheckoutPage = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { item,userData } = route.params;
+    const { selectedAppointment, opponent } = route.params;
     const paymentWidgetControl = usePaymentWidget();
     const [paymentMethodWidgetControl, setPaymentMethodWidgetControl] = useState<PaymentMethodWidgetControl | null>(null);
     const [agreementWidgetControl, setAgreementWidgetControl] = useState<AgreementWidgetControl | null>(null);
@@ -27,7 +27,7 @@ const CheckoutPage = () => {
 
         try {
             const result = await paymentWidgetControl.requestPayment({
-                orderId: item.id,
+                orderId: selectedAppointment.id,
                 orderName: "동행자 매칭 서비스",
             });
 
@@ -35,9 +35,9 @@ const CheckoutPage = () => {
                 console.log("ResultSuccess: ", result.success);
                 fetchFunc("/appointment/pay", result.success)
                     .then(()=>{
-                        fetchFunc("/appointment/payComplete",item)
+                        fetchFunc("/appointment/payComplete",selectedAppointment)
                             .then(()=>{
-                                Alert.alert("신청이 완료되었습니다.", `상대방 휴대폰 번호는 ${userData.phoneNum}입니다.`);
+                                Alert.alert("신청이 완료되었습니다.", `상대방 휴대폰 번호는 ${opponent.phoneNum}입니다.`);
                             })
                     })
             } else if (result?.fail) {
@@ -47,7 +47,7 @@ const CheckoutPage = () => {
             console.error('Error during payment request:', error);
             Alert.alert("결제 중 오류가 발생했습니다.");
         } finally {
-            navigation.navigate("CalendarPage");
+            navigation.navigate("MyPage");
         }
     };
 
@@ -57,7 +57,7 @@ const CheckoutPage = () => {
                 selector="payment-methods"
                 onLoadEnd={() => {
                     paymentWidgetControl
-                        .renderPaymentMethods("payment-methods", { value: item.bill }, { variantKey: "DEFAULT" })
+                        .renderPaymentMethods("payment-methods", { value: selectedAppointment.bill }, { variantKey: "DEFAULT" })
                         .then(control => setPaymentMethodWidgetControl(control));
                 }}
             />

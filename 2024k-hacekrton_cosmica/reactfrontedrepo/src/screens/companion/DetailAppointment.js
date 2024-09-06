@@ -56,6 +56,11 @@ const DetailAppointment = ({route}) => {
     const isButtonDisabled = userData && myData && userData.userType === myData.userType;
 
     const handlePress = () => {
+        if(myData.userType==='COMPANION' && myData.verify===false){
+            console.log("abc");
+            Alert.alert("사회복지사 인증이 필요합니다.", "마이페이지에서 사회복지사 인증을 완료해주세요");
+            return ;
+        }
         fetchFunc("/appointment/payComplete", item)
             .then(() => {
                 Alert.alert("신청이 완료되었습니다.", `상대방 휴대폰 번호는 ${userData.phoneNum}입니다.`);
