@@ -1,6 +1,7 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import { useEffect, useState } from "react";
 import { BUS_INFO_SERVICE, BUS_API_URL, BUS_INFO_F, E_BUS_API_SERVICE_KEY } from '@env';
+import {useNavigation} from "@react-navigation/native";
 
 const Bus = ({ route }) => {
     const { item, selectedCityCode } = route.params;
@@ -10,6 +11,7 @@ const Bus = ({ route }) => {
     const [bus, setBus] = useState([]);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const navigation = useNavigation();
 
     useEffect(() => {
         fetchBus(pageNo);
@@ -68,14 +70,16 @@ const Bus = ({ route }) => {
     const renderItem = ({ item }) => {
         const isLowFloorBus = item.vehicletp === "저상버스";
         return (
-            <View style={[styles.busItem, isLowFloorBus && styles.lowFloorBusItem]}>
+            <TouchableOpacity style={[styles.busItem, isLowFloorBus && styles.lowFloorBusItem]}
+                              onPress={()=>navigation.navigate("BusRoute",{item, selectedCityCode})}
+            >
                 <Text style={styles.busName}>버스 번호: {item.routeno}</Text>
                 <Text style={styles.busDetails}>도착까지 남은 정류장: {item.arrprevstationcnt}</Text>
                 <Text style={styles.busDetails}>
                     도착 예상 시간: {Math.floor(item.arrtime / 60)}분 {item.arrtime % 60}초
                 </Text>
                 <Text style={[styles.busDetails, isLowFloorBus && styles.lowFloorBusDetails]}>차량 유형: {item.vehicletp}</Text>
-            </View>
+            </TouchableOpacity>
         );
     };
 

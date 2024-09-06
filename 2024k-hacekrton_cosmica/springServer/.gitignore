@@ -32,7 +32,10 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
-src/main/resources/application.properties
 
 ### VS Code ###
 .vscode/
+
+# Exclude application.properties but include all other resources
+/src/main/resources/application.properties
+!src/main/resources
