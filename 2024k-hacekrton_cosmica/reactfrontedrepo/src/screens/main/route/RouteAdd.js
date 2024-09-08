@@ -75,7 +75,7 @@ try{
   console.log(response.data);
   
       Alert.alert('저장 완료', '해당 경로를 저장했습니다!');
-      navigation.navigate('Map', { origin: null, destination: null });
+      navigation.navigate("지도", { origin: null, destination: null });
 
     } catch (error) {
       console.error("에러: ", error);
@@ -106,7 +106,7 @@ try{
     <View style={styles.container}>
       <TouchableOpacity //길 찾기 버튼
         style={styles.searchButton}
-        onPress={() => navigation.navigate('AddScreen')} //클릭 시 검색 화면으로 이동
+        onPress={() => navigation.navigate("새 경로 추가")} //클릭 시 검색 화면으로 이동
       >
         <Text style={styles.buttonText}>새 경로 추가</Text>
       </TouchableOpacity>

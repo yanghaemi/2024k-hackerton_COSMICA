@@ -169,7 +169,7 @@ const Register = () => {
                         ]}
                         onPress={() => onUserTypeSelect("WHEELCHAIR")}
                     >
-                        <Text>Wheelchair</Text>
+                        <Text>휠체어 이용자</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[
@@ -178,7 +178,7 @@ const Register = () => {
                         ]}
                         onPress={() => onUserTypeSelect("COMPANION")}
                     >
-                        <Text>Companion</Text>
+                        <Text>동행자</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -16,7 +16,6 @@ function CompanionStack() {
         <PaymentWidgetProvider clientKey={`test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm`} customerKey={`IYb3-UCpCttZa4-GAj3sd`}>
         <Stack.Navigator>
             <Stack.Screen name="CalendarPage" component={CalendarPage} options={{ headerShown: false }}/>
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
             <Stack.Screen name="AppointmentRegister" component={AppointmentRegister} options={{ headerShown: false }}/>
             <Stack.Screen name="DetailAppointment" component={DetailAppointment} options={{ headerShown: false }}/>
             <Stack.Screen name="CheckoutPage" component={CheckoutPage} options={{ headerShown: false }}/>

@@ -13,7 +13,7 @@ const SearchScreen = () => {
 
   const handleNavigate = () => {
     if (origin && destination) {
-      navigation.navigate('Map', { origin, destination }); //Main스크린 이동 및 출발지와 도착지 정보 보냄
+      navigation.navigate("지도", { origin, destination }); //Main스크린 이동 및 출발지와 도착지 정보 보냄
     } else {
       Alert.alert('경고', '두 장소를 모두 선택해야 합니다.');
     }
