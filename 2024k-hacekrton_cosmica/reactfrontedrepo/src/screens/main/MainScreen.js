@@ -57,12 +57,14 @@ const MainScreen = ({apiUrl}) => {
 
 const getRoutes = async () => {
         try{const response = await axios.get(`${apiUrl}/main/getRoute`, {
-          origin: origin,
-          destination: destination
+          params: {
+            origin: origin,
+            destination: destination
+          }
         });
 
           if (response.data) {
-            console.log("dfdfd:",response.data.data);
+            console.log("루트 가져오기:",response.data.data);
             setRoutes(response.data.data);
           }
         } catch (error) {

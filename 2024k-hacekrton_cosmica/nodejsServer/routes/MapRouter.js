@@ -29,7 +29,7 @@ router.post('/addRoute', async (req, res) => {
             origin: JSON.stringify(req.body.origin),
             destination: JSON.stringify(req.body.destination)
         };
-            console.log("route: ",route);
+            console.log("addRoute: ",route);
         
         
         const registedRoute = await db.route.create(route);
@@ -59,24 +59,24 @@ router.get('/getRoute', async (req, res) => {
         msg: ""
     }
     try {
-        console.log("orging:",req.body.origin);
+        console.log("getRoute orgin 확인:",req.query.origin);
         
-        const origin = JSON.stringify(req.body.origin);
-        const destination = JSON.stringify(req.body.destination);
+        const origin = JSON.stringify(req.query.origin); 
+        const destination = JSON.stringify(req.query.destination);
 
-        const routes = await db.route.findAll({ Where: { origin: origin, destination: destination } });
+        const routes = await db.route.findAll({ where: { origin: origin, destination: destination } });
          // 각 요소에 대해 JSON.parse를 적용합니다.
     const parsedRoutes = routes.map(route => {
         return {
             ...route.dataValues, // 기존 데이터베이스의 다른 필드들도 유지하려면 사용
             // data: JSON.parse(route.dataValues.data),
-            data: JSON.parse(route.dataValues.data),
-            destination: JSON.parse(route.dataValues.destination),
+            data: typeof route.dataValues.data === 'string' ? JSON.parse(route.dataValues.data) : route.dataValues.data,
+            destination: typeof route.dataValues.destination === 'string' ? JSON.parse(route.dataValues.destination) : route.dataValues.destination,
             // origin: JSON.parse(route.dataValues.origin)
         };
     });
         
-        console.log("음", parsedRoutes);
+        console.log("getRoute 서버 부분", parsedRoutes);
 
         apiResult.code = 200;
         apiResult.data = parsedRoutes;
