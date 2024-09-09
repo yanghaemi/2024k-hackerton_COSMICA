@@ -41,12 +41,13 @@ router.get('/', async (req, res) => {
  */
 router.post('/create', async (req, res) => {
 
+    console.log("컨트롤러에서 request",req);
     let apiResult = {
         code: 400,
         data: "",
         msg: ""
     }
-    
+
     try {
         const report = {
             title: req.body.title,

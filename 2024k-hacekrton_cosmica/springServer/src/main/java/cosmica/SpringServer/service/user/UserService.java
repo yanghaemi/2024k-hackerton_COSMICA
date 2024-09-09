@@ -13,5 +13,7 @@ public interface UserService {
     public Optional<User> register(User user);//User 등록
     public Optional<User> deleteById(int id);
     public void updateRate(Appointment appointment);//id 입력 -> 해당 User 삭제
+    public Optional<User> updateUser(User user);
+    public List<User> findAll();
 //    public Optional<List<User>> findByDate(Date date);// date 입력 -> 해당 date에 가능한 User List 출력
 }

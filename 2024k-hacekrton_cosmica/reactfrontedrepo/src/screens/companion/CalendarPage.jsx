@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useNavigation } from '@react-navigation/native';
@@ -8,8 +8,18 @@ import CustomComponent from "../../components/CustomComponent";
 
 const CalendarPage = () => {
     const navigation = useNavigation();
-    const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString());
+    const [selectedDate, setSelectedDate] = useState();
     const [appointment, setAppointment] = useState([]); // 기존 동행자들을 비워둡니다
+
+    useEffect(() => {
+        const defaultDate = new Date();
+        const year = defaultDate.getFullYear();
+        const month = String(defaultDate.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줌
+        const day = String(defaultDate.getDate()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+        setSelectedDate(formattedDate);
+        console.log(formattedDate); // 2024-09-04 형식으로 출력
+    }, []);
 
     const fetchData = (url, additionalData1) => {
         fetchFunc(url, additionalData1)

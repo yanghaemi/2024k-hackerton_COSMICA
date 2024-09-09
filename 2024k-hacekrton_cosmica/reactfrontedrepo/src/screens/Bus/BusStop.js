@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, ActivityIndicator} from 'react-native';
+import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, ActivityIndicator } from 'react-native';
 import { BUS_API_URL, E_BUS_API_SERVICE_KEY, BUS_INFO_SERVICE, CITY_INFO_F, BUS_STOP_SERVICE, NAME_TO_CODE_F } from '@env';
 import { useNavigation } from "@react-navigation/native";
 import CustomComponent from "../../components/CustomComponent";
@@ -12,7 +12,7 @@ const BusStopSearchScreen = () => {
     const [selectedCityCode, setSelectedCityCode] = useState(null);
     const [selectedCityName, setSelectedCityName] = useState(null);
     const [searchTextToCode, setSearchTextToCode] = useState([]);
-    const [loading, setLoading] = useState(false); // 로딩 상태 추가
+    const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -40,14 +40,14 @@ const BusStopSearchScreen = () => {
             .then(data => {
                 const body = data.response.body || {};
                 const items = body.items ? body.items.item : [];
-                const sortedItems = items.sort((a, b) => a.cityname.localeCompare(b.cityname)); // 이름 순으로 정렬
+                const sortedItems = items.sort((a, b) => a.cityname.localeCompare(b.cityname));
                 setCityList(sortedItems);
             })
             .catch(error => console.error('There has been a problem with your fetch operation:', error));
     };
 
     const nameToCode = () => {
-        setLoading(true); // 로딩 시작
+        setLoading(true);
         console.log("nameToCode 에서의 text=", searchText);
         const url = BUS_API_URL;
         const serviceName = BUS_STOP_SERVICE;
@@ -61,10 +61,15 @@ const BusStopSearchScreen = () => {
         const queryString = new URLSearchParams(params).toString();
         const fullUrl = `${url}${serviceName}/${functionName}?${queryString}`;
         console.log("정류소 이름 to id", fullUrl);
+
         fetch(fullUrl)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const contentType = response.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new TypeError("Received non-JSON response");
                 }
                 return response.json();
             })
@@ -73,17 +78,14 @@ const BusStopSearchScreen = () => {
                 const body = data.response.body || {};
                 const items = body.items ? body.items.item : [];
                 setSearchTextToCode(items);
-                console.log(items) // Store all nodeno and nodeNm values in searchTextToCode
             })
             .catch(error => console.error('There has been a problem with your fetch operation:', error))
-            .finally(() => setLoading(false)); // 로딩 종료
+            .finally(() => setLoading(false));
     };
 
     const selectCity = (cityCode, cityName) => {
         setSelectedCityCode(cityCode);
         setSelectedCityName(cityName);
-        console.log("선택된 도시 코드:",cityCode);
-        console.log("선택된 도시 이름:",cityName);
         setCityModalVisible(false);
     };
 
@@ -137,14 +139,14 @@ const BusStopSearchScreen = () => {
                 </TouchableOpacity>
             </View>
 
-            {loading ? ( // 로딩 상태일 때 로딩 인디케이터 표시
+            {loading ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color="#333" />
                 </View>
             ) : (
                 <FlatList
                     data={searchTextToCode}
-                    keyExtractor={item => item.nodeno.toString()} // Use nodeno as keyExtractor
+                    keyExtractor={item => item.nodeno.toString()}
                     style={styles.busItems}
                     renderItem={({ item }) => (
                         <TouchableOpacity style={styles.busItem} onPress={() => navigation.navigate("Bus", { item, selectedCityCode })}>

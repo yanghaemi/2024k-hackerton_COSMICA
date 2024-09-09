@@ -4,6 +4,10 @@ import fetchFunc3 from "../../fetch/FetchFunc3";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {fetchFunc} from "../../fetch/FetchFunc";
 import CustomComponent from "../../components/CustomComponent";
+import DocumentPicker from 'react-native-document-picker';
+import {REACT_APP_SPRING_API_URL} from "@env";
+import fetchFunc2 from "../../fetch/FetchFunc2";
+
 
 const MyPage = () => {
     const [myData, setMyData] = useState(null);
@@ -15,6 +19,8 @@ const MyPage = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [reviewText, setReviewText] = useState('');
     const [rating, setRating] = useState(0);
+    const [historyModalVisible, setHistoryModalVisible] = useState(false);
+    const [opponent,setOpponent]=useState(null);
     const navigation = useNavigation();
 
     const fetchData = async () => {
@@ -40,6 +46,18 @@ const MyPage = () => {
             fetchData();
         }, [refresh])
     );
+
+    const getOpponent = (selected)=>{
+        const request = myData.userType==='COMPANION'? selected.wheelchairId : selected.companionId;
+        console.log(request);
+        fetchFunc2("/users/findById", { id: request })
+            .then(
+                data=>{
+                    setOpponent(data);
+                    console.log(data);
+                }
+            )
+    }
 
     const getUserType = (type) => {
         switch (type) {
@@ -72,6 +90,38 @@ const MyPage = () => {
         setModalVisible(true);
     };
 
+    const openHistoryModal = (appointment) => {
+        setSelectedAppointment(appointment);
+        getOpponent(appointment);
+        setHistoryModalVisible(true);
+    };
+
+    const uploadPdf = async (fileUri) => {
+        const formData = new FormData();
+        formData.append('file', {
+            uri: fileUri,
+            type: 'application/pdf', // MIME 타입
+            name: 'file.pdf',        // 서버에서 저장될 파일 이름
+        });
+
+        try {
+
+            const response = await fetch(REACT_APP_SPRING_API_URL+'/users/verify', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     const submitReview = () => {
         console.log('Submitted Review:', reviewText, 'Rating:', rating);
         selectedAppointment.review = reviewText;
@@ -79,6 +129,26 @@ const MyPage = () => {
         fetchFunc("/appointment/review",selectedAppointment);
         console.log("선택된 매칭 리뷰 작성 결과:", selectedAppointment);
         setModalVisible(false);
+    };
+
+    const selectFile = async () => {
+        try {
+            console.log("selectFile 실행 됨.")
+            // 파일 선택
+            const res = await DocumentPicker.pick({
+                type: [DocumentPicker.types.pdf], // PDF 파일만 선택 가능
+            });
+
+            console.log('선택된 파일:', res);
+            const fileUri = res[0].uri;       // 선택된 파일의 URI
+            uploadPdf(fileUri);               // 파일 전송 함수 호출
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                console.log('파일 선택이 취소되었습니다.');
+            } else {
+                console.error('파일 선택 중 오류 발생:', err);
+            }
+        }
     };
 
     // Ensure appointments is an array before calling filter
@@ -144,14 +214,29 @@ const MyPage = () => {
                         <Text style={styles.otherText}>거주 지역</Text>
                         <Text style={styles.otherCount}>{myData?.location || '거주지역'}</Text>
                     </View>
+                    { myData &&(
+                        myData.userType==='COMPANION' && (
+                            <View style={styles.otherItem}>
+                                <Text style={styles.otherText}>복지사 인증 현황</Text>
+                                <Text style={styles.otherCount}>{myData?.verify ? '인증 완료' :'인증 미완료'}</Text>
+                            </View>
+                        )
+                    )}
                 </View>
 
                 <View style={styles.accountSection}>
                     <View style={styles.accountItem}>
                         {myData ? (
-                            <TouchableOpacity style={styles.customButton} onPress={logout}>
-                                <Text style={styles.buttonText}>로그아웃</Text>
-                            </TouchableOpacity>
+                            <View style={styles.accountItem}>
+                                <TouchableOpacity style={styles.customButton} onPress={logout}>
+                                    <Text style={styles.buttonText}>로그아웃</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.customButton,myData?.userType!=='COMPANION' &&styles.buttonDisabled]}
+                                                  disabled={myData?.userType!=='COMPANION'}
+                                                  onPress={selectFile}>
+                                    <Text style={styles.buttonText}>사회 복지사 인증</Text>
+                                </TouchableOpacity>
+                            </View>
                         ) : (
                             <TouchableOpacity style={styles.customButton} onPress={() => { navigation.navigate("Login") }}>
                                 <Text style={styles.buttonText}>로그인</Text>
@@ -170,17 +255,7 @@ const MyPage = () => {
                                     styles.appointmentItem,
                                     !appointment.review && styles.noReviewItem, // review가 없으면 스타일 변경
                                 ]}
-                                onPress={() => {
-                                    if (myData?.userType === 'WHEELCHAIR') {
-                                        if(appointment.wheelchairId && appointment.companionId) {
-                                            openReviewModal(appointment); // Modal 열기
-                                        } else {
-                                            Alert.alert("매칭 상대 미정","아직 매칭상대가 정해지지 않아 리뷰를 등록할 수 없습니다.")
-                                        }
-                                    } else {
-                                        Alert.alert("권한 없음", "리뷰 등록은 휠체어 이용자만 가능합니다.");
-                                    }
-                                }} // Modal 열기
+                                onPress={()=>openHistoryModal(appointment)}
                             >
                                 <Text>날짜: {appointment.appointDate}</Text>
                                 <Text>위치: {appointment.location}</Text>
@@ -199,7 +274,58 @@ const MyPage = () => {
             {/* CustomComponent fixed at the bottom */}
             <CustomComponent />
 
-            {/* 리뷰 작성 Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={historyModalVisible}
+                onRequestClose={() => setHistoryModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>동행 이력</Text>
+                        {selectedAppointment && opponent? (
+                            <View style={styles.appointmentItem}>
+                                <Text style={styles.modalText}>날짜: {selectedAppointment.appointDate}</Text>
+                                <Text style={styles.modalText}>위치: {selectedAppointment.location}</Text>
+                                <Text style={styles.modalText}>비용: {selectedAppointment.bill}원</Text>
+                                <Text style={styles.modalText}>상대방 번호:{opponent.phoneNum}</Text>
+                                <View style={styles.modalButtonContainer}>
+                                    <TouchableOpacity
+                                        style={styles.customButton}
+                                        onPress={() => {
+                                            if (myData?.userType === 'WHEELCHAIR') {
+                                                if(selectedAppointment.wheelchairId && selectedAppointment.companionId) {
+                                                    openReviewModal(selectedAppointment); // Modal 열기
+                                                } else {
+                                                    Alert.alert("매칭 상대 미정","아직 매칭상대가 정해지지 않아 리뷰를 등록할 수 없습니다.")
+                                                }
+                                            } else {
+                                                Alert.alert("권한 없음", "리뷰 등록은 휠체어 이용자만 가능합니다.");
+                                            }
+                                        }} // Modal 열기
+                                    >
+                                        <Text style={styles.buttonText}>리뷰 등록</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.customButton}
+                                                      onPress={()=>navigation.navigate("CheckoutPage", { selectedAppointment, opponent })}
+                                    >
+                                        <Text style={styles.buttonText}>결제하기</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : (
+                            <Text>동행 이력이 없습니다.</Text>
+                        )}
+                        <TouchableOpacity
+                            style={styles.customButton}
+                            onPress={() => setHistoryModalVisible(false)}
+                        >
+                            <Text style={styles.buttonText}>닫기</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -325,6 +451,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 8,
+        marginHorizontal: 5, // 추가된 부분
     },
     buttonText: {
         color: '#fff',
@@ -351,7 +478,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     accountItem: {
-        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center',  // 이 부분을 추가하세요.
     },
     historySection: {
         marginTop: 10,
@@ -442,6 +570,16 @@ const styles = StyleSheet.create({
     modalButtonText: {
         color: '#fff',
         fontSize: 16,
+    },
+    buttonDisabled: {
+        backgroundColor: '#ccc',
+    },
+    modalText: {
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 10,
+        lineHeight: 22,
+        textAlign: 'left',
     },
 });
 

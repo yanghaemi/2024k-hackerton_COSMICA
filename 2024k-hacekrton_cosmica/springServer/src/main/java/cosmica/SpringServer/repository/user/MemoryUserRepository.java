@@ -45,5 +45,15 @@ public class MemoryUserRepository implements UserRepository {
     public void updateRate(Appointment appointment) {
     }
 
+    @Override
+    public Optional<User> updateUser(User user) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<User> findAll() {
+        return List.of();
+    }
+
 
 }

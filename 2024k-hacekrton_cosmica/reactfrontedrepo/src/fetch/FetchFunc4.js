@@ -2,8 +2,9 @@ import Config from "react-native-config";
 import {REACT_APP_SPRING_API_URL} from '@env'
 
 export const fetchFunc4 = (url, additionalData = null) => {
-    const defaultUrl = REACT_APP_SPRING_API_URL; // 환경변수로 변경하려면 Config.API_URL 사용
-    console.log(REACT_APP_SPRING_API_URL);
+    const defaultUrl = REACT_APP_SPRING_API_URL;
+    console.log("dd");
+    console.log(defaultUrl);
 
     const options = {
         method: 'POST',

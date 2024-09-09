@@ -20,7 +20,6 @@ export const fetchRoute = async (origin, destination, setLoading, setRouteCoordi
                 endName: '도착지',             // 도착지 이름
             }
         });
-
         if (response.data && response.data.features) {
             const coordinates = response.data.features
                 .filter(feature => feature.geometry.type === 'LineString')

@@ -35,15 +35,18 @@ public class JdbcMatchRepository implements MatchRepository {
         ms.addValue("appointDate",appointment.getAppointDate());
         ms.addValue("location",appointment.getLocation());
         ms.addValue("bill",appointment.getBill());
+        ms.addValue("start",appointment.getStart());
+        ms.addValue("end",appointment.getEnd());
+        ms.addValue("carRequire",appointment.getCarRequire());
+        ms.addValue("carName",appointment.getCarName());
 
-        jdbcTemplate.update("insert into Appointment (id, wheelchairId,companionId,appointDate,location,bill)" +
-                "values(:id,:wheelchairId,:companionId,:appointDate,:location,:bill)", ms);
+        jdbcTemplate.update("insert into Appointment (id, wheelchairId,companionId,appointDate,location,bill,start,end,carRequire,carName)" +
+                "values(:id,:wheelchairId,:companionId,:appointDate,:location,:bill,:start,:end,:carRequire,:carName)", ms);
 
         MapSqlParameterSource ms2 = new MapSqlParameterSource();
         ms2.addValue("userId",user.getId());
         ms2.addValue("appointmentId",appointment.getId());
         jdbcTemplate.update("insert into UserAppointment (userId,appointmentId) values(:userId,:appointmentId)",ms2);
-
         return appointment;
     }
 
@@ -126,11 +129,12 @@ public class JdbcMatchRepository implements MatchRepository {
             appointment.setBill(rs.getInt("bill"));
             appointment.setReview(rs.getString("review"));
             appointment.setRate(rs.getDouble("rate"));
+            appointment.setStart(rs.getTimestamp("start"));
+            appointment.setEnd(rs.getTimestamp("end"));
+            appointment.setCarRequire(rs.getBoolean("carRequire"));
+            appointment.setCarName(rs.getString("carName"));
             return appointment;
         });
     }
-
-
-
 
 }

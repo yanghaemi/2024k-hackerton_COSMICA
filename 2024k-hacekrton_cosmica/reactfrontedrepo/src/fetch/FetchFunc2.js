@@ -3,7 +3,10 @@ import {REACT_APP_SPRING_API_URL} from '@env'
 
 export const fetchFunc2 = (url, additionalData=null) => {
     const defaultUrl = REACT_APP_SPRING_API_URL;
-    console.log(REACT_APP_SPRING_API_URL);
+    console.log("dd");
+    console.log(defaultUrl);
+
+
     const params = new URLSearchParams();
 
     // additionalData 객체를 URLSearchParams 객체로 변환
@@ -19,6 +22,7 @@ export const fetchFunc2 = (url, additionalData=null) => {
         body: params.toString(), // URL 인코딩된 문자열로 변환
     };
 
+    console.log(defaultUrl+url);
     return fetch(defaultUrl + url, options)
         .then(response => response.json())
         .then(data => {

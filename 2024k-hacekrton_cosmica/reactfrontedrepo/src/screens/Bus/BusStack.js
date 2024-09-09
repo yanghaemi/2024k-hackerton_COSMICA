@@ -8,6 +8,7 @@ import {useNavigation} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 import BusStopSearchScreen from "./BusStop";
 import Bus from "./Bus";
+import BusRoute from "./BusRoute";
 
 function BusStack() {
 
@@ -16,6 +17,7 @@ function BusStack() {
             <Stack.Navigator>
                 <Stack.Screen name={"BusMain"} component={BusStopSearchScreen} options={{ headerShown: false }}/>
                 <Stack.Screen name={"Bus"} component={Bus} options={{ headerShown: false }}/>
+                <Stack.Screen name={"BusRoute"} component={BusRoute} options={{headerShown: false}}/>
             </Stack.Navigator>
     );
 }
