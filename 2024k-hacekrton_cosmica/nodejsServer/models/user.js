@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     pw: {
       type: DataTypes.STRING(20),
-      allowNull: true
+      allowNull: false
     },
     userName: {
       type: DataTypes.STRING(20),
@@ -33,6 +33,18 @@ module.exports = function(sequelize, DataTypes) {
     },
     phoneNum: {
       type: DataTypes.STRING(20),
+      allowNull: true
+    },
+    car: {
+      type: DataTypes.STRING(20),
+      allowNull: true
+    },
+    verify: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    veriftFilePath: {
+      type: DataTypes.STRING(200),
       allowNull: true
     }
   }, {
