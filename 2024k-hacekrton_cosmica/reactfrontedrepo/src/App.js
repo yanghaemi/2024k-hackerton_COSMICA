@@ -31,7 +31,7 @@ const MainStackNavigator = () => {
             <Stack.Screen name="Add">
                 {() => (<RouteAddStackNavigator />)}
             </Stack.Screen>
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
+            <Stack.Screen name="MyPageStack" component={MyPageStack} options={{ headerShown: false }} />
             <Stack.Screen name="CompanionStack" component={CompanionStack} options={{ headerShown: false }}/>
         </Stack.Navigator>
     );
@@ -52,7 +52,7 @@ const RouteAddStackNavigator = () => {
 
 const App = () => {
     useEffect(() => {
-        console.log("k");
+        console.log("dlsj");
         console.log(REACT_APP_LOCAL_API_URL);
         console.log(REACT_APP_SPRING_API_URL);
     }, []);

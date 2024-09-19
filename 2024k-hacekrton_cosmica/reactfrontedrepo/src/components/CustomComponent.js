@@ -14,7 +14,7 @@ const CustomComponent = () => {
                 Alert.alert('로그인이 필요한 서비스입니다.');
                 navigation.navigate('Login'); // 로그인 화면으로 이동
             } else {
-                navigation.navigate('CompanionStack'); // 동행자 매칭 스택으로 이동
+                navigation.navigate('CalendarPage'); // 동행자 매칭 스택으로 이동
             }
         } catch (error) {
             Alert.alert('서버에 문제가 생겼습니다. 나중에 다시 이용해주세요.');

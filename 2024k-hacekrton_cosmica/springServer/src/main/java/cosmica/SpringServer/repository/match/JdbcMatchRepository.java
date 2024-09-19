@@ -40,13 +40,13 @@ public class JdbcMatchRepository implements MatchRepository {
         ms.addValue("carRequire",appointment.getCarRequire());
         ms.addValue("carName",appointment.getCarName());
 
-        jdbcTemplate.update("insert into Appointment (id, wheelchairId,companionId,appointDate,location,bill,start,end,carRequire,carName)" +
+        jdbcTemplate.update("insert into APPOINTMENT (id, wheelchairId,companionId,appointDate,location,bill,start,end,carRequire,carName)" +
                 "values(:id,:wheelchairId,:companionId,:appointDate,:location,:bill,:start,:end,:carRequire,:carName)", ms);
 
         MapSqlParameterSource ms2 = new MapSqlParameterSource();
         ms2.addValue("userId",user.getId());
         ms2.addValue("appointmentId",appointment.getId());
-        jdbcTemplate.update("insert into UserAppointment (userId,appointmentId) values(:userId,:appointmentId)",ms2);
+        jdbcTemplate.update("insert into USERAPPOINTMENT (userId,appointmentId) values(:userId,:appointmentId)",ms2);
         return appointment;
     }
 
@@ -54,7 +54,7 @@ public class JdbcMatchRepository implements MatchRepository {
     public Appointment searchAppointmentById(int id){
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("id",id);
-        Appointment appointmentList = jdbcTemplate.queryForObject("select *from Appointment where id=:id", ms, appointmentRowMapper1());
+        Appointment appointmentList = jdbcTemplate.queryForObject("select *from APPOINTMENT where id=:id", ms, appointmentRowMapper1());
         return appointmentList;
     }
 
@@ -62,7 +62,7 @@ public class JdbcMatchRepository implements MatchRepository {
     public List<Appointment> searchAppointmentByDate(Date date) {
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("appointDate",date);
-        List<Appointment> appointmentList = jdbcTemplate.query("select * from Appointment where appointDate=:appointDate", ms, appointmentRowMapper1());
+        List<Appointment> appointmentList = jdbcTemplate.query("select * from APPOINTMENT where appointDate=:appointDate", ms, appointmentRowMapper1());
         return appointmentList;
     }
 
@@ -72,11 +72,11 @@ public class JdbcMatchRepository implements MatchRepository {
         List<Appointment> appointmentList;
         if(user.getUserType()==UserType.WHEELCHAIR) {
             ms.addValue("wheelchairId",user.getId());
-             appointmentList= jdbcTemplate.query("select * from appointment where wheelchairId=:wheelchairId", ms, appointmentRowMapper1());
+             appointmentList= jdbcTemplate.query("select * from APPOINTMENT where wheelchairId=:wheelchairId", ms, appointmentRowMapper1());
         }
         else{
             ms.addValue("companionId",user.getId());
-            appointmentList = jdbcTemplate.query("select * from appointment where companionId=:companionId", ms, appointmentRowMapper1());
+            appointmentList = jdbcTemplate.query("select * from APPOINTMENT where companionId=:companionId", ms, appointmentRowMapper1());
         }
         return appointmentList;
     }
@@ -88,13 +88,13 @@ public class JdbcMatchRepository implements MatchRepository {
         ms.addValue("id",appointment.getId());
         ms.addValue("wheelchairId",appointment.getWheelchairId());
         ms.addValue("companionId",appointment.getCompanionId());
-        jdbcTemplate.update("update Appointment set wheelchairId=:wheelchairId,companionId=:companionId  where id=:id", ms);
+        jdbcTemplate.update("update APPOINTMENT set wheelchairId=:wheelchairId,companionId=:companionId  where id=:id", ms);
         MapSqlParameterSource ms2 = new MapSqlParameterSource();
         ms2.addValue("id",appointment.getCompanionId());
-        jdbcTemplate.update("update User set times=times+1 where id=:id", ms2);
+        jdbcTemplate.update("update USER set times=times+1 where id=:id", ms2);
         MapSqlParameterSource ms3 = new MapSqlParameterSource();
         ms3.addValue("id",appointment.getWheelchairId());
-        jdbcTemplate.update("update User set times=times+1 where id=:id", ms3);
+        jdbcTemplate.update("update USER set times=times+1 where id=:id", ms3);
         return searchAppointmentById(appointment.getId());
     }
 
@@ -103,7 +103,7 @@ public class JdbcMatchRepository implements MatchRepository {
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("id",id);
         Appointment appointment = searchAppointmentById(id);
-        jdbcTemplate.update("delete from Appointment where id=:id",ms);
+        jdbcTemplate.update("delete from APPOINTMENT where id=:id",ms);
         return appointment;
     }
 
@@ -113,7 +113,7 @@ public class JdbcMatchRepository implements MatchRepository {
         ms.addValue("id",appointment.getId());
         ms.addValue("review",appointment.getReview());
         ms.addValue("rate",appointment.getRate());
-        jdbcTemplate.update("update appointment set review =:review, rate =:rate where id=:id", ms);
+        jdbcTemplate.update("update APPOINTMENT set review =:review, rate =:rate where id=:id", ms);
         return searchAppointmentById(appointment.getId());
     }
 

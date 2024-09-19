@@ -32,7 +32,7 @@ public class JdbcUserRepository implements UserRepository {
     public Optional<User> findById(int id) {
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
-                        "select * from user where id=:id",
+                        "select * from USER where id=:id",
                         new MapSqlParameterSource("id", id) ,userRowMapper()));
     }
 
@@ -66,7 +66,7 @@ public class JdbcUserRepository implements UserRepository {
         ms.addValue("times", 0);
         ms.addValue("car",user.getCar());
         ms.addValue("verify",user.getVerify());
-        jdbcTemplate.update("insert into user (id,pw,userName,phoneNum,userType,location,rate,times,car,verify)" +
+        jdbcTemplate.update("insert into USER (id,pw,userName,phoneNum,userType,location,rate,times,car,verify)" +
                 " values (:id,:pw,:userName,:phoneNum,:userType,:location,:rate,:times,:car,:verify)",ms);
         return Optional.of(user);
     }
@@ -75,7 +75,7 @@ public class JdbcUserRepository implements UserRepository {
     public Optional<User> deleteById(int id) {
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("id", id);
-        jdbcTemplate.update("delete from user where id=:id",ms);
+        jdbcTemplate.update("delete from USER where id=:id",ms);
         return findById(id);
     }
 
@@ -83,7 +83,7 @@ public class JdbcUserRepository implements UserRepository {
         MapSqlParameterSource ms = new MapSqlParameterSource();
         ms.addValue("companionId", appointment.getCompanionId());
 
-        List<Long> longList = jdbcTemplate.query("select rate from appointment where companionId=:companionId and rate!=0", ms, userRateRowMapper());
+        List<Long> longList = jdbcTemplate.query("select rate from APPOINTMENT where companionId=:companionId and rate!=0", ms, userRateRowMapper());
         for (Long l : longList) {
             log.info("long={}", l);
         }
@@ -94,7 +94,7 @@ public class JdbcUserRepository implements UserRepository {
         Double rate = sum / (longList.size());
         log.info("rate={}", rate);
         ms.addValue("rate", rate);
-        jdbcTemplate.update("update user set rate = :rate where id=:companionId", ms);
+        jdbcTemplate.update("update USER set rate = :rate where id=:companionId", ms);
     }
 
     @Override
@@ -111,13 +111,13 @@ public class JdbcUserRepository implements UserRepository {
         ms.addValue("car", user.getCar());
         ms.addValue("verify", user.getVerify());
         ms.addValue("verifyFilePath", user.getVerifyFilePath());
-        jdbcTemplate.update("update User set id=:id, pw=:pw, userName=:userName, phoneNum=:phoneNum, userType=:userType, location=:location, rate=:rate, times=:times, car=:car, verify=:verify, verifyFilePath=:verifyFilePath where id=:id",ms);
+        jdbcTemplate.update("update USER set id=:id, pw=:pw, userName=:userName, phoneNum=:phoneNum, userType=:userType, location=:location, rate=:rate, times=:times, car=:car, verify=:verify, verifyFilePath=:verifyFilePath where id=:id",ms);
         return findById(user.getId());
     }
 
     @Override
     public List<User> findAll() {
-        return jdbcTemplate.query("select * from user",userRowMapper());
+        return jdbcTemplate.query("select * from USER",userRowMapper());
     }
 
     public RowMapper<Long> userRateRowMapper() {
