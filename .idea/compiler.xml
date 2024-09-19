@@ -12,6 +12,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="cosmica.SpringServer" target="17" />
+      <module name="cosmica.SpringServer.test" target="17" />
       <module name="SpringServer" target="17" />
       <module name="SpringServer.main" target="17" />
       <module name="SpringServer.test" target="17" />

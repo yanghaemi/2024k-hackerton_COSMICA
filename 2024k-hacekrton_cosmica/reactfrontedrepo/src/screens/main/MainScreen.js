@@ -57,12 +57,14 @@ const MainScreen = ({apiUrl}) => {
 
 const getRoutes = async () => {
         try{const response = await axios.get(`${apiUrl}/main/getRoute`, {
-          origin: origin,
-          destination: destination
+          params: {
+            origin: origin,
+            destination: destination
+          }
         });
 
           if (response.data) {
-            console.log("dfdfd:",response.data.data);
+            console.log("루트 가져오기:",response.data.data);
             setRoutes(response.data.data);
           }
         } catch (error) {
@@ -86,7 +88,7 @@ const getRoutes = async () => {
   }, [destination]);
 
   const handleResetDestination = () => { //길 찾기 종료 시
-    navigation.navigate('Map', { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
+    navigation.navigate("지도", { origin: null, destination: null }); // 출발지, 도착지 상태 지우기
     setRouteCoordinates([]); //경로 표시 제거
     setRoutes([]);
     setSelectedRoute([]);
@@ -238,15 +240,6 @@ const getRoutes = async () => {
       >
         <Text style={{ color: '#fff', fontSize: 20}}>+</Text>
       </TouchableOpacity>
-      <TouchableOpacity // 신고버튼
-        style={styles.reportButton}
-        onPress={() => {
-          getData();
-          navigation.navigate('Report')
-        }} //클릭 시 검색 화면으로 이동
-      >
-        <Text style={{ color: '#fff', fontSize: 20}}>!</Text>
-      </TouchableOpacity>
       {selectedReport && (
         <Modal
           animationType="slide"
@@ -268,7 +261,7 @@ const getRoutes = async () => {
         style={styles.reportButton}
         onPress={() => {
           getData();
-          navigation.navigate('Report')
+          navigation.navigate("신고")
         }} //클릭 시 검색 화면으로 이동
       >
         <Text style={{ color: '#fff', fontSize: 20}}>!</Text>

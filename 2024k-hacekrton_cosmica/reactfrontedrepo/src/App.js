@@ -18,7 +18,7 @@ const Stack = createNativeStackNavigator();
 const MainStackNavigator = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Map">
+            <Stack.Screen name="지도">
                 {() => (
                     <ScreenWrapper>
                         <MainScreen apiUrl={REACT_APP_LOCAL_API_URL} />
@@ -28,7 +28,7 @@ const MainStackNavigator = () => {
             <Stack.Screen name="길 찾기">
                 {() => (<SearchScreen />)}
             </Stack.Screen>
-            <Stack.Screen name="Add">
+            <Stack.Screen name="Add" options={{ headerShown: false }}>
                 {() => (<RouteAddStackNavigator />)}
             </Stack.Screen>
             <Stack.Screen name="MyPageStack" component={MyPageStack} options={{ headerShown: false }} />
@@ -40,10 +40,10 @@ const MainStackNavigator = () => {
 const RouteAddStackNavigator = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="RouteAdd">
+            <Stack.Screen name="경로 추가">
                 {() => (<RouteAdd apiUrl={REACT_APP_LOCAL_API_URL} />)}
             </Stack.Screen>
-            <Stack.Screen name="AddScreen">
+            <Stack.Screen name="새 경로 추가" >
                 {() => (<AddScreen />)}
             </Stack.Screen>
         </Stack.Navigator>
@@ -64,7 +64,7 @@ const App = () => {
                 <Stack.Screen name="CompanionStack" component={CompanionStack} options={{ headerShown: false }} />
                 <Stack.Screen name="MyPageStack" component={MyPageStack} options={{ headerShown: false }} />
                 <Stack.Screen name="BusStack" component={BusStack} options={{ headerShown: false }} />
-                <Stack.Screen name="Report">
+                <Stack.Screen name="신고">
                     {() => <ScreenWrapper><Report apiUrl={REACT_APP_LOCAL_API_URL} /></ScreenWrapper>}
                 </Stack.Screen>
             </Stack.Navigator>

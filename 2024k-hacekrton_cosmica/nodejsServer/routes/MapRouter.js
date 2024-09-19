@@ -10,7 +10,7 @@ router.route('/Search')
     .post(SerachLocation)
 
 
-
+    
 /**
  * 임의의 경로를 DB에 저장하는 기능을 처리하는 라우터
  * - 호출 주소: http://localhost:5000/main/addRoute
@@ -29,7 +29,7 @@ router.post('/addRoute', async (req, res) => {
             origin: JSON.stringify(req.body.origin),
             destination: JSON.stringify(req.body.destination)
         };
-            console.log("route: ",route);
+            console.log("addRoute: ",route);
         
         
         const registedRoute = await db.route.create(route);
@@ -59,24 +59,31 @@ router.get('/getRoute', async (req, res) => {
         msg: ""
     }
     try {
-        console.log("orging:",req.body.origin);
-        
-        const origin = JSON.stringify(req.body.origin);
-        const destination = JSON.stringify(req.body.destination);
+        // 클라이언트에서 수신한 데이터 확인
+        console.log("서버에서 수신한 origin:", req.query.origin);
+        console.log("서버에서 수신한 destination:", req.query.destination);
 
-        const routes = await db.route.findAll({ Where: { origin: origin, destination: destination } });
-         // 각 요소에 대해 JSON.parse를 적용합니다.
-    const parsedRoutes = routes.map(route => {
+        //문자열 형식으로 저장
+        const origin = JSON.stringify(req.query.origin) 
+        const destination = JSON.stringify(req.query.destination)
+
+        //이 부분 수행이 제대로 이루어지고 있지 않음
+        //같다고 인식을 못함(?)- 
+        const routes = await db.route.findAll({ where: { origin: origin, destination: destination } });
+        console.log("서버에서 조회한 routes:", routes);
+        
+        // 각 요소에 대해 JSON.parse를 적용합니다.
+        const parsedRoutes = routes.map(route => {
         return {
             ...route.dataValues, // 기존 데이터베이스의 다른 필드들도 유지하려면 사용
             // data: JSON.parse(route.dataValues.data),
-            data: JSON.parse(route.dataValues.data),
-            destination: JSON.parse(route.dataValues.destination),
+            data: typeof route.dataValues.data === 'string' ? JSON.parse(route.dataValues.data) : route.dataValues.data,
+            destination: typeof route.dataValues.destination === 'string' ? JSON.parse(route.dataValues.destination) : route.dataValues.destination,
             // origin: JSON.parse(route.dataValues.origin)
         };
     });
         
-        console.log("음", parsedRoutes);
+        console.log("getRoute 서버 부분", parsedRoutes);
 
         apiResult.code = 200;
         apiResult.data = parsedRoutes;

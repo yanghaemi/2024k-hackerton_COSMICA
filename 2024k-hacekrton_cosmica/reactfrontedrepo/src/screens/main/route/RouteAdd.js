@@ -4,7 +4,6 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { getLocation } from '../../../components/Location';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
-import {REACT_APP_LOCAL_API_URL} from "@env";
 
 
 const RouteAdd = ({apiUrl}) => {
@@ -15,8 +14,11 @@ const RouteAdd = ({apiUrl}) => {
   const [location, setLocation] = useState(null); // 사용자 위치
   const [loading, setLoading] = useState(true); // 로딩 상태 (현재 위치 불러올 때 생기는 텀 방지)
   const [routeCoordinates, setRouteCoordinates] = useState([]);
+
   const [reports, setReports] = useState([]); // 모든 신고 내용
+
   const [selectedLocation, setSelectedLocation] = useState([]); // 터치된 위치 저장
+
 
 
   const getData = async () => {
@@ -73,7 +75,7 @@ try{
   console.log(response.data);
   
       Alert.alert('저장 완료', '해당 경로를 저장했습니다!');
-      navigation.navigate('Map', { origin: null, destination: null });
+      navigation.navigate("지도", { origin: null, destination: null });
 
     } catch (error) {
       console.error("에러: ", error);
@@ -104,7 +106,7 @@ try{
     <View style={styles.container}>
       <TouchableOpacity //길 찾기 버튼
         style={styles.searchButton}
-        onPress={() => navigation.navigate('AddScreen')} //클릭 시 검색 화면으로 이동
+        onPress={() => navigation.navigate("새 경로 추가")} //클릭 시 검색 화면으로 이동
       >
         <Text style={styles.buttonText}>새 경로 추가</Text>
       </TouchableOpacity>
