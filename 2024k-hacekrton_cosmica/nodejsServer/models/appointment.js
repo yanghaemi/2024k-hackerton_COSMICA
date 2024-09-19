@@ -41,6 +41,22 @@ module.exports = function(sequelize, DataTypes) {
     rate: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    START: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    end: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    carRequire: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    carName: {
+      type: DataTypes.STRING(20),
+      allowNull: true
     }
   }, {
     sequelize,
