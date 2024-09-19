@@ -1,6 +1,7 @@
 import AppointmentRegister from "../companion/AppointmentRegister";
 import DetailAppointment from "../companion/DetailAppointment";
 import CheckoutPage from "../companion/checkout/CheckoutPage";
+
 import React from "react";
 import MyPage from "./MyPage";
 import {createStackNavigator} from "@react-navigation/stack";

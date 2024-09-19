@@ -53,6 +53,45 @@ router.post('/addRoute', async (req, res) => {
     res.json(apiResult);
 });
 
+router.get('/getMyRouter', async (req, res) => {
+    const apiResult = {
+        code: "400",
+        data: "",
+        msg: ""
+    }
+    try {
+        
+        const routes = await db.route.findAll();
+    
+        const parsedRoutes = routes.map(route => {
+        return {
+            ...route.dataValues, // 기존 데이터베이스의 다른 필드들도 유지하려면 사용
+            // data: JSON.parse(route.dataValues.data),
+            data: JSON.parse(route.dataValues.data),
+            destination: JSON.parse(route.dataValues.destination),
+            origin: JSON.parse(route.dataValues.origin)
+        };
+    });
+        
+        console.log("음", parsedRoutes);
+
+        apiResult.code = 200;
+        apiResult.data = parsedRoutes;
+        apiResult.msg = "Ok";
+        
+        
+        
+        
+    } catch (error) {
+        console.log(error);
+        apiResult.code = 500;
+        apiResult.data = null;
+        apiResult.msg = "Failed";
+    }
+
+    res.json(apiResult);
+})
+
 router.get('/getRoute', async (req, res) => {
     const apiResult = {
         code: "400",

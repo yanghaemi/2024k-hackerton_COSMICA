@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ActivityIndicator, Text,FlatList, TouchableOpacity, Modal, Button } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Text, FlatList, TouchableOpacity, Modal, Button } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { getLocation } from '../../components/Location';
 import { fetchRoute } from '../../components/FetchRoute';
@@ -41,10 +41,19 @@ const MainScreen = ({apiUrl}) => {
 
   }, []);
 
-  const handleItemPress = async (marker) => {
+  const handleRoutePress = async (marker) => {
     try {
       setSelectedRoute(marker.data);
-      console.log(selectedRoute); // 요청이 성공한 경우 응답 데이터 로그
+      setDelta();
+    } catch (error) {
+      console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
+    }
+  };
+
+  const handleReportPress = async (marker) => {
+    try {
+      setSelectedReport(marker);
+      console.log("selectedReport: ", selectedReport); // 요청이 성공한 경우 응답 데이터 로그
     } catch (error) {
       console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
     }
@@ -56,32 +65,65 @@ const MainScreen = ({apiUrl}) => {
 
 
 const getRoutes = async () => {
-        try{const response = await axios.get(`${apiUrl}/main/getRoute`, {
-          origin: origin,
-          destination: destination
-        });
+  try {
+    const response = await axios.get(`${apiUrl}/main/getRoute`, {
+      params: { // 쿼리 파라미터로 전달
+        origin: origin,
+        destination: destination
+      }
+    }
+        );
 
           if (response.data) {
             setRoutes(response.data.data);
+            console.log(response.data.data)
           }
         } catch (error) {
           console.error("에러?:", error);
     }
   }
+
+  const setDelta=() => {
+    const calculateDelta = (start, end) => {
+        const latDelta = Math.abs(start.latitude - end.latitude) * 1.5;
+        const lngDelta = Math.abs(start.longitude - end.longitude) * 1.5;
+        return {
+          latitudeDelta: latDelta,
+          longitudeDelta: lngDelta,
+        };
+      };
+      const region = {
+        latitude: (origin.latitude + destination.latitude) / 2,
+        longitude: (origin.longitude + destination.longitude) / 2,
+        ...calculateDelta(origin, destination),
+      };
+
+      setRegion(region); // 계산된 중심과 delta를 기반으로 지도 포커스 설정
+  }
   
 
   useEffect(() => { //길 찾기 장소
     if (origin && destination) { //출발지, 목적지 둘 다 정해진 경우
-      setRegion({ //도착지를 기준으로 지도 포커스
-        latitude: destination.latitude,
-        longitude: destination.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      })
-      fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
+      //     setRegion({ //도착지를 기준으로 지도 포커스
+      //       latitude: origin.latitude,
+      //       longitude: origin.longitude,
+      //       latitudeDelta: 0.01,
+      //       longitudeDelta: 0.01,
+      //     })
+      //     fetchRoute(origin, destination, setLoading, setRouteCoordinates ); //경로 표시
       
+      //     getRoutes();
+      //   }
+      // }, [destination]);
+      setDelta();
+
+      // 경로를 가져와 표시
+      fetchRoute(origin, destination, setLoading, setRouteCoordinates);
+      
+      // 추가적인 작업 수행
       getRoutes();
     }
+    
   }, [destination]);
 
   const handleResetDestination = () => { //길 찾기 종료 시
@@ -94,14 +136,37 @@ const getRoutes = async () => {
 
  const renderItem = ({ item }) => (
   // 터치하면 해당 경로 띄우기
-  <TouchableOpacity onPress={() => handleItemPress(item)} style={styles.touchable}>
+  <TouchableOpacity onPress={() => handleRoutePress(item)} style={styles.touchable}>
     <View style={styles.itemContainer}>
        <Text style={styles.title}>경로 ID: {item.routeId}</Text>
+       <Text>출발지: {item.origin.name}</Text>
+       <Text>목적지: {item.destination.name}</Text>
        <Text>작성자: cosmica</Text>
     </View>
   </TouchableOpacity>
+  );
+  
+  const MyCustomMarker = () => (
+  <View style={styles.marker}>
+    <View>
+      {/* <Text style={styles.markerText}></Text> 이모지 또는 텍스트 */}
+    </View>
+    <View style={styles.markerTriangle} />
+  </View>
 );
 
+  const refreshRoutes = async () => { // 루트 새로고침
+     try {
+      const response = await axios.get(`${apiUrl}/main/getRoute`)
+      console.log(response.data);
+      if (response.data) {
+              setRoutes(response.data.data); // 새로운 데이터로 리스트를 갱신
+          }
+    } catch (error) {
+        console.error("새로고침 중 에러 발생:", error);
+    }
+
+  }
   
 
   if (loading) { // 현재 위치 확인해서 표시해 줄 때까지 로딩 화면 보여주는 부분
@@ -112,6 +177,7 @@ const getRoutes = async () => {
     );
   }
 
+
   return (
     <View style={styles.container}>
       <TouchableOpacity //길 찾기 버튼
@@ -120,14 +186,7 @@ const getRoutes = async () => {
       >
         <Text style={styles.buttonText}>길 찾기</Text>
       </TouchableOpacity>
-      {destination && ( // 도착지 값이 있는 경우 "길찾기 해제" 버튼 렌더링
-        <TouchableOpacity
-          style={styles.resetButton}
-          onPress={handleResetDestination}
-        >
-          <Text style={styles.buttonText}>길 찾기 종료</Text>
-        </TouchableOpacity>
-      )}
+      
       <MapView //지도
         style={styles.map}
         region={region}
@@ -143,7 +202,6 @@ const getRoutes = async () => {
         {/* 신고 표시랑 헷갈려서 마커만 지웠음 */}
           
         
-        
 
 
       {reports.map((marker, index) => (
@@ -154,8 +212,8 @@ const getRoutes = async () => {
             longitude: marker.longitude,
           }}
           title={marker.title} // 마커의 타이틀 (예: 장소 이름)
-            description={marker.contents} // 마커의 설명 (예: 간단한 설명)
-          onPress={()=>handleItemPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
+          description={marker.contents} // 마커의 설명 (예: 간단한 설명)
+          onPress={()=>handleReportPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
             
         />
       ))}
@@ -172,16 +230,16 @@ const getRoutes = async () => {
         {origin && ( //출발지
           <Marker
             coordinate={origin}
-            pinColor="#33ff93" // 색상 변경 가능
+            // pinColor="#33ff93" // 색상 변경 가능
             title="출발지"
-          />
+          ><MyCustomMarker/></Marker>
         )}
         {destination && ( //도착지
           <Marker
             coordinate={destination}
             pinColor="#3A4CA8" // 색상 변경 가능
             title="도착지"
-          />
+          ><MyCustomMarker/></Marker>
         )}
         {routeCoordinates.length > 0 && ( //경로
           <Polyline
@@ -190,11 +248,11 @@ const getRoutes = async () => {
             strokeWidth={4} // 경로 선 두께
           />
         )} 
-        {selectedRoute.length > 0 &&<Polyline   //추천 경로
+        {selectedRoute.length > 0 && (<Polyline   //추천 경로
           coordinates={selectedRoute}
           strokeColor="#eb34d5" // 경로의 색상
           strokeWidth={4}      // 경로의 두께
-        />}
+        />)}
       </MapView>
       {/* {routes && (
         
@@ -220,6 +278,16 @@ const getRoutes = async () => {
       {routes?.length > 0 && (
         <View style={styles.routeList} id="routeList"> 
           <Text style={styles.listTitle}>⭐ 다른 사용자들의 추천 경로 ⭐</Text>
+          {destination && ( // 도착지 값이 있는 경우 "길찾기 해제" 버튼 렌더링
+        <TouchableOpacity
+          style={styles.resetButton}
+          onPress={handleResetDestination}
+        >
+          <Text style={styles.buttonText}>길 찾기 종료</Text>
+        </TouchableOpacity>
+      )}
+          <Button title="새로고침"
+          onPress={refreshRoutes}></Button>
         <FlatList
           data={routes}
           renderItem={renderItem}
@@ -309,21 +377,18 @@ const styles = StyleSheet.create({
       position: 'flex',
       backgroundColor: 'white',
      // marginBottom: 5,
-     height: 350,
+     height: 300,
       padding:10,
       borderRadius: 5,
     
     },
   resetButton: {
-    position: 'absolute',
-    bottom: 10,
+    position: 'flex',
     left: 10,
     right: 10,
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 5,
-    elevation: 3,
-    zIndex: 1, // 버튼이 지도 위에 표시되도록 설정
   },
   buttonText: {
     color: 'black',
@@ -393,7 +458,36 @@ const styles = StyleSheet.create({
     textAlign: 'center', // 텍스트를 중앙에 배치
     color: '#333', // 텍스트 색상
     marginVertical: 10, // 위아래 여백
-  }
+  },
+  //----------Marker CSS---------------
+  marker: {
+    alignItems: 'center',
+  },
+  markerIcon: {
+    backgroundColor: '#ff6347',
+    padding: 10,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  markerText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  markerTriangle: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderTopWidth: 15,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#ff6347',
+    marginTop: -1,
+  },
 });
 
 export default MainScreen;

@@ -13,12 +13,12 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: ""
     },
     origin: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(5000),
       allowNull: false,
       defaultValue: ""
     },
     destination: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(5000),
       allowNull: false,
       defaultValue: ""
     }

@@ -84,7 +84,7 @@ const MyPage = () => {
 
                 {/* Custom Buttons */}
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.customButton} onPress={() => {}}>
+                    <TouchableOpacity style={styles.customButton} onPress={() => {navigation.navigate('MyRoute')}}>
                         <Text style={styles.buttonText}>저장한 경로</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.customButton} onPress={() => {}}>

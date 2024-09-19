@@ -14,6 +14,8 @@ import {Alert} from "react-native";
 import MyPageStack from "./screens/mypage/MyPageStack";
 import RouteAdd from "./screens/main/route/RouteAdd.js";
 import AddScreen from "./screens/main/route/AddScreen.js";
+import MyPage from './screens/mypage/MyPage.js';
+import MyRoute from './screens/mypage/MyRoute.js';
 
 const Tab = createBottomTabNavigator(); //탭 네비
 const Stack = createNativeStackNavigator(); //스택 네비
@@ -38,6 +40,15 @@ const RouteAddStackNavigator = () => { //RouteAdd 페이지에서 길찾기 화�
     );
 };
 
+const MypageStackNavigator = () => {
+    return (
+        <Stack.Navigator initialRouteName="My">
+            <Stack.Screen name="MainMypage" component={MyPage}/>
+            <Stack.Screen name="MyRoute" children={() => <MyRoute apiUrl={REACT_APP_LOCAL_API_URL} />}/>
+        </Stack.Navigator>
+    )
+}
+
 
 function MyTabs() {
     return (
@@ -48,7 +59,7 @@ function MyTabs() {
                 listeners={({ navigation }) => ({
                     tabPress: e => handleCompanionTabPress(e, navigation)
                 })}/>
-            <Tab.Screen name="마이페이지" component={MyPageStack} options={{ headerShown: true }} />
+            <Tab.Screen name="MyPage" component={MypageStackNavigator} options={{ headerShown: true }} />
                 
         </Tab.Navigator>
     );
