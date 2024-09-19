@@ -64,12 +64,25 @@ router.get('/getRoute', async (req, res) => {
         console.log("서버에서 수신한 destination:", req.query.destination);
 
         //문자열 형식으로 저장
-        const origin = JSON.stringify(req.query.origin) 
-        const destination = JSON.stringify(req.query.destination)
+        const origin = {
+            latitude: Number(req.query.origin.latitude),
+            longitude: Number(req.query.origin.longitude),
+            name: req.query.origin.name
+        };
+        
+        const destination = {
+            latitude: Number(req.query.destination.latitude),
+            longitude: Number(req.query.destination.longitude),
+            name: req.query.destination.name
+        };
 
-        //이 부분 수행이 제대로 이루어지고 있지 않음
-        //같다고 인식을 못함(?)- 
-        const routes = await db.route.findAll({ where: { origin: origin, destination: destination } });
+        // 쿼리 조건을 객체 형태로 정의
+        const routes = await db.route.findAll({
+            where: {
+                origin: JSON.stringify(origin),
+                destination: JSON.stringify(destination)
+            }
+        });
         console.log("서버에서 조회한 routes:", routes);
         
         // 각 요소에 대해 JSON.parse를 적용합니다.

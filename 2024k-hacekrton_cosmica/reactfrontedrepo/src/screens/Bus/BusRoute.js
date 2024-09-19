@@ -12,6 +12,8 @@ const BusRoute = () => {
 
     useEffect(() => {
         fetchBusRoute(pageNo); // pageNo 값을 전달
+        console.log(BUS_ROUTE_SERVICE)
+        console.log(BUS_ROUTE_INFO_F)
     }, [selectedCityCode, item.routeid, pageNo]); // pageNo를 의존성 배열에 추가
 
     const fetchBusRoute = (pageNo) => {

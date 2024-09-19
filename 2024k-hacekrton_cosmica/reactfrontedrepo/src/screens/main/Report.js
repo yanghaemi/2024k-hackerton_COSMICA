@@ -97,6 +97,7 @@ const Report = ({ apiUrl }) => {
  
   
   useEffect(() => {
+    console.log("Report: ",apiUrl)
     
     getLocation2();
 
