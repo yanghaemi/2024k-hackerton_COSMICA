@@ -32,7 +32,7 @@ const MainStackNavigator = () => {
                 {() => (<RouteAddStackNavigator />)}
             </Stack.Screen>
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
-            <Stack.Screen name="CompanionStack" component={CompanionStack} options={{ headerShown: false }}/>
+            {/* <Stack.Screen name="CalendarPage" component={CalendarPage} options={{ headerShown: false }}/> */}
         </Stack.Navigator>
     );
 };

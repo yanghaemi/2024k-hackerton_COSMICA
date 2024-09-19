@@ -23,7 +23,8 @@ function CompanionStack() {
             <Stack.Screen name="MyReview" component={MyReview} options={{headerShown:false}}/>
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
             <Stack.Screen name="Register" component={Register} options={{ headerShown: false }}/>
-            <Stack.Screen name="CheckoutPage" component={CheckoutPage} options={{ headerShown: false }}/>            <Stack.Screen name="AppointmentRegister" component={AppointmentRegister} options={{ headerShown: false }}/>
+            <Stack.Screen name="CheckoutPage" component={CheckoutPage} options={{ headerShown: false }}/>
+            <Stack.Screen name="AppointmentRegister" component={AppointmentRegister} options={{ headerShown: false }}/>
             <Stack.Screen name="DetailAppointment" component={DetailAppointment} options={{ headerShown: false }}/>
         </Stack.Navigator>
         </PaymentWidgetProvider>
