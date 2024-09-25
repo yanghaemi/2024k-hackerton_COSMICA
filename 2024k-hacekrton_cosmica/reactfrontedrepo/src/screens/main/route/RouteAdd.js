@@ -32,6 +32,7 @@ const RouteAdd = ({apiUrl}) => {
   };
 
   useEffect(() => {
+    console.log('RouteAdd: ',apiUrl);
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
     getData();
   }, []);

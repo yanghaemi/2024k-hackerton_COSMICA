@@ -22,7 +22,7 @@ const MainScreen = ({apiUrl}) => {
   const [routes, setRoutes] = useState([]); // 검색 후 동일 출발, 목적지 경로 추천
   const [selectedRoute, setSelectedRoute] = useState([]); // 선택된 경로
 
-
+  
 
   const getData = async () => {
     try {
@@ -35,6 +35,7 @@ const MainScreen = ({apiUrl}) => {
   };
 
   useEffect(() => {
+    console.log("main: ",apiUrl);
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
     getData();
     
