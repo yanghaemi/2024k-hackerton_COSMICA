@@ -55,6 +55,7 @@ const App = () => {
         console.log("dlsj");
         console.log(REACT_APP_LOCAL_API_URL);
         console.log(REACT_APP_SPRING_API_URL);
+        console.log('az')
     }, []);
 
     return (

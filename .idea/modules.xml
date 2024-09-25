@@ -6,8 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpringServer.iml" filepath="$PROJECT_DIR$/.idea/modules/SpringServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpringServer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/SpringServer.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpringServer.test.iml" filepath="$PROJECT_DIR$/.idea/modules/SpringServer.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cosmica.SpringServer.iml" filepath="$PROJECT_DIR$/.idea/modules/cosmica.SpringServer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cosmica.SpringServer.test.iml" filepath="$PROJECT_DIR$/.idea/modules/cosmica.SpringServer.test.iml" />
     </modules>
   </component>
 </project>

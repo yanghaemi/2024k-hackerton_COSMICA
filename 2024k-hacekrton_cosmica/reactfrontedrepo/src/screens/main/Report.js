@@ -255,19 +255,18 @@ const Report = ({ apiUrl }) => {
                 title="선택된 위치"
                 description={`위도: ${selectedLocation.latitude}, 경도: ${selectedLocation.longitude}`}
               />)}
-
             {reports.map((marker, index) => (
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
-                  reportId: marker.reportId
-                }}
-                title={marker.title} // 마커의 타이틀 (예: 장소 이름)
-                description={marker.contents} // 마커의 설명 (예: 간단한 설명)
-                onPress={() => handleItemPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
-              />
+                <Marker
+                    key={index}
+                    coordinate={{
+                      latitude: marker.latitude,
+                      longitude: marker.longitude,
+                      reportId: marker.reportId
+                    }}
+                    title={marker.title} // 마커의 타이틀 (예: 장소 이름)
+                    description={marker.contents} // 마커의 설명 (예: 간단한 설명)
+                    onPress={() => handleItemPress(marker)} // 선택한 신고 위치만 클릭됨 (modify 기능 수행)
+                />
             ))}
           </MapView>
 

@@ -44,6 +44,7 @@ const BusRoute = () => {
                 const body = data.response.body || {};
                 const items = body.items ? body.items.item : [];
                 setBusRoutes(items);
+                console.log(items)
                 setLoading(false);
             })
             .catch(error => {
@@ -55,13 +56,14 @@ const BusRoute = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>버스 번호: {item.routeno}</Text>
+            <Text>{busRoutes[0]?.nodenm} - {busRoutes[busRoutes.length-1]?.nodenm}</Text>
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : busRoutes.length > 0 ? (
                 <ScrollView style={styles.scrollView}>
                     {busRoutes.map((busRoute, index) => (
-                        <View key={index} style={styles.routeContainer}>
-                            <Text style={styles.routeText}>{busRoute.nodenm}</Text>
+                        <View key={index} style={[styles.routeContainer,busRoute.nodenm===item.nodenm && styles.routeContainerHighlight]}>
+                            <Text style={styles.routeText}>{index+1}. {busRoute.nodenm} ({busRoute.nodeno})</Text>
                         </View>
                     ))}
                 </ScrollView>
@@ -78,11 +80,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        backgroundColor:'white'
     },
     title: {
-        fontSize: 24,
+        fontSize: 25,
         fontWeight: 'bold',
         marginBottom: 20,
+    },
+    subtitle:{
+        fontSize: 20,
     },
     scrollView: {
         width: '100%',
@@ -90,12 +96,25 @@ const styles = StyleSheet.create({
     routeContainer: {
         padding: 15,
         marginVertical: 5,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'white',
         borderRadius: 10,
+        borderColor: '#d0d0d0',
+        borderStyle: 'solid',
+        borderWidth: 1
     },
     routeText: {
-        fontSize: 18,
+        fontSize: 20,
+        fontWeight:'bold',
         color: '#333',
+    },
+    routeContainerHighlight: {
+        padding: 15,
+        marginVertical: 5,
+        backgroundColor: '#00FFFF',
+        borderRadius: 10,
+        borderColor: '#f0f0f0',
+        borderStyle: 'solid',
+        borderWidth: 1
     },
     noDataText: {
         fontSize: 16,

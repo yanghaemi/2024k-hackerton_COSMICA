@@ -118,12 +118,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     busName: {
-        fontSize: 15,
+        fontSize: 18,
         color: '#333',
         fontWeight: '600',
     },
     busDetails: {
-        fontSize: 12,
+        fontSize: 16,
         color: '#666',
         marginTop: 5,
     },
