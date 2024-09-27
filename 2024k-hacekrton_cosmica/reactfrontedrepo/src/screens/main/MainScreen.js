@@ -67,10 +67,16 @@ const getRoutes = async () => {
           if (response.data) {
             const dataFromFlask = response.data.data.data1;  // Flask에서 받은 데이터
             const parsedRoutes = response.data.data.data2;   // DB에서 가져온 경로들
-            setAiRoutes(dataFromFlask.data);
+            // setAiRoutes(dataFromFlask);
             setRoutes(parsedRoutes);
 
             console.log("루트들: ", routes)
+            
+           setAiRoutes(dataFromFlask.data.data.map(point => ({
+                latitude: parseFloat(point.latitude),  // 문자열을 숫자로 변환
+                longitude: parseFloat(point.longitude) // 문자열을 숫자로 변환
+              })));
+            
             console.log("플라스크", aiRoutes)
             
           }
@@ -99,6 +105,7 @@ const getRoutes = async () => {
     setRouteCoordinates([]); //경로 표시 제거
     setRoutes([]);
     setSelectedRoute([]);
+    setAiRoutes([]);
   };
 
 
@@ -139,6 +146,7 @@ const getRoutes = async () => {
         </TouchableOpacity>
       )}
       <MapView //지도
+        
         style={styles.map}
         region={region}
         onRegionChangeComplete={setRegion} // 지역 변경 시 상태를 업데이트
@@ -209,7 +217,10 @@ const getRoutes = async () => {
           coordinates={aiRoutes}
           strokeColor="#ff0000" // 경로의 색상 빨간색 선
           strokeWidth={4}      // 경로의 두께
-      />}
+        />
+        
+        
+        }
       </MapView>
       
       {selectedReport && (
@@ -236,8 +247,9 @@ const getRoutes = async () => {
           <Text style={styles.listTitle}>⭐ 다른 사용자들의 추천 경로 ⭐</Text>
         <FlatList
           data={routes}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => item?.id ? item.id.toString() : index.toString()}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ flexGrow: 1 }}
         />
         </View>
       )}
@@ -319,17 +331,17 @@ const styles = StyleSheet.create({
       borderRadius: 5,
     
     },
-  resetButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    right: 10,
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 5,
-    elevation: 3,
-    zIndex: 2, // 버튼이 지도 위에 표시되도록 설정
-  },
+    resetButton: {
+      position: 'absolute',
+      top: 10,
+      left: 10,
+      right: 10,
+      backgroundColor: 'white',
+      padding: 15,
+      borderRadius: 5,
+      elevation: 3,
+      zIndex: 2, // 버튼이 지도 위에 표시되도록 설정
+    },
   buttonText: {
     color: 'black',
     fontSize: 16,

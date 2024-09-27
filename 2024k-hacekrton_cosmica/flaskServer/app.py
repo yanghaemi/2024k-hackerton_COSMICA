@@ -24,15 +24,15 @@ def aiRoute(routeData):
     def json_to_matrix(json_data):
         data = json.loads(json_data)
         points = [(float(point["lat"]), float(point["long"])) for point in data["data"]]
-
+        
         num_points = len(points)
         distance_matrix = np.zeros((num_points, num_points))
-
+        
         for i in range(num_points):
             for j in range(num_points):
                 if i != j:
                     distance_matrix[i][j] = haversine(points[i][0], points[i][1], points[j][0], points[j][1])
-
+        
         return points, distance_matrix
 
     # Brute-force TSP 경로 최적화
@@ -41,7 +41,7 @@ def aiRoute(routeData):
         all_routes = permutations(range(num_points))
         min_distance = float('inf')
         best_route = None
-
+        
         for route in all_routes:
             current_distance = 0
             for i in range(len(route) - 1):
@@ -51,7 +51,7 @@ def aiRoute(routeData):
             if current_distance < min_distance:
                 min_distance = current_distance
                 best_route = route
-
+        
         return min_distance, best_route
 
     # Matrix Factorization (MF) 알고리즘 구현
@@ -59,7 +59,7 @@ def aiRoute(routeData):
         def __init__(self, R, hyper_params):
             self.R = np.array(R)
             self.num_users, self.num_items = np.shape(self.R)
-
+            
             self.K = hyper_params['K']
             self.alpha = hyper_params['alpha']
             self.beta = hyper_params['beta']
@@ -103,7 +103,7 @@ def aiRoute(routeData):
 
                     self.P[i, :] += self.alpha * (e * self.Q[j, :] - self.beta * self.P[i, :])
                     self.Q[j, :] += self.alpha * (e * self.P[i, :] - self.beta * self.Q[j, :])
-
+                
                 rmse = self.rmse()
 
         # 모든 경로에 대해 예측 점수를 반환하는 함수
@@ -119,9 +119,9 @@ def aiRoute(routeData):
 
     # 평가 매트릭스 (예시)
     R = [
-        [3, 3, 3],
-        [3, 3, 3],
-        [3, 3, 3]
+        [3, 3, 3],  
+        [3, 3, 3],  
+        [3, 3, 3]   
     ]
 
     # 하이퍼파라미터 설정 및 MF 모델 생성
@@ -163,16 +163,16 @@ def receive_data():
         json_data_list = []
 
         for route in received_data:
-            data_list = [{"lat": str(point['latitude']), "long": str(point['longitude'])} for point in route['data']]
+            data_list = [{"latitude": str(point['latitude']), "longitude": str(point['longitude'])} for point in route['data']]
             json_data_list.append({
                 "data": data_list
             })
-
+        
         print("변환된 json_data_list: ", json_data_list)
 
         # 데이터 처리 (ai)
         aiData = aiRoute(json_data_list)
-        print("ai로 나온 경로:", aiData)
+        # print("ai로 나온 경로:", aiData)
 
         # 처리된 데이터를 json 형식으로 응답
         apiResult["code"] = 200
@@ -186,7 +186,7 @@ def receive_data():
         apiResult["data"] = None
         apiResult["msg"] = "failed"
         return jsonify(apiResult), 500
-
+    
 
 
 if __name__ == '__main__':
