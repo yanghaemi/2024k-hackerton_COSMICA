@@ -20,9 +20,10 @@ const MainScreen = ({apiUrl}) => {
   const [reports, setReports] = useState([]); // 모든 신고 내용
   const [selectedReport, setSelectedReport] = useState(null); // 선택된 리포트
   const [routes, setRoutes] = useState([]); // 검색 후 동일 출발, 목적지 경로 추천
+  const [aiRoutes, setAiRoutes] = useState([]); // 검색 후 동일 출발, 목적지 경로 추천
   const [selectedRoute, setSelectedRoute] = useState([]); // 선택된 경로
 
-  
+
 
   const getData = async () => {
     try {
@@ -30,12 +31,11 @@ const MainScreen = ({apiUrl}) => {
       // console.log(response.data);
       setReports(response.data);
     } catch (err) {
-      console.error(err);
+      console.error("신고 가져오기 에러 : ",err);
     }
   };
 
   useEffect(() => {
-    console.log("main: ",apiUrl);
     getLocation(setLocation, setRegion, setLoading, destination); // 위치 받아오는 함수
     getData();
     
@@ -47,7 +47,7 @@ const MainScreen = ({apiUrl}) => {
       setSelectedRoute(marker.data);
       console.log(selectedRoute); // 요청이 성공한 경우 응답 데이터 로그
     } catch (error) {
-      console.error('Error fetching data:', error); // 에러 발생 시 에러 로그
+      console.error('선택한 루트 에러:', error); // 에러 발생 시 에러 로그
     }
   };
 
@@ -65,8 +65,14 @@ const getRoutes = async () => {
         });
 
           if (response.data) {
-            console.log("루트 가져오기:",response.data.data);
-            setRoutes(response.data.data);
+            const dataFromFlask = response.data.data.data1;  // Flask에서 받은 데이터
+            const parsedRoutes = response.data.data.data2;   // DB에서 가져온 경로들
+            setAiRoutes(dataFromFlask.data);
+            setRoutes(parsedRoutes);
+
+            console.log("루트들: ", routes)
+            console.log("플라스크", aiRoutes)
+            
           }
         } catch (error) {
           console.error("에러?:", error);
@@ -150,7 +156,7 @@ const getRoutes = async () => {
         
 
 
-      {reports.map((marker, index) => (
+      {Array.isArray(reports) && reports.map((marker, index) => (
         <Marker
           key={index}
           coordinate={{
@@ -194,15 +200,18 @@ const getRoutes = async () => {
             strokeWidth={4} // 경로 선 두께
           />
         )} 
-        {selectedRoute !=null && selectedRoute.length > 0 &&<Polyline   //추천 경로
+        {selectedRoute !=null && selectedRoute.length > 0 && <Polyline   //추천 경로
           coordinates={selectedRoute}
-          strokeColor="#eb34d5" // 경로의 색상
+          strokeColor="#eb34d5" // 경로의 색상 핑크색 선
           strokeWidth={4}      // 경로의 두께
         />}
+        {aiRoutes != null&& aiRoutes.length > 0 && <Polyline
+          coordinates={aiRoutes}
+          strokeColor="#ff0000" // 경로의 색상 빨간색 선
+          strokeWidth={4}      // 경로의 두께
+      />}
       </MapView>
-      {/* {routes && (
-        
-      )} */}
+      
       {selectedReport && (
         <Modal
           animationType="slide"
@@ -228,7 +237,7 @@ const getRoutes = async () => {
         <FlatList
           data={routes}
           renderItem={renderItem}
-          // keyExtractor={(item) => item..toString()}
+          keyExtractor={(item, index) => item?.id ? item.id.toString() : index.toString()}
         />
         </View>
       )}
@@ -305,21 +314,21 @@ const styles = StyleSheet.create({
       position: 'flex',
       backgroundColor: 'white',
      // marginBottom: 5,
-     height: 350,
+     height: 200,
       padding:10,
       borderRadius: 5,
     
     },
   resetButton: {
     position: 'absolute',
-    bottom: 10,
+    top: 10,
     left: 10,
     right: 10,
     backgroundColor: 'white',
     padding: 15,
     borderRadius: 5,
     elevation: 3,
-    zIndex: 1, // 버튼이 지도 위에 표시되도록 설정
+    zIndex: 2, // 버튼이 지도 위에 표시되도록 설정
   },
   buttonText: {
     color: 'black',
