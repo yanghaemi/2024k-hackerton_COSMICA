@@ -24,7 +24,6 @@ const MainScreen = ({apiUrl}) => {
   const [selectedRoute, setSelectedRoute] = useState([]); // 선택된 경로
 
 
-
   const getData = async () => {
     try {
       const response = await axios.get(`${apiUrl}/report`);
@@ -213,7 +212,7 @@ const getRoutes = async () => {
           strokeColor="#eb34d5" // 경로의 색상 핑크색 선
           strokeWidth={4}      // 경로의 두께
         />}
-        {aiRoutes != null&& aiRoutes.length > 0 && <Polyline
+        {aiRoutes != null&& aiRoutes.length > 0 &&  <Polyline
           coordinates={aiRoutes}
           strokeColor="#ff0000" // 경로의 색상 빨간색 선
           strokeWidth={4}      // 경로의 두께

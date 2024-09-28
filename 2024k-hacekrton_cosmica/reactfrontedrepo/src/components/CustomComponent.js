@@ -38,7 +38,7 @@ const CustomComponent = () => {
                 style={styles.button}
                 onPress={handleCompanionPress}
             >
-                <Image source={require('../image/동행자.png')} style={styles.icon} />
+                <Image source={{ uri: 'src_image_companion' }} style={styles.icon} />
             </TouchableOpacity>
 
             {/* 두 번째 아이콘 (버스) */}
@@ -46,7 +46,7 @@ const CustomComponent = () => {
                 style={styles.button}
                 onPress={handleBusPress}
             >
-                <Image source={require('../image/버스.jpg')} style={styles.icon} />
+                <Image source={{ uri: 'src_image_bus' }} style={styles.icon} />
             </TouchableOpacity>
 
             {/* 세 번째 아이콘 (MY 텍스트) */}
