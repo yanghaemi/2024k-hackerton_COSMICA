@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Button, Alert } from 'react-native';
+import { StyleSheet, View, Button, Alert,TouchableOpacity,Text } from 'react-native';
 import { GooglePlacesAutocomplete  } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_API_KEY } from '@env';
 import { useNavigation } from '@react-navigation/native';
@@ -56,7 +56,12 @@ const SearchScreen = () => {
         listViewDisplayed={true} // 목록
         styles={styles.search}
       />
-      <Button title="경로 찾기" onPress={handleNavigate} />
+      <TouchableOpacity
+        style={styles.searchButton}
+        onPress={handleNavigate}
+      >
+        <Text style={styles.buttonText}>경로 찾기</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -65,6 +70,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+  },
+  searchButton: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    right: 10,
+    backgroundColor: 'black',
+    padding: 12,
+    borderRadius: 5,
+    elevation: 3,
+    zIndex: 1, // 버튼이 지도 위에 표시되도록 설정
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight:'bold',
+    fontSize: 16,
+    textAlign: 'center',
   },
   search: {
     textInputContainer: {

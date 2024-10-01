@@ -31,7 +31,7 @@ const Login = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Image
-                source={require('../../../image/로그인화면.png')} // 로고 이미지 경로를 맞게 설정하세요
+                source={{ uri: 'src_image_login' }}
                 style={styles.logo}
                 accessibilityLabel="Logo"
             />

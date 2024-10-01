@@ -158,7 +158,7 @@ def receive_data():
 
         # Node.js로부터 데이터를 수신
         received_data = request.json
-        print("node.js에서 받은 데이터: ", received_data)
+        # print("node.js에서 받은 데이터: ", received_data)
 
         json_data_list = []
 
@@ -168,8 +168,7 @@ def receive_data():
                 "data": data_list
             })
 
-
-        print("변환된 data_list: ", json_data_list)
+        print("변환된 json_data_list: ", json_data_list)
 
         # 데이터 처리 (ai)
         aiData = aiRoute(json_data_list)
