@@ -1,5 +1,6 @@
 package cosmica.SpringServer.service.user;
 
+import cosmica.SpringServer.dto.Appointment;
 import cosmica.SpringServer.dto.User;
 import cosmica.SpringServer.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,13 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public Optional<User> findById(int id) {
@@ -24,20 +22,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByPw(int pw) {
-        return userRepository.findByPw(pw);
-    }
-
-    @Override
-    public Optional<User> login(int id, int pw) {
-        Optional<User> userById = findById(id);
-        Optional<User> userByPw = findByPw(pw);
-        if (userById.isPresent() && userByPw.isPresent()) {
-            if(userById.get().equals(userByPw.get())) {
-                return userById;
-            }
-        }
-        return Optional.empty();
+    public Optional<User> login(int id, String pw) {
+       return userRepository.login(id,pw);
     }
 
     @Override
@@ -51,7 +37,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<User>> findByDate(Date date){
-        return userRepository.findByDate(date);
+    public void updateRate(Appointment appointment) {
+        userRepository.updateRate(appointment);
     }
+
+    @Override
+    public Optional<User> updateUser(User user) {return userRepository.updateUser(user);}
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+
+//    @Override
+//    public Optional<List<User>> findByDate(Date date){
+//        return userRepository.findByDate(date);
+//    }
 }

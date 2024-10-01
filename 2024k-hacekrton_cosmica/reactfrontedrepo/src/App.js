@@ -1,114 +1,75 @@
-import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import { Colors} from 'react-native/Libraries/NewAppScreen';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainScreen from './screens/main/MainScreen';
+import SearchScreen from './screens/main/SearchScreen';
+import CompanionStack from "./screens/companion/CompanionStack";
+import Report from './screens/main/Report';
+import MyPageStack from "./screens/mypage/MyPageStack";
+import RouteAdd from "./screens/main/route/RouteAdd";
+import AddScreen from "./screens/main/route/AddScreen";
+import BusStack from "./screens/Bus/BusStack";
+import { REACT_APP_LOCAL_API_URL, REACT_APP_SPRING_API_URL } from '@env';
+import ScreenWrapper from './components/ScreenWrapper';
+import Login from "./screens/mypage/loginregister/Login"; // 경로 확인
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-function Section({children, title}){
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+const MainStackNavigator = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="지도">
+                {() => (
+                    <ScreenWrapper>
+                        <MainScreen apiUrl={REACT_APP_LOCAL_API_URL} />
+                    </ScreenWrapper>
+                )}
+            </Stack.Screen>
+            <Stack.Screen name="길 찾기">
+                {() => (<SearchScreen />)}
+            </Stack.Screen>
+            <Stack.Screen name="Add" options={{ headerShown: false }}>
+                {() => (<RouteAddStackNavigator />)}
+            </Stack.Screen>
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
+            {/* <Stack.Screen name="CalendarPage" component={CalendarPage} options={{ headerShown: false }}/> */}
+        </Stack.Navigator>
+    );
+};
 
-function SamplePage(){ //리액트 네이티브의 기본적인 구조를 확인하고자 만들어둔 샘플 페이지입니다
-  const isDarkMode = useColorScheme() === 'dark';
+const RouteAddStackNavigator = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="경로 추가">
+                {() => (<RouteAdd apiUrl={REACT_APP_LOCAL_API_URL} />)}
+            </Stack.Screen>
+            <Stack.Screen name="새 경로 추가" >
+                {() => (<AddScreen />)}
+            </Stack.Screen>
+        </Stack.Navigator>
+    );
+};
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+const App = () => {
+    useEffect(() => {
+        console.log("kk");
+        console.log(REACT_APP_LOCAL_API_URL);
+        console.log(REACT_APP_SPRING_API_URL);
+    }, []);
 
-  return (
-    <SafeAreaView style={{ flex: 1 }} //flex: 1로 하면 전체화면을 차지한다고 합니다
-    > 
-    <StatusBar
-      barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      backgroundColor={backgroundStyle.backgroundColor}
-    />
-    <View>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}
-      >
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            flex: 1,
-          }}
-        >
-          <Section title="How to make page">
-            This is <Text style={styles.highlight}>Sample</Text>{'\n'}
-            Please refer to this{'\n'}
-          </Section>
-        </View>
-      </ScrollView>
-    </View>
-  </SafeAreaView>
-  )
-}
-
-function App(){
-
-  return (
-    <NavigationContainer>
-    <Tab.Navigator>
-      <Tab.Screen name="Sample"//제일 첫번째로 보이는 화면
-       component={SamplePage} //현재는 일단 샘플로 만들어둔 페이지로 지정해놨습니다
-        options={{ headerShown: false }} />
-      <Tab.Screen name="Main" //여기다가 지도 넣을 예정
-      component={MainScreen} />
-    </Tab.Navigator>
-  </NavigationContainer>
-  );
-}
-
-const styles = StyleSheet.create({ //style 참고용
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen name="MainStack" component={MainStackNavigator} options={{ headerShown: false }} />
+                <Stack.Screen name="CompanionStack" component={CompanionStack} options={{ headerShown: false }} />
+                <Stack.Screen name="MyPageStack" component={MyPageStack} options={{ headerShown: false }} />
+                <Stack.Screen name="BusStack" component={BusStack} options={{ headerShown: false }} />
+                <Stack.Screen name="신고">
+                    {() => <ScreenWrapper><Report apiUrl={REACT_APP_LOCAL_API_URL} /></ScreenWrapper>}
+                </Stack.Screen>
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+};
 
 export default App;

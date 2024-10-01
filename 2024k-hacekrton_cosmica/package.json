@@ -1,8 +1,9 @@
 {
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "npm run setup && concurrently \"npm run server\" \"npm run client\"",
     "server": "cd nodejsServer && node app.js",
-    "client": "cd reactfrontedrepo && npm start"
+    "client": "cd reactfrontedrepo && npm start",
+    "setup": "adb reverse tcp:5000 tcp:5000"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

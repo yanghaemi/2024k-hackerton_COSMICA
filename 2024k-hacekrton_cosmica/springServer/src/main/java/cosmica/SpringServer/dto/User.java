@@ -9,16 +9,19 @@ import lombok.ToString;
 import java.sql.Date;
 
 //사용자 정보 객체
-@Data
+@Getter
+@Setter
 @ToString
 public class User {
     private Integer id;
-    private Integer pw;
+    private String pw;
     private String userName;
+    private String phoneNum;
     private UserType userType;
     private String location;
     private Double rate;
-    private Date possibleDate;
     private Integer times;
-
+    private String car;
+    private Boolean verify;
+    private String verifyFilePath;
 }

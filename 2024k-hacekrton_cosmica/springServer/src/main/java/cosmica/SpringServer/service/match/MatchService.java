@@ -9,9 +9,11 @@ import java.util.Map;
 
 //매칭 기능
 public interface MatchService {
-    public Appointment findMatchedDateById(int id); //id입력 -> 동행자와 약속 정보 출력
-    public Map<Date, Appointment> insertMatchDay(Appointment appointment); //약속 정보 저장
-    public List<Map<Date, Appointment>> showMatchedDatesByUser(User user); //자기자신 입력 ->내가 잡았던 약속정보들 출력
-    public Appointment deleteMatchedDateById(int id); //id입력 -> 동행자와 약속 정보 취소
-
+    public Appointment registerAppointment(User user,Appointment appointment);
+    public Appointment searchAppointmentById(int id);
+    public List<Appointment> searchAppointmentByDate(Date date);
+    public List<Appointment> searchAppointmentByUser(User user);
+    public Appointment applyAppointment(Appointment appointment,User I);
+    public Appointment cancelAppointment(int id);
+    public Appointment updateAppointment(Appointment appointment);
 }
