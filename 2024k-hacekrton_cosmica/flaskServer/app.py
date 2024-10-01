@@ -23,7 +23,7 @@ def aiRoute(routeData):
     # JSON 데이터를 거리 행렬로 변환
     def json_to_matrix(json_data):
         data = json.loads(json_data)
-        points = [(float(point["lat"]), float(point["long"])) for point in data["data"]]
+        points = [(float(point["latitude"]), float(point["longitude"])) for point in data["data"]]
 
         num_points = len(points)
         distance_matrix = np.zeros((num_points, num_points))
@@ -158,21 +158,22 @@ def receive_data():
 
         # Node.js로부터 데이터를 수신
         received_data = request.json
-        # print("node.js에서 받은 데이터: ", received_data)
+        print("node.js에서 받은 데이터: ", received_data)
 
         json_data_list = []
 
         for route in received_data:
-            data_list = [{"lat": str(point['latitude']), "long": str(point['longitude'])} for point in route['data']]
+            data_list = [{"latitude": str(point['latitude']), "longitude": str(point['longitude'])} for point in route['data']]
             json_data_list.append({
                 "data": data_list
             })
 
-        print("변환된 json_data_list: ", json_data_list)
+
+        print("변환된 data_list: ", json_data_list)
 
         # 데이터 처리 (ai)
         aiData = aiRoute(json_data_list)
-        print("ai로 나온 경로:", aiData)
+        # print("ai로 나온 경로:", aiData)
 
         # 처리된 데이터를 json 형식으로 응답
         apiResult["code"] = 200

@@ -123,6 +123,7 @@ public class UserController {
 
     @GetMapping("/verify")
     public String setVerify(Model model) {
+        log.info("verify page");
         List<User> userList = userService.findAll();
         List<User> filteredUser = userList.stream()
                 .filter(user -> !user.getVerify() && user.getVerifyFilePath() != null)
